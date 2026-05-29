@@ -1,0 +1,6 @@
+@ISPT_Project_Backend.Server_HostAddress = http://localhost:5293
+
+GET {{ISPT_Project_Backend.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

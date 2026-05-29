@@ -4,7 +4,7 @@ using System.Text;
 
 namespace BD.Entidades
 {
-    internal class MesaNota
+    internal class File
     {
     }
 }

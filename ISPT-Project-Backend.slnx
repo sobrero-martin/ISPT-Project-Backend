@@ -1,3 +1,6 @@
 <Solution>
+  <Project Path="BD/BD.csproj" />
+  <Project Path="DTO/DTO.csproj" />
   <Project Path="ISPT-Project-Backend.Server/ISPT-Project-Backend.Server.csproj" />
+  <Project Path="Repositorio/Repositorio.csproj" />
 </Solution>

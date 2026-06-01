@@ -4,7 +4,7 @@ using System.Text;
 
 namespace BD.Entidades
 {
-    internal class Contact
+    public class Contact : BaseEntity
     {
     }
 }

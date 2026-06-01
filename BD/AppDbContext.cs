@@ -11,13 +11,39 @@ namespace BD
     public class AppDbContext : IdentityDbContext<IdentityUser>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-        {
-            
-        }
+        {}
+        
+        DbSet<Person> Persons { get; set; }
+        DbSet<Location> Locations { get; set; }
+        DbSet<Documentation> Documentations { get; set; }
+        DbSet<Title> Titles { get; set; }
+        DbSet<Contact> Contacts { get; set; }
         
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            base.Roles.AddRange(
+                new IdentityRole
+                {
+                    Name = "Directivo",
+                    NormalizedName = "DIRECTIVO"
+                },
+                new IdentityRole{
+                Name = "Preceptor",
+                NormalizedName = "PRECEPTOR"
+                },
+                new IdentityRole{
+                    Name = "Preceptor_Auxiliar",
+                    NormalizedName = "PRECEPTOR_AUXILIAR"
+                },
+                new IdentityRole{
+                    Name = "Docente",
+                    NormalizedName = "DOCENTE"
+                },
+                new IdentityRole{
+                    Name = "Estudiante",
+                    NormalizedName = "ESTUDIANTE"
+                });
         }
         
         public override int SaveChanges()

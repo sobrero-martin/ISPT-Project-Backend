@@ -1,8 +1,16 @@
+using BD;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseMySql(builder.Configuration.GetConnectionString("DBConnection"),
+        new MySqlServerVersion(new Version(10, 4, 32))));
 
+// Add services to the container.
 builder.Services.AddControllers();
+
+builder.Services.AddAuthorization();
 
 builder.Services.AddCors(options =>
 {
@@ -27,6 +35,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

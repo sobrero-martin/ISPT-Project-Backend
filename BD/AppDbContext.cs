@@ -43,27 +43,32 @@ namespace BD
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            base.Roles.AddRange(
+            builder.Entity<IdentityRole>().HasData(
                 new IdentityRole
                 {
                     Name = "Directivo",
-                    NormalizedName = "DIRECTIVO"
+                    NormalizedName = "DIRECTIVO",
+                    ConcurrencyStamp = "1"
                 },
                 new IdentityRole{
                 Name = "Preceptor",
-                NormalizedName = "PRECEPTOR"
+                NormalizedName = "PRECEPTOR",
+                ConcurrencyStamp = "2"
                 },
                 new IdentityRole{
                     Name = "Preceptor_Auxiliar",
-                    NormalizedName = "PRECEPTOR_AUXILIAR"
+                    NormalizedName = "PRECEPTOR_AUXILIAR",
+                    ConcurrencyStamp = "3"
                 },
                 new IdentityRole{
                     Name = "Docente",
-                    NormalizedName = "DOCENTE"
+                    NormalizedName = "DOCENTE",
+                    ConcurrencyStamp = "4"
                 },
                 new IdentityRole{
                     Name = "Estudiante",
-                    NormalizedName = "ESTUDIANTE"
+                    NormalizedName = "ESTUDIANTE",
+                    ConcurrencyStamp = "5"
                 });
         }
         

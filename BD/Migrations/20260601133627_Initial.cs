@@ -94,41 +94,6 @@ namespace BD.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Persons",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Firstname = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Lastname = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Gender = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    CUIL = table.Column<string>(type: "varchar(255)", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    TypeDocument = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    DocumentNumber = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Birthdate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    PracticePlace = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Observations = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    state = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    CreatedBy = table.Column<long>(type: "bigint", nullable: false),
-                    UpdatedBy = table.Column<long>(type: "bigint", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Persons", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -252,6 +217,48 @@ namespace BD.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Persons",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Firstname = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Lastname = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Gender = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    CUIL = table.Column<string>(type: "varchar(255)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    TypeDocument = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    DocumentNumber = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Birthdate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    PracticePlace = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Observations = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    UserId = table.Column<string>(type: "varchar(255)", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    state = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    CreatedBy = table.Column<long>(type: "bigint", nullable: false),
+                    UpdatedBy = table.Column<long>(type: "bigint", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Persons", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Persons_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -867,11 +874,11 @@ namespace BD.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "05e08058-f1c7-4eae-87ea-6b51182248c6", "acab8687-7e7b-4dd8-bb8d-5b9e53b5e741", "Estudiante", "ESTUDIANTE" },
-                    { "5c9f483f-6196-4db0-9340-0daef577bef8", "e07a5c23-ec7a-4f81-848a-aa84290f0cf6", "Directivo", "DIRECTIVO" },
-                    { "5f0bbb12-c751-4e48-96f9-f856098f9b0c", "ac4fc2fc-5ee3-471d-9794-c80d47392424", "Preceptor", "PRECEPTOR" },
-                    { "e4d98feb-d5a2-4261-b970-339a199239ad", "1d84da02-41b5-4cdf-9db1-232ad9440bdc", "Docente", "DOCENTE" },
-                    { "efefb888-f0a3-470c-8ea2-c6c82b1589f6", "e60fa21a-7001-444e-b4d5-d701a261adae", "Preceptor_Auxiliar", "PRECEPTOR_AUXILIAR" }
+                    { "249f4a5b-c26e-4f3b-a811-656359abfdb2", "5", "Estudiante", "ESTUDIANTE" },
+                    { "49d3a509-06a7-4023-a9da-54f4110eec16", "1", "Directivo", "DIRECTIVO" },
+                    { "6a2a748c-923e-4248-bba8-39a5d978014c", "3", "Preceptor_Auxiliar", "PRECEPTOR_AUXILIAR" },
+                    { "c3e4e84f-a6cd-4205-9add-a50acae7283e", "2", "Preceptor", "PRECEPTOR" },
+                    { "f1eccb39-0265-42da-88c3-d9cfe020c269", "4", "Docente", "DOCENTE" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -1030,6 +1037,11 @@ namespace BD.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Persons_UserId",
+                table: "Persons",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Schedules_DivisionID",
                 table: "Schedules",
                 column: "DivisionID",
@@ -1117,9 +1129,6 @@ namespace BD.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
                 name: "AttendanceDays");
 
             migrationBuilder.DropTable(
@@ -1142,6 +1151,9 @@ namespace BD.Migrations
 
             migrationBuilder.DropTable(
                 name: "Subjects");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Curriculums");

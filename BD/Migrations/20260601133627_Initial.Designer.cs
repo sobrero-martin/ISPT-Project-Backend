@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BD.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260601132616_Initial")]
+    [Migration("20260601133627_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -788,6 +788,9 @@ namespace BD.Migrations
                     b.Property<long?>("UpdatedBy")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("varchar(255)");
+
                     b.Property<bool>("state")
                         .HasColumnType("tinyint(1)");
 
@@ -795,6 +798,8 @@ namespace BD.Migrations
 
                     b.HasIndex("CUIL")
                         .IsUnique();
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Persons");
                 });
@@ -1017,36 +1022,36 @@ namespace BD.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "5c9f483f-6196-4db0-9340-0daef577bef8",
-                            ConcurrencyStamp = "e07a5c23-ec7a-4f81-848a-aa84290f0cf6",
+                            Id = "49d3a509-06a7-4023-a9da-54f4110eec16",
+                            ConcurrencyStamp = "1",
                             Name = "Directivo",
                             NormalizedName = "DIRECTIVO"
                         },
                         new
                         {
-                            Id = "5f0bbb12-c751-4e48-96f9-f856098f9b0c",
-                            ConcurrencyStamp = "ac4fc2fc-5ee3-471d-9794-c80d47392424",
+                            Id = "c3e4e84f-a6cd-4205-9add-a50acae7283e",
+                            ConcurrencyStamp = "2",
                             Name = "Preceptor",
                             NormalizedName = "PRECEPTOR"
                         },
                         new
                         {
-                            Id = "efefb888-f0a3-470c-8ea2-c6c82b1589f6",
-                            ConcurrencyStamp = "e60fa21a-7001-444e-b4d5-d701a261adae",
+                            Id = "6a2a748c-923e-4248-bba8-39a5d978014c",
+                            ConcurrencyStamp = "3",
                             Name = "Preceptor_Auxiliar",
                             NormalizedName = "PRECEPTOR_AUXILIAR"
                         },
                         new
                         {
-                            Id = "e4d98feb-d5a2-4261-b970-339a199239ad",
-                            ConcurrencyStamp = "1d84da02-41b5-4cdf-9db1-232ad9440bdc",
+                            Id = "f1eccb39-0265-42da-88c3-d9cfe020c269",
+                            ConcurrencyStamp = "4",
                             Name = "Docente",
                             NormalizedName = "DOCENTE"
                         },
                         new
                         {
-                            Id = "05e08058-f1c7-4eae-87ea-6b51182248c6",
-                            ConcurrencyStamp = "acab8687-7e7b-4dd8-bb8d-5b9e53b5e741",
+                            Id = "249f4a5b-c26e-4f3b-a811-656359abfdb2",
+                            ConcurrencyStamp = "5",
                             Name = "Estudiante",
                             NormalizedName = "ESTUDIANTE"
                         });
@@ -1441,6 +1446,15 @@ namespace BD.Migrations
                         .IsRequired();
 
                     b.Navigation("Person");
+                });
+
+            modelBuilder.Entity("BD.Entidades.Person", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("BD.Entidades.Schedule", b =>

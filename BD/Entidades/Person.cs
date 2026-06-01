@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace BD.Entidades
@@ -31,5 +32,9 @@ namespace BD.Entidades
         public List<File> Files { get; set; }
         [JsonIgnore]
         public List<TeacherDivision> TeacherDivisions { get; set; }
+        
+        public string? UserId { get; set; } 
+        [JsonIgnore]
+        public IdentityUser? User { get; set; }
     }
 }

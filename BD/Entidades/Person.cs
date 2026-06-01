@@ -24,7 +24,7 @@ namespace BD.Entidades
         public Contact Contact { get; set; }
         public Location Location { get; set; }
         public List<Documentation> Documentations { get; set; }
-        public List<Title> Titles { get; set; }
+        public List<Degree> Degrees { get; set; }
         
         // (LEGAJOS)
         [JsonIgnore]

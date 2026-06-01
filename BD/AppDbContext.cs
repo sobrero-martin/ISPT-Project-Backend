@@ -14,19 +14,32 @@ namespace BD
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {}
         
-        DbSet<Person> Persons { get; set; }
-        DbSet<Location> Locations { get; set; }
-        DbSet<Documentation> Documentations { get; set; }
-        DbSet<Title> Titles { get; set; }
-        DbSet<Contact> Contacts { get; set; }
+        public DbSet<Person> Persons { get; set; }
+        public DbSet<Location> Locations { get; set; }
+        public DbSet<Documentation> Documentations { get; set; }
+        public DbSet<Degree> Degrees { get; set; }
+        public DbSet<Contact> Contacts { get; set; }
         
-        DbSet<File> Files { get; set; }
-        DbSet<TeacherDivision> TeacherDivisions { get; set; }
+        public DbSet<File> Files { get; set; }
+        public DbSet<FileDivision> FileDivisions { get; set; }
+        public DbSet<TeacherDivision> TeacherDivisions { get; set; }
         
-        DbSet<AttendanceDay> AttendanceDays { get; set; }
-        DbSet<Attendance> Attendances { get; set; }
-        DbSet<Grade> Grades { get; set; }
-        
+        public DbSet<AttendanceDay> AttendanceDays { get; set; }
+        public DbSet<Attendance> Attendances { get; set; }
+        public DbSet<Grade> Grades { get; set; }
+        public DbSet<DivisionExam> DivisionExams { get; set; }
+        public DbSet<Division> Divisions { get; set; }
+        public DbSet<Schedule> Schedules { get; set; }
+
+        public DbSet<Career> Careers { get; set; }
+        public DbSet<Curriculum> Curriculums { get; set; }
+        public DbSet<SchoolYear> SchoolYears { get; set; }
+        public DbSet<Subject> Subjects { get; set; }
+        public DbSet<Correlative> Correlatives { get; set; }
+
+        public DbSet<FinalExam> FinalExams { get; set; }
+        public DbSet<FinalExamGrade> FinalExamGrades { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

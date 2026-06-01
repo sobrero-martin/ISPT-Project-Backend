@@ -12,5 +12,7 @@ namespace BD.Entidades
         
         [JsonIgnore]
         public List<Grade> Grades { get; set; }
+        [JsonIgnore]
+        public List<Attendance> Attendances { get; set; }
     }
 }

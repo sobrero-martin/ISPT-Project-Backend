@@ -5,6 +5,7 @@ using BD.Entidades;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using File = BD.Entidades.File;
 
 namespace BD
 {
@@ -18,6 +19,13 @@ namespace BD
         DbSet<Documentation> Documentations { get; set; }
         DbSet<Title> Titles { get; set; }
         DbSet<Contact> Contacts { get; set; }
+        
+        DbSet<File> Files { get; set; }
+        DbSet<TeacherDivision> TeacherDivisions { get; set; }
+        
+        DbSet<AttendanceDay> AttendanceDays { get; set; }
+        DbSet<Attendance> Attendances { get; set; }
+        DbSet<Grade> Grades { get; set; }
         
         protected override void OnModelCreating(ModelBuilder builder)
         {

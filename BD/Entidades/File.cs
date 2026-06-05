@@ -10,6 +10,7 @@ namespace BD.Entidades
         public long StudentId { get; set; }
         public Person Student { get; set; }
         
+        public List<Documentation> Documentations { get; set; }
         [JsonIgnore]
         public List<Grade> Grades { get; set; }
         [JsonIgnore]

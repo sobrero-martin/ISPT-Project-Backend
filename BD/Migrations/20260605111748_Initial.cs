@@ -354,42 +354,6 @@ namespace BD.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Documentations",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    PersonId = table.Column<long>(type: "bigint", nullable: false),
-                    DNI = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    Picture = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    BirthdateDocument = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    CUS = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    CNIRDS = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    CDA = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    Cooperative = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    CNIRDAM = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    CAP = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    CDS = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    Date = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    state = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    CreatedBy = table.Column<long>(type: "bigint", nullable: false),
-                    UpdatedBy = table.Column<long>(type: "bigint", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Documentations", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Documentations_Persons_PersonId",
-                        column: x => x.PersonId,
-                        principalTable: "Persons",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
                 name: "Files",
                 columns: table => new
                 {
@@ -539,6 +503,39 @@ namespace BD.Migrations
                         name: "FK_Subjects_Curriculums_CurriculumID",
                         column: x => x.CurriculumID,
                         principalTable: "Curriculums",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "Documentations",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    FileId = table.Column<long>(type: "bigint", nullable: false),
+                    DNI = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    Picture = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    BirthdateDocument = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    CUS = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    CNIRDS = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    CDA = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    Cooperative = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    state = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    CreatedBy = table.Column<long>(type: "bigint", nullable: false),
+                    UpdatedBy = table.Column<long>(type: "bigint", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Documentations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Documentations_Files_FileId",
+                        column: x => x.FileId,
+                        principalTable: "Files",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -874,11 +871,11 @@ namespace BD.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "249f4a5b-c26e-4f3b-a811-656359abfdb2", "5", "Estudiante", "ESTUDIANTE" },
-                    { "49d3a509-06a7-4023-a9da-54f4110eec16", "1", "Directivo", "DIRECTIVO" },
-                    { "6a2a748c-923e-4248-bba8-39a5d978014c", "3", "Preceptor_Auxiliar", "PRECEPTOR_AUXILIAR" },
-                    { "c3e4e84f-a6cd-4205-9add-a50acae7283e", "2", "Preceptor", "PRECEPTOR" },
-                    { "f1eccb39-0265-42da-88c3-d9cfe020c269", "4", "Docente", "DOCENTE" }
+                    { "0b683cab-b42b-49b5-805a-7def3aefe34b", "4", "Docente", "DOCENTE" },
+                    { "3ab31832-f477-453d-99e6-9b9f0b067f47", "5", "Estudiante", "ESTUDIANTE" },
+                    { "6e78ddf7-447e-4ea8-a613-9d250fdec7bc", "1", "Directivo", "DIRECTIVO" },
+                    { "eb1db0cd-25c0-4bb1-8896-e1951216db77", "3", "Preceptor_Auxiliar", "PRECEPTOR_AUXILIAR" },
+                    { "f3d5d797-69bd-4abd-a4bb-2e9ca7ac3400", "2", "Preceptor", "PRECEPTOR" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -975,9 +972,9 @@ namespace BD.Migrations
                 column: "SubjectID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Documentations_PersonId",
+                name: "IX_Documentations_FileId",
                 table: "Documentations",
-                column: "PersonId");
+                column: "FileId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_FileDivisions_DivisionID",

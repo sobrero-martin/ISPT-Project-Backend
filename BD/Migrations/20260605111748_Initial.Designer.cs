@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BD.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260601133627_Initial")]
+    [Migration("20260605111748_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -414,16 +414,7 @@ namespace BD.Migrations
                     b.Property<bool>("BirthdateDocument")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<bool>("CAP")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<bool>("CDA")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("CDS")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("CNIRDAM")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("CNIRDS")
@@ -447,7 +438,7 @@ namespace BD.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long>("PersonId")
+                    b.Property<long>("FileId")
                         .HasColumnType("bigint");
 
                     b.Property<bool>("Picture")
@@ -464,7 +455,7 @@ namespace BD.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PersonId");
+                    b.HasIndex("FileId");
 
                     b.ToTable("Documentations");
                 });
@@ -1022,35 +1013,35 @@ namespace BD.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "49d3a509-06a7-4023-a9da-54f4110eec16",
+                            Id = "6e78ddf7-447e-4ea8-a613-9d250fdec7bc",
                             ConcurrencyStamp = "1",
                             Name = "Directivo",
                             NormalizedName = "DIRECTIVO"
                         },
                         new
                         {
-                            Id = "c3e4e84f-a6cd-4205-9add-a50acae7283e",
+                            Id = "f3d5d797-69bd-4abd-a4bb-2e9ca7ac3400",
                             ConcurrencyStamp = "2",
                             Name = "Preceptor",
                             NormalizedName = "PRECEPTOR"
                         },
                         new
                         {
-                            Id = "6a2a748c-923e-4248-bba8-39a5d978014c",
+                            Id = "eb1db0cd-25c0-4bb1-8896-e1951216db77",
                             ConcurrencyStamp = "3",
                             Name = "Preceptor_Auxiliar",
                             NormalizedName = "PRECEPTOR_AUXILIAR"
                         },
                         new
                         {
-                            Id = "f1eccb39-0265-42da-88c3-d9cfe020c269",
+                            Id = "0b683cab-b42b-49b5-805a-7def3aefe34b",
                             ConcurrencyStamp = "4",
                             Name = "Docente",
                             NormalizedName = "DOCENTE"
                         },
                         new
                         {
-                            Id = "249f4a5b-c26e-4f3b-a811-656359abfdb2",
+                            Id = "3ab31832-f477-453d-99e6-9b9f0b067f47",
                             ConcurrencyStamp = "5",
                             Name = "Estudiante",
                             NormalizedName = "ESTUDIANTE"
@@ -1341,13 +1332,13 @@ namespace BD.Migrations
 
             modelBuilder.Entity("BD.Entidades.Documentation", b =>
                 {
-                    b.HasOne("BD.Entidades.Person", "Person")
+                    b.HasOne("BD.Entidades.File", "File")
                         .WithMany("Documentations")
-                        .HasForeignKey("PersonId")
+                        .HasForeignKey("FileId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Person");
+                    b.Navigation("File");
                 });
 
             modelBuilder.Entity("BD.Entidades.File", b =>
@@ -1574,6 +1565,8 @@ namespace BD.Migrations
                 {
                     b.Navigation("Attendances");
 
+                    b.Navigation("Documentations");
+
                     b.Navigation("Grades");
                 });
 
@@ -1583,8 +1576,6 @@ namespace BD.Migrations
                         .IsRequired();
 
                     b.Navigation("Degrees");
-
-                    b.Navigation("Documentations");
 
                     b.Navigation("Files");
 

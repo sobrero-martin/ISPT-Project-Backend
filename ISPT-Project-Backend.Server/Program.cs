@@ -1,5 +1,6 @@
 using BD;
 using Microsoft.EntityFrameworkCore;
+using Repositorio.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Add services to the container.
 builder.Services.AddControllers();
+
+builder.Services.AddScoped<ICareerRepository, CareerRepository>();
 
 builder.Services.AddAuthorization();
 

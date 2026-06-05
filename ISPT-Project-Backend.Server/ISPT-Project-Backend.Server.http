@@ -3,4 +3,33 @@
 GET {{ISPT_Project_Backend.Server_HostAddress}}/weatherforecast/
 Accept: application/json
 
+### Obtener todas las carreras
+GET {{ISPT_Project_Backend.Server_HostAddress}}/api/careers
+Accept: application/json
+
 ###
+
+
+### Crear carrera
+POST {{ISPT_Project_Backend.Server_HostAddress}}/api/careers
+Content-Type: application/json
+
+{
+    "name": "Ingeniería en Sistemas",
+    "title": "Ingeniero"
+}
+
+###
+
+### Modificar carrera
+PUT {{ISPT_Project_Backend.Server_HostAddress}}/api/careers/1
+Content-Type: application/json
+
+{
+    "id": 1,
+    "name": "dfhfd",
+    "title": "sdg"
+}
+
+###
+

@@ -6,10 +6,10 @@ namespace BD.Entidades
 {
     public class FileDivision : BaseEntity
     {
-        public long FileID { get; set; }
+        public long FileId { get; set; }
         public File? File { get; set; }
 
-        public long DivisionID { get; set; }
+        public long DivisionId { get; set; }
         public Division? Division { get; set; }
 
         public required string FileDivisionState { get; set; }

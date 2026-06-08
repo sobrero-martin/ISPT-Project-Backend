@@ -33,6 +33,18 @@ namespace Repositorio.Repository
             return careerDTOs;
         }
 
+        public async Task<CareerDTO> GetById(long id)
+        {
+            var career = await context.Set<Career>().FirstOrDefaultAsync(x => x.Id == id);
+            if (career == null) return null;
+            return new CareerDTO
+            {
+                Id = career.Id,
+                Name = career.Name,
+                Title = career.Title
+            };
+        }
+
         public async Task<CareerDTO> Post(Career carrera)
         {
             try

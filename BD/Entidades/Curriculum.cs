@@ -6,7 +6,7 @@ namespace BD.Entidades
 {
     public class Curriculum : BaseEntity
     {
-        public long CareerID { get; set; }
+        public long CareerId { get; set; }
         public Career? Career { get; set; }
 
         public required string Resolution { get; set; }

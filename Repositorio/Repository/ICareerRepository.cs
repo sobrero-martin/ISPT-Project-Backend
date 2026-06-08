@@ -9,6 +9,7 @@ namespace Repositorio.Repository
     public interface ICareerRepository
     {
         Task<List<CareerDTO>> GetFull();
+        Task<CareerDTO> GetById(long id);
         Task<bool> Put(long id, Career carrera);
         Task<CareerDTO> Post(Career carrera);
     }

@@ -6,10 +6,10 @@ namespace BD.Entidades
 {
     public class FinalExamGrade : BaseEntity
     {
-        public long FinalExamID { get; set; }
+        public long FinalExamId { get; set; }
         public FinalExam? FinalExam { get; set; }
 
-        public long FileID { get; set; }
+        public long FileId { get; set; }
         public File? File { get; set; }
 
         public int Grade { get; set; }

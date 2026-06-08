@@ -7,7 +7,7 @@ namespace BD.Entidades
 {
     public class DivisionExam : BaseEntity
     {
-        public long DivisionID { get; set; }
+        public long DivisionId { get; set; }
         public Division? Division { get; set; }
 
         public DateTime Date { get; set; }

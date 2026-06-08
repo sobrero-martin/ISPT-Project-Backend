@@ -8,7 +8,7 @@ namespace BD.Entidades
 {
     public class Schedule : BaseEntity
     {
-        public long DivisionID { get; set; }
+        public long DivisionId { get; set; }
         public Division? Division { get; set; }
         public TimeOnly StartTime { get; set; }
         public TimeOnly EndTime { get; set; }

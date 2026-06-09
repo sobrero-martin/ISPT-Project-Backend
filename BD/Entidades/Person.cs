@@ -19,8 +19,8 @@ namespace BD.Entidades
         public string DocumentNumber { get; set; }
         
         public DateTime Birthdate { get; set; }
-        public string PracticePlace { get; set; }
-        public string Observations { get; set; }
+        public string? PracticePlace { get; set; }
+        public string? Observations { get; set; }
         
         public Contact Contact { get; set; }
         public Location Location { get; set; }

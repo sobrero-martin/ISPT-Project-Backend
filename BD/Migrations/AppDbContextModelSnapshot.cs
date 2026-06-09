@@ -36,8 +36,8 @@ namespace BD.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<long>("FileId")
                         .HasColumnType("bigint");
@@ -48,8 +48,8 @@ namespace BD.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long?>("UpdatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<bool>("state")
                         .HasColumnType("tinyint(1)");
@@ -74,8 +74,8 @@ namespace BD.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime(6)");
@@ -89,8 +89,8 @@ namespace BD.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long?>("UpdatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<bool>("state")
                         .HasColumnType("tinyint(1)");
@@ -113,8 +113,8 @@ namespace BD.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -127,8 +127,8 @@ namespace BD.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long?>("UpdatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<bool>("state")
                         .HasColumnType("tinyint(1)");
@@ -147,35 +147,31 @@ namespace BD.Migrations
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
 
                     b.Property<string>("ContactNameEmergency")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("EmergencyNumber")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<long>("PersonId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("PhoneNumber")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long?>("UpdatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<bool>("state")
                         .HasColumnType("tinyint(1)");
@@ -199,8 +195,8 @@ namespace BD.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<long>("SubjectCorrelativeID")
                         .HasColumnType("bigint");
@@ -211,8 +207,8 @@ namespace BD.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long?>("UpdatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<bool>("state")
                         .HasColumnType("tinyint(1)");
@@ -240,8 +236,8 @@ namespace BD.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<int>("Duration")
                         .HasColumnType("int");
@@ -259,8 +255,8 @@ namespace BD.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long?>("UpdatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<DateTime>("VigencyDate")
                         .HasColumnType("datetime(6)");
@@ -286,8 +282,8 @@ namespace BD.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<long>("PersonId")
                         .HasColumnType("bigint");
@@ -299,8 +295,8 @@ namespace BD.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long?>("UpdatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<bool>("state")
                         .HasColumnType("tinyint(1)");
@@ -323,8 +319,8 @@ namespace BD.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("DivisionState")
                         .IsRequired()
@@ -343,8 +339,8 @@ namespace BD.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long?>("UpdatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<bool>("state")
                         .HasColumnType("tinyint(1)");
@@ -369,8 +365,8 @@ namespace BD.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime(6)");
@@ -387,8 +383,8 @@ namespace BD.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long?>("UpdatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<bool>("state")
                         .HasColumnType("tinyint(1)");
@@ -426,8 +422,8 @@ namespace BD.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<bool>("DNI")
                         .HasColumnType("tinyint(1)");
@@ -444,8 +440,8 @@ namespace BD.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long?>("UpdatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<bool>("state")
                         .HasColumnType("tinyint(1)");
@@ -468,8 +464,14 @@ namespace BD.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<long>("StudentId")
                         .HasColumnType("bigint");
@@ -477,8 +479,8 @@ namespace BD.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long?>("UpdatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<bool>("state")
                         .HasColumnType("tinyint(1)");
@@ -501,8 +503,8 @@ namespace BD.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<long>("DivisionID")
                         .HasColumnType("bigint");
@@ -520,8 +522,8 @@ namespace BD.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long?>("UpdatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<bool>("state")
                         .HasColumnType("tinyint(1)");
@@ -546,8 +548,8 @@ namespace BD.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<long>("CurriculumID")
                         .HasColumnType("bigint");
@@ -570,8 +572,8 @@ namespace BD.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long?>("UpdatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<bool>("state")
                         .HasColumnType("tinyint(1)");
@@ -596,8 +598,8 @@ namespace BD.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<long>("FileID")
                         .HasColumnType("bigint");
@@ -615,8 +617,8 @@ namespace BD.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long?>("UpdatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<bool>("state")
                         .HasColumnType("tinyint(1)");
@@ -641,8 +643,8 @@ namespace BD.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<long>("DivisionExamId")
                         .HasColumnType("bigint");
@@ -656,8 +658,8 @@ namespace BD.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long?>("UpdatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<bool>("state")
                         .HasColumnType("tinyint(1)");
@@ -690,8 +692,8 @@ namespace BD.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("Department")
                         .IsRequired()
@@ -707,8 +709,8 @@ namespace BD.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long?>("UpdatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<bool>("state")
                         .HasColumnType("tinyint(1)");
@@ -739,8 +741,8 @@ namespace BD.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("DocumentNumber")
                         .IsRequired()
@@ -759,11 +761,9 @@ namespace BD.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("Observations")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("PracticePlace")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("TypeDocument")
@@ -773,8 +773,8 @@ namespace BD.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long?>("UpdatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("UserId")
                         .HasColumnType("varchar(255)");
@@ -803,8 +803,8 @@ namespace BD.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<long>("DivisionID")
                         .HasColumnType("bigint");
@@ -812,19 +812,14 @@ namespace BD.Migrations
                     b.Property<TimeOnly>("EndTime")
                         .HasColumnType("time(6)");
 
-                    b.Property<string>("ExampleName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
-
                     b.Property<TimeOnly>("StartTime")
                         .HasColumnType("time(6)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long?>("UpdatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<bool>("state")
                         .HasColumnType("tinyint(1)");
@@ -848,8 +843,8 @@ namespace BD.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<long>("CurriculumID")
                         .HasColumnType("bigint");
@@ -860,8 +855,8 @@ namespace BD.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long?>("UpdatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<bool>("state")
                         .HasColumnType("tinyint(1)");
@@ -888,8 +883,8 @@ namespace BD.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<long>("CurriculumID")
                         .HasColumnType("bigint");
@@ -912,8 +907,8 @@ namespace BD.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long?>("UpdatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<int>("Year")
                         .HasColumnType("int");
@@ -942,8 +937,8 @@ namespace BD.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long>("CreatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<long>("DivisionId")
                         .HasColumnType("bigint");
@@ -967,8 +962,8 @@ namespace BD.Migrations
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long?>("UpdatedBy")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("char(36)");
 
                     b.Property<bool>("state")
                         .HasColumnType("tinyint(1)");
@@ -1010,35 +1005,35 @@ namespace BD.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "6e78ddf7-447e-4ea8-a613-9d250fdec7bc",
+                            Id = "rol-directivo-id",
                             ConcurrencyStamp = "1",
                             Name = "Directivo",
                             NormalizedName = "DIRECTIVO"
                         },
                         new
                         {
-                            Id = "f3d5d797-69bd-4abd-a4bb-2e9ca7ac3400",
+                            Id = "59c6f3b4-6ec5-453e-ad14-c3e7f76a821d",
                             ConcurrencyStamp = "2",
                             Name = "Preceptor",
                             NormalizedName = "PRECEPTOR"
                         },
                         new
                         {
-                            Id = "eb1db0cd-25c0-4bb1-8896-e1951216db77",
+                            Id = "e8ebb9d9-3d43-46f8-84df-d41d12660581",
                             ConcurrencyStamp = "3",
                             Name = "Preceptor_Auxiliar",
                             NormalizedName = "PRECEPTOR_AUXILIAR"
                         },
                         new
                         {
-                            Id = "0b683cab-b42b-49b5-805a-7def3aefe34b",
+                            Id = "2950d796-2bda-4218-aafc-ce476dfec759",
                             ConcurrencyStamp = "4",
                             Name = "Docente",
                             NormalizedName = "DOCENTE"
                         },
                         new
                         {
-                            Id = "3ab31832-f477-453d-99e6-9b9f0b067f47",
+                            Id = "811a8dab-79de-45af-9b80-f1dd88f3f73b",
                             ConcurrencyStamp = "5",
                             Name = "Estudiante",
                             NormalizedName = "ESTUDIANTE"
@@ -1132,6 +1127,24 @@ namespace BD.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "superadminISPT-2026",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "d7d9f5ab-4639-45a9-b27d-aee689c825ae",
+                            Email = "",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "",
+                            NormalizedUserName = "SUPERADMINISPT-2026",
+                            PasswordHash = "AQAAAAIAAYagAAAAECbGLx7Gt6c2OWpuHV2acp6uOgjkc2tz1iRDyURk1iWtk//hXI9KEYsuzNAdSLqN3Q==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "36f0a73e-dc45-48ef-92c8-19ddfe9c89f0",
+                            TwoFactorEnabled = false,
+                            UserName = "SuperadminISPT-2026"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -1194,6 +1207,13 @@ namespace BD.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "superadminISPT-2026",
+                            RoleId = "rol-directivo-id"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>

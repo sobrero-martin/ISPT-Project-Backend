@@ -9,10 +9,10 @@ namespace BD.Entidades
         public long PersonId { get; set; }
         public Person Person { get; set; }
         
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
+        public string? Email { get; set; }
+        public string? PhoneNumber { get; set; }
         
-        public string EmergencyNumber { get; set; }
-        public string ContactNameEmergency { get; set; }
+        public string? EmergencyNumber { get; set; }
+        public string? ContactNameEmergency { get; set; }
     }
 }

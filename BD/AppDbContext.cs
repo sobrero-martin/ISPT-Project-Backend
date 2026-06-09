@@ -46,6 +46,7 @@ namespace BD
             builder.Entity<IdentityRole>().HasData(
                 new IdentityRole
                 {
+                    Id = "rol-directivo-id",
                     Name = "Directivo",
                     NormalizedName = "DIRECTIVO",
                     ConcurrencyStamp = "1"
@@ -70,6 +71,28 @@ namespace BD
                     NormalizedName = "ESTUDIANTE",
                     ConcurrencyStamp = "5"
                 });
+
+            var adminUser = new IdentityUser()
+            {
+                Id = "superadminISPT-2026",
+                UserName = "SuperadminISPT-2026", 
+                NormalizedUserName = "SUPERADMINISPT-2026",
+                Email = "",
+                NormalizedEmail = "",
+                EmailConfirmed = true,
+                SecurityStamp = Guid.NewGuid().ToString()
+            };
+            
+            adminUser.PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(adminUser, "!ISPT-AQUILES-#2026#");
+            builder.Entity<IdentityUser>().HasData(adminUser);
+            
+            builder.Entity<IdentityUserRole<string>>().HasData(
+                new IdentityUserRole<string>
+                {
+                    UserId = "superadminISPT-2026",
+                    RoleId = "rol-directivo-id"
+                }
+            );
         }
         
         public override int SaveChanges()

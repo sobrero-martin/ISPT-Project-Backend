@@ -21,9 +21,9 @@ namespace BD.Entidades
         public DateTime? UpdatedAt { get; set; }
         
         [JsonIgnore]
-        public long CreatedBy { get; set; }
+        public Guid CreatedBy { get; set; }
         
         [JsonIgnore]
-        public long? UpdatedBy { get; set; }
+        public Guid? UpdatedBy { get; set; }
     }
 }

@@ -58,7 +58,9 @@ public class TokenService : ITokenService
             ValidateIssuer = false,
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!)),
-            ValidateLifetime = false 
+            ValidateLifetime = false,
+            NameClaimType = "Username",
+            RoleClaimType = "Role"
         };
 
         var tokenHandler = new JwtSecurityTokenHandler();

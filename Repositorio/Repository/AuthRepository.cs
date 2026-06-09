@@ -47,14 +47,14 @@ public class AuthRepository : IAuthRepository
             var userRoles = await userManager.GetRolesAsync(user);
             var authClaims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id),
-                new Claim(ClaimTypes.Name, user.UserName!),
+                new Claim("ID", user.Id),
+                new Claim("Username", user.UserName!),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
 
             foreach (var role in userRoles)
             {
-                authClaims.Add(new Claim(ClaimTypes.Role, role));
+                authClaims.Add(new Claim("Role", role));
             }
 
             var person = await appDbContext.Persons.FirstOrDefaultAsync(p => p.UserId == user.Id);
@@ -111,7 +111,7 @@ public class AuthRepository : IAuthRepository
         try
         {
             var principal = tokenService.GetPrincipalFromExpiredToken(tokenDTO.AccessToken);
-            var username = principal?.Identity?.Name;
+            var username = principal?.FindFirst("Username")?.Value;
 
             if (username == null)
                 return new ResponseDTO<TokenDTO>()

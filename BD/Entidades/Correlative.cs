@@ -6,10 +6,10 @@ namespace BD.Entidades
 {
     public class Correlative : BaseEntity
     {
-        public long SubjectID { get; set; }
+        public long SubjectId { get; set; }
         public Subject? Subject { get; set; }
 
-        public long SubjectCorrelativeID { get; set; }
+        public long SubjectCorrelativeId { get; set; }
         public Subject? SubjectCorrelative { get; set; }
     }
 }

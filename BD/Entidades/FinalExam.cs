@@ -6,10 +6,10 @@ namespace BD.Entidades
 {
     public class FinalExam : BaseEntity
     {
-        public long CurriculumID { get; set; }
+        public long CurriculumId { get; set; }
         public Curriculum? Curriculum { get; set; }
 
-        public long PersonID { get; set; }
+        public long PersonId { get; set; }
         public Person? Person { get; set; }
 
         public DateTime Date { get; set; }

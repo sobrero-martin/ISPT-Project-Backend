@@ -35,6 +35,18 @@ namespace ISPT_Project_Backend.Server.Controllers
             return Ok(users);
         }
 
+        [HttpGet("{id:long}")]
+        public async Task<ActionResult<CareerDTO>> GetById(long id)
+        {
+            var career = await careerRepository.GetById(id);
+
+            if (career == null)
+            {
+                return NotFound("Carrera no encontrada");
+            }
+
+            return Ok(career);
+        }
 
         [HttpPost]
         public async Task<ActionResult<int>> Post(Career career)

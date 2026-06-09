@@ -6,7 +6,7 @@ namespace BD.Entidades
 {
     public class SchoolYear : BaseEntity
     {
-        public long CurriculumID { get; set; }
+        public long CurriculumId { get; set; }
         public Curriculum? Curriculum { get; set; }
 
         public int SchoolYearNumber { get; set; }

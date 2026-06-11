@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DTO.DTOs
+namespace DTO.DTOs.CareerDTO
 {
     public class CurriculumDTO
     {

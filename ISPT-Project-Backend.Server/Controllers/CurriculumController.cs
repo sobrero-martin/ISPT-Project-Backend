@@ -1,7 +1,7 @@
 ﻿using BD.Entidades;
-using DTO.DTOs;
+using DTO.DTOs.CareerDTO;
 using Microsoft.AspNetCore.Mvc;
-using Repositorio.Repository;
+using Repositorio.Implementations;
 
 namespace ISPT_Project_Backend.Server.Controllers
 {

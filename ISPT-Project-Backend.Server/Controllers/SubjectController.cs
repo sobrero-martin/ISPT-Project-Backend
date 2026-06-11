@@ -1,7 +1,7 @@
 ﻿using BD.Entidades;
-using DTO.DTOs;
+using DTO.DTOs.CareerDTO;
 using Microsoft.AspNetCore.Mvc;
-using Repositorio.Repository;
+using Repositorio.Implementations;
 
 namespace ISPT_Project_Backend.Server.Controllers
 {
@@ -47,6 +47,25 @@ namespace ISPT_Project_Backend.Server.Controllers
 
             return Ok(subject);
         }
+
+        [HttpGet("{curriculumId:long}/{subjectId:long}")]
+        public async Task<ActionResult<List<SubjectDTO>>> GetPossibleCorrelatives(long curriculumId, long subjectId)
+        {
+            var subjects = await subjectRepository.GetPossibleCorrelatives(curriculumId, subjectId);
+
+            if (subjects == null)
+            {
+                return NotFound("No se encontraron materias");
+            }
+
+            if (subjects.Count == 0)
+            {
+                return NotFound("No existen materias en este plan de estudio con un año académico anterior al de la materia seleccionada");
+            }
+
+            return Ok(subjects);
+        }
+
 
         [HttpPost]
         public async Task<ActionResult<int>> Post(Subject subject)

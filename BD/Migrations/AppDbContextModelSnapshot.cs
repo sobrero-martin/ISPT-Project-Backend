@@ -198,10 +198,10 @@ namespace BD.Migrations
                     b.Property<Guid>("CreatedBy")
                         .HasColumnType("char(36)");
 
-                    b.Property<long>("SubjectCorrelativeID")
+                    b.Property<long>("SubjectCorrelativeId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("SubjectID")
+                    b.Property<long>("SubjectId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -215,9 +215,9 @@ namespace BD.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SubjectCorrelativeID");
+                    b.HasIndex("SubjectCorrelativeId");
 
-                    b.HasIndex("SubjectID");
+                    b.HasIndex("SubjectId");
 
                     b.ToTable("Correlatives");
                 });
@@ -230,7 +230,7 @@ namespace BD.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("CareerID")
+                    b.Property<long>("CareerId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("CreatedAt")
@@ -266,7 +266,7 @@ namespace BD.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CareerID");
+                    b.HasIndex("CareerId");
 
                     b.ToTable("Curriculums");
                 });
@@ -330,10 +330,10 @@ namespace BD.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<long>("SchoolYearID")
+                    b.Property<long>("SchoolYearId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("SubjectID")
+                    b.Property<long>("SubjectId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -347,9 +347,9 @@ namespace BD.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SchoolYearID");
+                    b.HasIndex("SchoolYearId");
 
-                    b.HasIndex("SubjectID");
+                    b.HasIndex("SubjectId");
 
                     b.ToTable("Divisions");
                 });
@@ -371,7 +371,7 @@ namespace BD.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<long>("DivisionID")
+                    b.Property<long>("DivisionId")
                         .HasColumnType("bigint");
 
                     b.Property<int>("Number")
@@ -391,7 +391,7 @@ namespace BD.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DivisionID");
+                    b.HasIndex("DivisionId");
 
                     b.ToTable("DivisionExams");
                 });
@@ -506,7 +506,7 @@ namespace BD.Migrations
                     b.Property<Guid>("CreatedBy")
                         .HasColumnType("char(36)");
 
-                    b.Property<long>("DivisionID")
+                    b.Property<long>("DivisionId")
                         .HasColumnType("bigint");
 
                     b.Property<long?>("FileDivisionObservations")
@@ -516,7 +516,7 @@ namespace BD.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<long>("FileID")
+                    b.Property<long>("FileId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -530,9 +530,9 @@ namespace BD.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DivisionID");
+                    b.HasIndex("DivisionId");
 
-                    b.HasIndex("FileID");
+                    b.HasIndex("FileId");
 
                     b.ToTable("FileDivisions");
                 });
@@ -551,7 +551,7 @@ namespace BD.Migrations
                     b.Property<Guid>("CreatedBy")
                         .HasColumnType("char(36)");
 
-                    b.Property<long>("CurriculumID")
+                    b.Property<long>("CurriculumId")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("Date")
@@ -560,7 +560,7 @@ namespace BD.Migrations
                     b.Property<int>("PageNumber")
                         .HasColumnType("int");
 
-                    b.Property<long>("PersonID")
+                    b.Property<long>("PersonId")
                         .HasColumnType("bigint");
 
                     b.Property<int>("RecordBook")
@@ -580,9 +580,9 @@ namespace BD.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CurriculumID");
+                    b.HasIndex("CurriculumId");
 
-                    b.HasIndex("PersonID");
+                    b.HasIndex("PersonId");
 
                     b.ToTable("FinalExams");
                 });
@@ -601,10 +601,10 @@ namespace BD.Migrations
                     b.Property<Guid>("CreatedBy")
                         .HasColumnType("char(36)");
 
-                    b.Property<long>("FileID")
+                    b.Property<long>("FileId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("FinalExamID")
+                    b.Property<long>("FinalExamId")
                         .HasColumnType("bigint");
 
                     b.Property<int>("Grade")
@@ -625,9 +625,9 @@ namespace BD.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FileID");
+                    b.HasIndex("FileId");
 
-                    b.HasIndex("FinalExamID");
+                    b.HasIndex("FinalExamId");
 
                     b.ToTable("FinalExamGrades");
                 });
@@ -806,7 +806,7 @@ namespace BD.Migrations
                     b.Property<Guid>("CreatedBy")
                         .HasColumnType("char(36)");
 
-                    b.Property<long>("DivisionID")
+                    b.Property<long>("DivisionId")
                         .HasColumnType("bigint");
 
                     b.Property<TimeOnly>("EndTime")
@@ -826,7 +826,7 @@ namespace BD.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DivisionID")
+                    b.HasIndex("DivisionId")
                         .IsUnique();
 
                     b.ToTable("Schedules");
@@ -846,7 +846,7 @@ namespace BD.Migrations
                     b.Property<Guid>("CreatedBy")
                         .HasColumnType("char(36)");
 
-                    b.Property<long>("CurriculumID")
+                    b.Property<long>("CurriculumId")
                         .HasColumnType("bigint");
 
                     b.Property<int>("SchoolYearNumber")
@@ -863,7 +863,7 @@ namespace BD.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CurriculumID");
+                    b.HasIndex("CurriculumId");
 
                     b.ToTable("SchoolYears");
                 });
@@ -886,7 +886,7 @@ namespace BD.Migrations
                     b.Property<Guid>("CreatedBy")
                         .HasColumnType("char(36)");
 
-                    b.Property<long>("CurriculumID")
+                    b.Property<long>("CurriculumId")
                         .HasColumnType("bigint");
 
                     b.Property<int>("Duration")
@@ -921,7 +921,7 @@ namespace BD.Migrations
                     b.HasIndex("Code")
                         .IsUnique();
 
-                    b.HasIndex("CurriculumID");
+                    b.HasIndex("CurriculumId");
 
                     b.ToTable("Subjects");
                 });
@@ -1012,28 +1012,28 @@ namespace BD.Migrations
                         },
                         new
                         {
-                            Id = "59c6f3b4-6ec5-453e-ad14-c3e7f76a821d",
+                            Id = "6ada9f17-9d5a-4a5a-8477-00113abc6223",
                             ConcurrencyStamp = "2",
                             Name = "Preceptor",
                             NormalizedName = "PRECEPTOR"
                         },
                         new
                         {
-                            Id = "e8ebb9d9-3d43-46f8-84df-d41d12660581",
+                            Id = "e1b86910-9039-4a99-bc4e-6c47d86a4ae1",
                             ConcurrencyStamp = "3",
                             Name = "Preceptor_Auxiliar",
                             NormalizedName = "PRECEPTOR_AUXILIAR"
                         },
                         new
                         {
-                            Id = "2950d796-2bda-4218-aafc-ce476dfec759",
+                            Id = "b9869b0a-cc6d-423a-86b8-ca6a121bed4c",
                             ConcurrencyStamp = "4",
                             Name = "Docente",
                             NormalizedName = "DOCENTE"
                         },
                         new
                         {
-                            Id = "811a8dab-79de-45af-9b80-f1dd88f3f73b",
+                            Id = "0277c8c0-5cfe-4f19-8f08-8230456c9ae1",
                             ConcurrencyStamp = "5",
                             Name = "Estudiante",
                             NormalizedName = "ESTUDIANTE"
@@ -1133,15 +1133,15 @@ namespace BD.Migrations
                         {
                             Id = "superadminISPT-2026",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d7d9f5ab-4639-45a9-b27d-aee689c825ae",
+                            ConcurrencyStamp = "0ce963d6-6a86-4753-8090-fffb4db83e3f",
                             Email = "",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "",
                             NormalizedUserName = "SUPERADMINISPT-2026",
-                            PasswordHash = "AQAAAAIAAYagAAAAECbGLx7Gt6c2OWpuHV2acp6uOgjkc2tz1iRDyURk1iWtk//hXI9KEYsuzNAdSLqN3Q==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEIbc8G6ZpztIU8T2WQAhgiD49qQ14JHrMI3rgl119y6LXnlqXa3/hGzaadRv7LkAqw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "36f0a73e-dc45-48ef-92c8-19ddfe9c89f0",
+                            SecurityStamp = "fbc1e1ce-be7d-4d8d-b03c-398a6eb901c0",
                             TwoFactorEnabled = false,
                             UserName = "SuperadminISPT-2026"
                         });
@@ -1280,13 +1280,13 @@ namespace BD.Migrations
                 {
                     b.HasOne("BD.Entidades.Subject", "SubjectCorrelative")
                         .WithMany()
-                        .HasForeignKey("SubjectCorrelativeID")
+                        .HasForeignKey("SubjectCorrelativeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BD.Entidades.Subject", "Subject")
                         .WithMany()
-                        .HasForeignKey("SubjectID")
+                        .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1299,7 +1299,7 @@ namespace BD.Migrations
                 {
                     b.HasOne("BD.Entidades.Career", "Career")
                         .WithMany()
-                        .HasForeignKey("CareerID")
+                        .HasForeignKey("CareerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1321,13 +1321,13 @@ namespace BD.Migrations
                 {
                     b.HasOne("BD.Entidades.SchoolYear", "SchoolYear")
                         .WithMany()
-                        .HasForeignKey("SchoolYearID")
+                        .HasForeignKey("SchoolYearId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BD.Entidades.Subject", "Subject")
                         .WithMany()
-                        .HasForeignKey("SubjectID")
+                        .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1340,7 +1340,7 @@ namespace BD.Migrations
                 {
                     b.HasOne("BD.Entidades.Division", "Division")
                         .WithMany()
-                        .HasForeignKey("DivisionID")
+                        .HasForeignKey("DivisionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1373,13 +1373,13 @@ namespace BD.Migrations
                 {
                     b.HasOne("BD.Entidades.Division", "Division")
                         .WithMany()
-                        .HasForeignKey("DivisionID")
+                        .HasForeignKey("DivisionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BD.Entidades.File", "File")
                         .WithMany()
-                        .HasForeignKey("FileID")
+                        .HasForeignKey("FileId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1392,13 +1392,13 @@ namespace BD.Migrations
                 {
                     b.HasOne("BD.Entidades.Curriculum", "Curriculum")
                         .WithMany()
-                        .HasForeignKey("CurriculumID")
+                        .HasForeignKey("CurriculumId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BD.Entidades.Person", "Person")
                         .WithMany()
-                        .HasForeignKey("PersonID")
+                        .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1411,13 +1411,13 @@ namespace BD.Migrations
                 {
                     b.HasOne("BD.Entidades.File", "File")
                         .WithMany()
-                        .HasForeignKey("FileID")
+                        .HasForeignKey("FileId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BD.Entidades.FinalExam", "FinalExam")
                         .WithMany()
-                        .HasForeignKey("FinalExamID")
+                        .HasForeignKey("FinalExamId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1469,7 +1469,7 @@ namespace BD.Migrations
                 {
                     b.HasOne("BD.Entidades.Division", "Division")
                         .WithOne("Schedule")
-                        .HasForeignKey("BD.Entidades.Schedule", "DivisionID")
+                        .HasForeignKey("BD.Entidades.Schedule", "DivisionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1480,7 +1480,7 @@ namespace BD.Migrations
                 {
                     b.HasOne("BD.Entidades.Curriculum", "Curriculum")
                         .WithMany()
-                        .HasForeignKey("CurriculumID")
+                        .HasForeignKey("CurriculumId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1491,7 +1491,7 @@ namespace BD.Migrations
                 {
                     b.HasOne("BD.Entidades.Curriculum", "Curriculum")
                         .WithMany()
-                        .HasForeignKey("CurriculumID")
+                        .HasForeignKey("CurriculumId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

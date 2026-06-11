@@ -1,6 +1,6 @@
 ﻿using BD;
 using BD.Entidades;
-using DTO.DTOs;
+using DTO.DTOs.CareerDTO;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

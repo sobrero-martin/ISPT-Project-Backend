@@ -268,7 +268,7 @@ namespace BD.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    CareerID = table.Column<long>(type: "bigint", nullable: false),
+                    CareerId = table.Column<long>(type: "bigint", nullable: false),
                     Resolution = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     StartDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
@@ -285,8 +285,8 @@ namespace BD.Migrations
                 {
                     table.PrimaryKey("PK_Curriculums", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Curriculums_Careers_CareerID",
-                        column: x => x.CareerID,
+                        name: "FK_Curriculums_Careers_CareerId",
+                        column: x => x.CareerId,
                         principalTable: "Careers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -419,8 +419,8 @@ namespace BD.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    CurriculumID = table.Column<long>(type: "bigint", nullable: false),
-                    PersonID = table.Column<long>(type: "bigint", nullable: false),
+                    CurriculumId = table.Column<long>(type: "bigint", nullable: false),
+                    PersonId = table.Column<long>(type: "bigint", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Time = table.Column<TimeOnly>(type: "time(6)", nullable: false),
                     RecordBook = table.Column<int>(type: "int", nullable: false),
@@ -435,14 +435,14 @@ namespace BD.Migrations
                 {
                     table.PrimaryKey("PK_FinalExams", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_FinalExams_Curriculums_CurriculumID",
-                        column: x => x.CurriculumID,
+                        name: "FK_FinalExams_Curriculums_CurriculumId",
+                        column: x => x.CurriculumId,
                         principalTable: "Curriculums",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_FinalExams_Persons_PersonID",
-                        column: x => x.PersonID,
+                        name: "FK_FinalExams_Persons_PersonId",
+                        column: x => x.PersonId,
                         principalTable: "Persons",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -455,7 +455,7 @@ namespace BD.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    CurriculumID = table.Column<long>(type: "bigint", nullable: false),
+                    CurriculumId = table.Column<long>(type: "bigint", nullable: false),
                     SchoolYearNumber = table.Column<int>(type: "int", nullable: false),
                     state = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
@@ -467,8 +467,8 @@ namespace BD.Migrations
                 {
                     table.PrimaryKey("PK_SchoolYears", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SchoolYears_Curriculums_CurriculumID",
-                        column: x => x.CurriculumID,
+                        name: "FK_SchoolYears_Curriculums_CurriculumId",
+                        column: x => x.CurriculumId,
                         principalTable: "Curriculums",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -481,7 +481,7 @@ namespace BD.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    CurriculumID = table.Column<long>(type: "bigint", nullable: false),
+                    CurriculumId = table.Column<long>(type: "bigint", nullable: false),
                     Code = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Name = table.Column<string>(type: "longtext", nullable: false)
@@ -502,8 +502,8 @@ namespace BD.Migrations
                 {
                     table.PrimaryKey("PK_Subjects", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Subjects_Curriculums_CurriculumID",
-                        column: x => x.CurriculumID,
+                        name: "FK_Subjects_Curriculums_CurriculumId",
+                        column: x => x.CurriculumId,
                         principalTable: "Curriculums",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -549,8 +549,8 @@ namespace BD.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    FinalExamID = table.Column<long>(type: "bigint", nullable: false),
-                    FileID = table.Column<long>(type: "bigint", nullable: false),
+                    FinalExamId = table.Column<long>(type: "bigint", nullable: false),
+                    FileId = table.Column<long>(type: "bigint", nullable: false),
                     Grade = table.Column<int>(type: "int", nullable: false),
                     GradeState = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -564,14 +564,14 @@ namespace BD.Migrations
                 {
                     table.PrimaryKey("PK_FinalExamGrades", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_FinalExamGrades_Files_FileID",
-                        column: x => x.FileID,
+                        name: "FK_FinalExamGrades_Files_FileId",
+                        column: x => x.FileId,
                         principalTable: "Files",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_FinalExamGrades_FinalExams_FinalExamID",
-                        column: x => x.FinalExamID,
+                        name: "FK_FinalExamGrades_FinalExams_FinalExamId",
+                        column: x => x.FinalExamId,
                         principalTable: "FinalExams",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -584,8 +584,8 @@ namespace BD.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    SubjectID = table.Column<long>(type: "bigint", nullable: false),
-                    SubjectCorrelativeID = table.Column<long>(type: "bigint", nullable: false),
+                    SubjectId = table.Column<long>(type: "bigint", nullable: false),
+                    SubjectCorrelativeId = table.Column<long>(type: "bigint", nullable: false),
                     state = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
@@ -596,14 +596,14 @@ namespace BD.Migrations
                 {
                     table.PrimaryKey("PK_Correlatives", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Correlatives_Subjects_SubjectCorrelativeID",
-                        column: x => x.SubjectCorrelativeID,
+                        name: "FK_Correlatives_Subjects_SubjectCorrelativeId",
+                        column: x => x.SubjectCorrelativeId,
                         principalTable: "Subjects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Correlatives_Subjects_SubjectID",
-                        column: x => x.SubjectID,
+                        name: "FK_Correlatives_Subjects_SubjectId",
+                        column: x => x.SubjectId,
                         principalTable: "Subjects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -616,8 +616,8 @@ namespace BD.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    SubjectID = table.Column<long>(type: "bigint", nullable: false),
-                    SchoolYearID = table.Column<long>(type: "bigint", nullable: false),
+                    SubjectId = table.Column<long>(type: "bigint", nullable: false),
+                    SchoolYearId = table.Column<long>(type: "bigint", nullable: false),
                     Name = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     DivisionState = table.Column<string>(type: "longtext", nullable: false)
@@ -632,14 +632,14 @@ namespace BD.Migrations
                 {
                     table.PrimaryKey("PK_Divisions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Divisions_SchoolYears_SchoolYearID",
-                        column: x => x.SchoolYearID,
+                        name: "FK_Divisions_SchoolYears_SchoolYearId",
+                        column: x => x.SchoolYearId,
                         principalTable: "SchoolYears",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Divisions_Subjects_SubjectID",
-                        column: x => x.SubjectID,
+                        name: "FK_Divisions_Subjects_SubjectId",
+                        column: x => x.SubjectId,
                         principalTable: "Subjects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -679,7 +679,7 @@ namespace BD.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    DivisionID = table.Column<long>(type: "bigint", nullable: false),
+                    DivisionId = table.Column<long>(type: "bigint", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Type = table.Column<int>(type: "int", nullable: false),
                     Number = table.Column<int>(type: "int", nullable: false),
@@ -693,8 +693,8 @@ namespace BD.Migrations
                 {
                     table.PrimaryKey("PK_DivisionExams", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DivisionExams_Divisions_DivisionID",
-                        column: x => x.DivisionID,
+                        name: "FK_DivisionExams_Divisions_DivisionId",
+                        column: x => x.DivisionId,
                         principalTable: "Divisions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -707,8 +707,8 @@ namespace BD.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    FileID = table.Column<long>(type: "bigint", nullable: false),
-                    DivisionID = table.Column<long>(type: "bigint", nullable: false),
+                    FileId = table.Column<long>(type: "bigint", nullable: false),
+                    DivisionId = table.Column<long>(type: "bigint", nullable: false),
                     FileDivisionState = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     FileDivisionObservations = table.Column<long>(type: "bigint", nullable: true),
@@ -722,14 +722,14 @@ namespace BD.Migrations
                 {
                     table.PrimaryKey("PK_FileDivisions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_FileDivisions_Divisions_DivisionID",
-                        column: x => x.DivisionID,
+                        name: "FK_FileDivisions_Divisions_DivisionId",
+                        column: x => x.DivisionId,
                         principalTable: "Divisions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_FileDivisions_Files_FileID",
-                        column: x => x.FileID,
+                        name: "FK_FileDivisions_Files_FileId",
+                        column: x => x.FileId,
                         principalTable: "Files",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -742,7 +742,7 @@ namespace BD.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    DivisionID = table.Column<long>(type: "bigint", nullable: false),
+                    DivisionId = table.Column<long>(type: "bigint", nullable: false),
                     StartTime = table.Column<TimeOnly>(type: "time(6)", nullable: false),
                     EndTime = table.Column<TimeOnly>(type: "time(6)", nullable: false),
                     state = table.Column<bool>(type: "tinyint(1)", nullable: false),
@@ -755,8 +755,8 @@ namespace BD.Migrations
                 {
                     table.PrimaryKey("PK_Schedules", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Schedules_Divisions_DivisionID",
-                        column: x => x.DivisionID,
+                        name: "FK_Schedules_Divisions_DivisionId",
+                        column: x => x.DivisionId,
                         principalTable: "Divisions",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -871,22 +871,22 @@ namespace BD.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "2950d796-2bda-4218-aafc-ce476dfec759", "4", "Docente", "DOCENTE" },
-                    { "59c6f3b4-6ec5-453e-ad14-c3e7f76a821d", "2", "Preceptor", "PRECEPTOR" },
-                    { "811a8dab-79de-45af-9b80-f1dd88f3f73b", "5", "Estudiante", "ESTUDIANTE" },
-                    { "e8ebb9d9-3d43-46f8-84df-d41d12660581", "3", "Preceptor_Auxiliar", "PRECEPTOR_AUXILIAR" },
+                    { "10c0bd31-f67b-4808-adc1-274ec7fcb1a5", "5", "Estudiante", "ESTUDIANTE" },
+                    { "be297c86-9998-4e83-9b64-ef2c484d222f", "4", "Docente", "DOCENTE" },
+                    { "c1ca4076-af44-4184-9ea3-c4100eea34d7", "2", "Preceptor", "PRECEPTOR" },
+                    { "e4222abf-c02a-4009-b938-42221dd93e78", "3", "Preceptor_Auxiliar", "PRECEPTOR_AUXILIAR" },
                     { "rol-directivo-id", "1", "Directivo", "DIRECTIVO" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "superadminISPT-2026", 0, "d7d9f5ab-4639-45a9-b27d-aee689c825ae", "", true, false, null, "", "SUPERADMINISPT-2026", "AQAAAAIAAYagAAAAECbGLx7Gt6c2OWpuHV2acp6uOgjkc2tz1iRDyURk1iWtk//hXI9KEYsuzNAdSLqN3Q==", null, false, "36f0a73e-dc45-48ef-92c8-19ddfe9c89f0", false, "SuperadminISPT-2026" });
+                values: new object[] { "ae65a54a-aab5-4d0c-aa17-554334b49e8c", 0, "d100234d-19bb-4873-a724-3d3371693216", "", true, false, null, "", "SUPERADMINISPT-2026", "AQAAAAIAAYagAAAAEPZyo96/oP7MxB6+BA0gouLrsZUuVHCH1PB2xzsz33PNrev0RhupN58ZHr3GWDuChw==", null, false, "d5198440-62e9-46c3-aec7-ddd61859a9e1", false, "SuperadminISPT-2026" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "RoleId", "UserId" },
-                values: new object[] { "rol-directivo-id", "superadminISPT-2026" });
+                values: new object[] { "rol-directivo-id", "ae65a54a-aab5-4d0c-aa17-554334b49e8c" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -947,19 +947,19 @@ namespace BD.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Correlatives_SubjectCorrelativeID",
+                name: "IX_Correlatives_SubjectCorrelativeId",
                 table: "Correlatives",
-                column: "SubjectCorrelativeID");
+                column: "SubjectCorrelativeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Correlatives_SubjectID",
+                name: "IX_Correlatives_SubjectId",
                 table: "Correlatives",
-                column: "SubjectID");
+                column: "SubjectId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Curriculums_CareerID",
+                name: "IX_Curriculums_CareerId",
                 table: "Curriculums",
-                column: "CareerID");
+                column: "CareerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Degrees_PersonId",
@@ -967,19 +967,19 @@ namespace BD.Migrations
                 column: "PersonId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DivisionExams_DivisionID",
+                name: "IX_DivisionExams_DivisionId",
                 table: "DivisionExams",
-                column: "DivisionID");
+                column: "DivisionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Divisions_SchoolYearID",
+                name: "IX_Divisions_SchoolYearId",
                 table: "Divisions",
-                column: "SchoolYearID");
+                column: "SchoolYearId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Divisions_SubjectID",
+                name: "IX_Divisions_SubjectId",
                 table: "Divisions",
-                column: "SubjectID");
+                column: "SubjectId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Documentations_FileId",
@@ -987,14 +987,14 @@ namespace BD.Migrations
                 column: "FileId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FileDivisions_DivisionID",
+                name: "IX_FileDivisions_DivisionId",
                 table: "FileDivisions",
-                column: "DivisionID");
+                column: "DivisionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FileDivisions_FileID",
+                name: "IX_FileDivisions_FileId",
                 table: "FileDivisions",
-                column: "FileID");
+                column: "FileId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Files_StudentId",
@@ -1002,24 +1002,24 @@ namespace BD.Migrations
                 column: "StudentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FinalExamGrades_FileID",
+                name: "IX_FinalExamGrades_FileId",
                 table: "FinalExamGrades",
-                column: "FileID");
+                column: "FileId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FinalExamGrades_FinalExamID",
+                name: "IX_FinalExamGrades_FinalExamId",
                 table: "FinalExamGrades",
-                column: "FinalExamID");
+                column: "FinalExamId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FinalExams_CurriculumID",
+                name: "IX_FinalExams_CurriculumId",
                 table: "FinalExams",
-                column: "CurriculumID");
+                column: "CurriculumId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FinalExams_PersonID",
+                name: "IX_FinalExams_PersonId",
                 table: "FinalExams",
-                column: "PersonID");
+                column: "PersonId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Grades_DivisionExamId",
@@ -1049,15 +1049,15 @@ namespace BD.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Schedules_DivisionID",
+                name: "IX_Schedules_DivisionId",
                 table: "Schedules",
-                column: "DivisionID",
+                column: "DivisionId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_SchoolYears_CurriculumID",
+                name: "IX_SchoolYears_CurriculumId",
                 table: "SchoolYears",
-                column: "CurriculumID");
+                column: "CurriculumId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Subjects_Code",
@@ -1066,9 +1066,9 @@ namespace BD.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Subjects_CurriculumID",
+                name: "IX_Subjects_CurriculumId",
                 table: "Subjects",
-                column: "CurriculumID");
+                column: "CurriculumId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TeacherDivisions_DivisionId",

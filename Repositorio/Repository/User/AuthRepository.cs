@@ -57,7 +57,7 @@ public class AuthRepository : IAuthRepository
                 authClaims.Add(new Claim("Role", role));
             }
 
-            var person = await appDbContext.Persons.FirstOrDefaultAsync(p => p.UserId == user.Id);
+            var person = await appDbContext.People.FirstOrDefaultAsync(p => p.UserId == user.Id);
             if (person != null) authClaims.Add(new Claim("Fullname", $"{person.Firstname} {person.Lastname}"));
 
             var accessToken = tokenService.GenerateAccessToken(authClaims);

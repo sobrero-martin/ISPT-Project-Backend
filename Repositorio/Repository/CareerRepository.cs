@@ -1,11 +1,9 @@
 ﻿using BD;
 using BD.Entidades;
-using DTO.DTOs.CareerDTO;
-using DTO.DTOs.DTO_Response;
+using DTO.DTOs;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Text;
 
 namespace Repositorio.Repository
@@ -19,7 +17,7 @@ namespace Repositorio.Repository
             this.context = context;
         }
 
-        public async Task<ResponseDTO<List<CareerDTO>>> GetFull()
+        public async Task<List<CareerDTO>> GetFull()
         {
             try 
             { 
@@ -54,7 +52,7 @@ namespace Repositorio.Repository
 
         }
 
-        public async Task<ResponseDTO<CareerDTO>> GetById(long id)
+        public async Task<CareerDTO> GetById(long id)
         {
             try
             {
@@ -132,57 +130,20 @@ namespace Repositorio.Repository
             }
         }
 
-        public async Task<ResponseDTO<string>> Put(long id, Career carrera)
+        public async Task<bool> Put(long id, Career carrera)
         {
+            if (id != carrera.Id) return false;
+
+            bool existe = await context.Set<Career>().AnyAsync(x => x.Id == id);
+            if (!existe) return false;
+
             try
             {
-                if (id != carrera.Id)
-                {
-                    return new ResponseDTO<string>
-                    {
-                        StatusCode = HttpStatusCode.BadRequest,
-                        Message = "El ID proporcionado no coincide con el ID de la carrera.",
-                        Object = null
-                    };
-                }
-
-                var existingCareer = await context.Set<Career>().FirstOrDefaultAsync(c => c.Id == id);
-
-                if (existingCareer == null)
-                {
-                    return new ResponseDTO<string>
-                    {
-                        StatusCode = HttpStatusCode.NotFound,
-                        Message = "Carrera no encontrada.",
-                        Object = null
-                    };
-                }
-
-                existingCareer.Name = carrera.Name;
-                existingCareer.Title = carrera.Title;
-
+                context.Set<Career>().Update(carrera);
                 await context.SaveChangesAsync();
-
-                return new ResponseDTO<string>
-                {
-                    StatusCode = HttpStatusCode.OK,
-                    Message = "Carrera actualizada exitosamente.",
-                    Object = null
-                };
+                return true;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error al actualizar la carrera: {ex.Message}");
-
-                return new ResponseDTO<string>
-                {
-                    StatusCode = HttpStatusCode.InternalServerError,
-                    Message = "Ocurrió un error al actualizar la carrera.",
-                    Object = null
-                };
-            }
-
-            
+            catch (Exception) { throw; }
         }
     }
 }

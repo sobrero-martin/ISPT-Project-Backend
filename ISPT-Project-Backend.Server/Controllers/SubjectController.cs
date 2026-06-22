@@ -1,8 +1,7 @@
 ﻿using BD.Entidades;
-using DTO.DTOs.CareerDTO;
-using DTO.DTOs.DTO_Response;
+using DTO.DTOs;
 using Microsoft.AspNetCore.Mvc;
-using Repositorio.Implementations;
+using Repositorio.Repository;
 
 namespace ISPT_Project_Backend.Server.Controllers
 {
@@ -19,43 +18,55 @@ namespace ISPT_Project_Backend.Server.Controllers
 
 
         [HttpGet("curriculum/{curriculumId:long}")]
-        public async Task<ActionResult<ResponseDTO<List<SubjectDTO>>>> GetByCurriculum(long curriculumId)
+        public async Task<ActionResult<List<SubjectDTO>>> GetByCurriculum(long curriculumId)
         {
-            var response = await subjectRepository.GetByCurriculum(curriculumId);
+            var subjects = await subjectRepository.GetByCurriculum(curriculumId);
 
-            return StatusCode((int)response.StatusCode, response);
+            if (subjects == null)
+            {
+                return NotFound("No se encontraron materias");
+            }
+
+            if (subjects.Count == 0)
+            {
+                return NotFound("No existen materias en este plan de estudio");
+            }
+
+            return Ok(subjects);
         }
 
         [HttpGet("{id:long}")]
-        public async Task<ActionResult<ResponseDTO<SubjectDTO>>> GetById(long id)
+        public async Task<ActionResult<SubjectDTO>> GetById(long id)
         {
-            var response = await subjectRepository.GetById(id);
+            var subject = await subjectRepository.GetById(id);
 
-            return StatusCode((int)response.StatusCode, response);
+            if (subject == null)
+            {
+                return NotFound("Materia no encontrada");
+            }
+
+            return Ok(subject);
         }
-
-        [HttpGet("{curriculumId:long}/{subjectId:long}")]
-        public async Task<ActionResult<ResponseDTO<List<SubjectDTO>>>> GetPossibleCorrelatives(long curriculumId, long subjectId)
-        {
-            var response = await subjectRepository.GetPossibleCorrelatives(curriculumId, subjectId);
-
-            return StatusCode((int)response.StatusCode, response);
-        }
-
 
         [HttpPost]
-        public async Task<ActionResult<ResponseDTO<SubjectDTO>>> Post(Subject subject)
+        public async Task<ActionResult<int>> Post(Subject subject)
         {
-            var response = await subjectRepository.Post(subject);
-
-            return StatusCode((int)response.StatusCode, response);
+            try
+            {
+                await subjectRepository.Post(subject);
+                return Ok(subject.Id);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpPut("{id:long}")]
-        public async Task<ActionResult<ResponseDTO<SubjectDTO>>> Put(long id, Subject subject)
+        public async Task<ActionResult> Put(long id, Subject subject)
         {
-            var response = await subjectRepository.Put(id, subject);
-            return StatusCode((int)response.StatusCode, response);
+            var result = await subjectRepository.Put(id, subject);
+            return Ok($"Subject with id {id} correctly updated");
         }
 
     }

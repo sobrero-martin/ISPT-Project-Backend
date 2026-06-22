@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using System.Net;
 using BD;
 using BD.Entidades;
@@ -38,82 +39,11 @@ public class PersonRepository : IPersonRepository
         this.pluralTypeName = pluralTypeName;
     }
 
-    public async Task<ResponseDTO<List<PersonDTO>>> GetAllPeopleByRol()
-    {
-        try
-        {
-            var peopleId = new List<string>();
-            foreach (var role in roleNames)
-            {
-                var peopleIdentity = await userManager.GetUsersInRoleAsync(role);
-                peopleId.AddRange(peopleIdentity.Select(p => p.Id));
-            }
-
-            peopleId = peopleId.Distinct().ToList();
-
-            var people = await bbdd.Persons
-                .AsNoTracking()
-                .Include(p => p.Location)
-                .Include(p => p.Contact)
-                .Where(p => peopleId.Contains(p.UserId))
-                .Select(p => new PersonDTO
-                {
-                    Id = p.Id,
-                    CUIL = p.CUIL,
-                    Firstname = p.Firstname,
-                    Lastname = p.Lastname,
-                    Birthdate = p.Birthdate,
-                    TypeDocument = p.TypeDocument,
-                    DocumentNumber = p.DocumentNumber,
-                    Gender = p.Gender,
-                    Observations = p.Observations,
-                    PracticePlace = p.PracticePlace,
-                    CreatedById = p.CreatedBy,
-                    LocationDTO = new LocationDTO()
-                    {
-                        Address = p.Location.Address,
-                        Province = p.Location.Province,
-                        Department = p.Location.Department,
-                        Country = p.Location.Country
-                    },
-                    ContactDTO = new ContactDTO
-                    {
-                        Email = p.Contact.Email,
-                        PhoneNumber = p.Contact.PhoneNumber,
-                        ContactNameEmergency = p.Contact.ContactNameEmergency,
-                        EmergencyNumber = p.Contact.EmergencyNumber,
-                    }
-                })
-                .ToListAsync();
-
-            return new ResponseDTO<List<PersonDTO>>()
-            {
-                StatusCode = HttpStatusCode.OK,
-                Message = roleNames.Count > 1
-                    ? $"¡Listado de personas con {pluralTypeName} obtenido con éxito!"
-                    : $"¡Listado de {pluralTypeName} obtenido con éxito!",
-                Object = people
-            };
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine($"Error al intentar obtener el listado de {pluralTypeName}: " + e.Message);
-            return new ResponseDTO<List<PersonDTO>>()
-            {
-                StatusCode = HttpStatusCode.InternalServerError,
-                Message = roleNames.Count > 1
-                    ? $"¡Hubo un error al intentar obtener el listado de personas con {pluralTypeName}!"
-                    : $"¡Hubo un error al intentar obtener el listado de {pluralTypeName}!",
-                Object = null
-            };
-        }
-    }
-
     public async Task<ResponseDTO<PersonDTO>> GetPerson(long id)
     {
         try
         {
-            var p = await bbdd.Persons.AsNoTracking()
+            var p = await bbdd.People.AsNoTracking()
                 .Include(p => p.Location)
                 .Include(p => p.Contact)
                 .FirstOrDefaultAsync(p => p.Id == id);
@@ -165,6 +95,73 @@ public class PersonRepository : IPersonRepository
         }
     }
 
+    public async Task<ResponseDTO<ContactDTO>> GetContactByPersonId(long id)
+    {
+        try
+        {
+            var c = await bbdd.Contacts.AsNoTracking()
+                .FirstOrDefaultAsync(p => p.PersonId == id);
+
+            if (c == null) throw new Exception($"No hay un {singularTypeName} con ese ID.");
+
+            return new ResponseDTO<ContactDTO>()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Message = "¡Operación éxitosa!",
+                Object = new ContactDTO()
+                {
+                    ContactId = c.Id,
+                    ContactNameEmergency = c.ContactNameEmergency,
+                    EmergencyNumber = c.EmergencyNumber,
+                    PhoneNumber = c.PhoneNumber,
+                    Email = c.Email,
+                }
+            };
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Error al intentar obtener el contacto de {singularTypeName}: " + e.Message);
+            return new ResponseDTO<ContactDTO>()
+            {
+                StatusCode = HttpStatusCode.InternalServerError,
+                Message = $"¡Hubo un error al intentar obtener el contacto del {singularTypeName}!",
+                Object = null
+            };
+        }
+    }
+
+    public async Task<ResponseDTO<ObservationDTO>> GetObservationByPersonId(long id)
+    {
+        try
+        {
+            var p = await bbdd.People.AsNoTracking()
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (p == null) throw new Exception($"No hay un {singularTypeName} con ese ID.");
+
+            return new ResponseDTO<ObservationDTO>()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Message = "¡Operación éxitosa!",
+                Object = new ObservationDTO()
+                {
+                    PersonId = p.Id,
+                    Observation = p.Observations
+                }
+            };
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Error al intentar obtener la observación de {singularTypeName}: " + e.Message);
+            return new ResponseDTO<ObservationDTO>()
+            {
+                StatusCode = HttpStatusCode.InternalServerError,
+                Message = $"¡Hubo un error al intentar obtener la observación del {singularTypeName}!",
+                Object = null
+            };
+        }
+    }
+
     public async Task<ResponseDTO<string>> AddPerson(PersonDTO personDTO)
     {
         using var transaction = await bbdd.Database.BeginTransactionAsync();
@@ -179,7 +176,16 @@ public class PersonRepository : IPersonRepository
             };
 
             var resultUsuario = await userManager.CreateAsync(newUser, personDTO.CUIL);
-            if (!resultUsuario.Succeeded) throw new Exception("Error al crear el usuario");
+            if (!resultUsuario.Succeeded)
+            {
+                if (resultUsuario.Errors.Any(x => x.Code == "DuplicateUserName"))
+                {
+                    throw new Exception("DuplicateUserName");
+                }
+
+                var errores = string.Join(", ", resultUsuario.Errors.Select(e => e.Description));
+                throw new Exception($"Error de Identity: {errores}");
+            }
 
             string roleToAsign = !string.IsNullOrEmpty(personDTO.RoleName)
                 ? personDTO.RoleName
@@ -202,7 +208,7 @@ public class PersonRepository : IPersonRepository
                 Observations = personDTO.Observations,
                 PracticePlace = personDTO.PracticePlace,
             };
-            bbdd.Persons.Add(p);
+            bbdd.People.Add(p);
             await bbdd.SaveChangesAsync();
 
             Location l = new()
@@ -240,7 +246,20 @@ public class PersonRepository : IPersonRepository
         catch (Exception e)
         {
             await transaction.RollbackAsync();
-            Console.WriteLine($"Error al intentar crear al {singularTypeName}: " + e.Message);
+            Console.WriteLine($"Error al intentar crear al {singularTypeName}: " + e.Message + $", {e.ToString()}");
+
+            if (e.Message == "DuplicateUserName" ||
+                (e.InnerException != null && (e.InnerException.Message.Contains("duplicate") ||
+                                              e.InnerException.Message.Contains("IX_"))))
+            {
+                return new ResponseDTO<string>()
+                {
+                    StatusCode = HttpStatusCode.Conflict,
+                    Message = "¡El CUIL ingresado ya existe en el sistema!",
+                    Object = null
+                };
+            }
+
             return new ResponseDTO<string>()
             {
                 StatusCode = HttpStatusCode.InternalServerError,
@@ -255,7 +274,7 @@ public class PersonRepository : IPersonRepository
         using var transaction = await bbdd.Database.BeginTransactionAsync();
         try
         {
-            var person = await bbdd.Persons.FindAsync(personDTO.Id);
+            var person = await bbdd.People.FindAsync(personDTO.Id);
             if (person == null) throw new Exception("La persona que se desea actualizar no existe.");
 
             var user = await userManager.FindByIdAsync(person.UserId);
@@ -267,7 +286,16 @@ public class PersonRepository : IPersonRepository
                 user.NormalizedUserName = personDTO.CUIL;
 
                 var resultUsuario = await userManager.UpdateAsync(user);
-                if (!resultUsuario.Succeeded) throw new Exception("Error al actualizar el usuario");
+                if (!resultUsuario.Succeeded)
+                {
+                    if (resultUsuario.Errors.Any(x => x.Code == "DuplicateUserName"))
+                    {
+                        throw new Exception("DuplicateUserName");
+                    }
+
+                    var errores = string.Join(", ", resultUsuario.Errors.Select(e => e.Description));
+                    throw new Exception($"Error de Identity: {errores}");
+                }
             }
 
             if (!string.IsNullOrEmpty(personDTO.RoleName))
@@ -294,21 +322,21 @@ public class PersonRepository : IPersonRepository
             person.Gender = personDTO.Gender;
             person.Observations = personDTO.Observations;
             person.PracticePlace = personDTO.PracticePlace;
-            person.UpdatedBy = personDTO.UpdatedById ?? Guid.Empty;
+            person.UpdatedBy = personDTO.UpdatedById;
 
             var location = await bbdd.Locations.FirstAsync(l => l.PersonId == person.Id);
             location.Address = personDTO.LocationDTO.Address;
             location.Country = personDTO.LocationDTO.Country;
             location.Department = personDTO.LocationDTO.Department;
             location.Province = personDTO.LocationDTO.Province;
-            location.UpdatedBy = personDTO.UpdatedById ?? Guid.Empty;
+            location.UpdatedBy = personDTO.UpdatedById;
 
             var contact = await bbdd.Contacts.FirstAsync(c => c.PersonId == person.Id);
             contact.Email = personDTO.ContactDTO?.Email;
             contact.PhoneNumber = personDTO.ContactDTO?.PhoneNumber;
             contact.ContactNameEmergency = personDTO.ContactDTO?.ContactNameEmergency;
             contact.EmergencyNumber = personDTO.ContactDTO?.EmergencyNumber;
-            contact.UpdatedBy = personDTO.UpdatedById ?? Guid.Empty;
+            contact.UpdatedBy = personDTO.UpdatedById;
 
             await bbdd.SaveChangesAsync();
             await transaction.CommitAsync();
@@ -317,9 +345,61 @@ public class PersonRepository : IPersonRepository
             {
                 StatusCode = HttpStatusCode.OK,
                 Message = "¡Operación éxitosa!",
-                Object = string.IsNullOrEmpty(personDTO.RoleName) 
+                Object = string.IsNullOrEmpty(personDTO.RoleName)
                     ? $"¡{singularTypeName} actualizado con éxito!"
                     : "¡Persona con cargo actualizada con éxito!"
+            };
+        }
+        catch (Exception e)
+        {
+            await transaction.RollbackAsync();
+            Console.WriteLine($"Error al intentar actualizar al {singularTypeName}: " + e.Message);
+
+            if (e.Message == "DuplicateUserName" ||
+                (e.InnerException != null && (e.InnerException.Message.Contains("duplicate") ||
+                                              e.InnerException.Message.Contains("IX_"))))
+            {
+                return new ResponseDTO<string>()
+                {
+                    StatusCode = HttpStatusCode.Conflict,
+                    Message = "¡El CUIL ingresado ya existe en el sistema, no puede haber duplicados!",
+                    Object = null
+                };
+            }
+
+            return new ResponseDTO<string>()
+            {
+                StatusCode = HttpStatusCode.InternalServerError,
+                Message = string.IsNullOrEmpty(personDTO.RoleName)
+                    ? $"¡Hubo un error al intentar actualizar al {singularTypeName}!"
+                    : "¡Hubo un error al intentar actualizar a una persona con cargo!",
+                Object = null
+            };
+        }
+    }
+
+    public async Task<ResponseDTO<string>> EditContact(ContactDTO contactDTO)
+    {
+        using var transaction = await bbdd.Database.BeginTransactionAsync();
+        try
+        {
+            var c = await bbdd.Contacts.FindAsync(contactDTO.ContactId);
+            if (c == null) throw new Exception("El contacto que se desea actualizar no existe.");
+            
+            c.UpdatedBy = contactDTO.UpdatedById;
+            c.Email = contactDTO.Email;
+            c.PhoneNumber = contactDTO.PhoneNumber;
+            c.EmergencyNumber = contactDTO.EmergencyNumber;
+            c.ContactNameEmergency = contactDTO.ContactNameEmergency;
+            
+            await bbdd.SaveChangesAsync();
+            await transaction.CommitAsync();
+
+            return new ResponseDTO<string>()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Message = "¡Operación éxitosa!",
+                Object = "¡Contacto actualizado con éxito!"
             };
         }
         catch (Exception e)
@@ -329,9 +409,41 @@ public class PersonRepository : IPersonRepository
             return new ResponseDTO<string>()
             {
                 StatusCode = HttpStatusCode.InternalServerError,
-                Message = string.IsNullOrEmpty(personDTO.RoleName) 
-                    ? $"¡Hubo un error al intentar actualizar al {singularTypeName}!" 
-                    : "¡Hubo un error al intentar actualizar a una persona con cargo!",
+                Message = "¡Hubo un error al intentar actualizar el contacto!",
+                Object = null
+            };
+        }
+    }
+
+    public async Task<ResponseDTO<string>> EditObservation(ObservationDTO observationDTO)
+    {
+        using var transaction = await bbdd.Database.BeginTransactionAsync();
+        try
+        {
+            var p = await bbdd.People.FindAsync(observationDTO.PersonId);
+            if (p == null) throw new Exception("La observación de la persona que se desea actualizar no se puede porque la persona no existe.");
+            
+            p.UpdatedBy = observationDTO.UpdatedById;
+            p.Observations = observationDTO.Observation;
+            
+            await bbdd.SaveChangesAsync();
+            await transaction.CommitAsync();
+
+            return new ResponseDTO<string>()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Message = "¡Operación éxitosa!",
+                Object = "¡Observación actualizada con éxito!"
+            };
+        }
+        catch (Exception e)
+        {
+            await transaction.RollbackAsync();
+            Console.WriteLine($"Error al intentar actualizar la observación del {singularTypeName}: " + e.Message);
+            return new ResponseDTO<string>()
+            {
+                StatusCode = HttpStatusCode.InternalServerError,
+                Message = "¡Hubo un error al intentar actualizar la observación!",
                 Object = null
             };
         }

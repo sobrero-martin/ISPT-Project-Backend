@@ -14,7 +14,7 @@ namespace BD
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {}
         
-        public DbSet<Person> Persons { get; set; }
+        public DbSet<Person> People { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<Documentation> Documentations { get; set; }
         public DbSet<Degree> Degrees { get; set; }
@@ -72,9 +72,10 @@ namespace BD
                     ConcurrencyStamp = "5"
                 });
 
+            string superadminId = "ae65a54a-aab5-4d0c-aa17-554334b49e8c";
             var adminUser = new IdentityUser()
             {
-                Id = "superadminISPT-2026",
+                Id = superadminId,
                 UserName = "SuperadminISPT-2026", 
                 NormalizedUserName = "SUPERADMINISPT-2026",
                 Email = "",
@@ -89,7 +90,7 @@ namespace BD
             builder.Entity<IdentityUserRole<string>>().HasData(
                 new IdentityUserRole<string>
                 {
-                    UserId = "superadminISPT-2026",
+                    UserId = superadminId,
                     RoleId = "rol-directivo-id"
                 }
             );

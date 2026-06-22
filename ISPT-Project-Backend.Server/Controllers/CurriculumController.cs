@@ -1,8 +1,7 @@
 ﻿using BD.Entidades;
-using DTO.DTOs.CareerDTO;
-using DTO.DTOs.DTO_Response;
+using DTO.DTOs;
 using Microsoft.AspNetCore.Mvc;
-using Repositorio.Implementations;
+using Repositorio.Repository;
 
 namespace ISPT_Project_Backend.Server.Controllers
 {
@@ -19,34 +18,55 @@ namespace ISPT_Project_Backend.Server.Controllers
 
 
         [HttpGet("career/{careerId:long}")]
-        public async Task<ActionResult<ResponseDTO<List<CurriculumDTO>>>> GetByCareer(long careerId)
+        public async Task<ActionResult<List<CurriculumDTO>>> GetByCareer(long careerId)
         {
-            var response = await curriculumRepository.GetByCareer(careerId);
+            var users = await curriculumRepository.GetByCareer(careerId);
 
-            return StatusCode((int)response.StatusCode, response);
+            if (users == null)
+            {
+                return NotFound("No se encontraron planes de estudio");
+            }
+
+            if (users.Count == 0)
+            {
+                return NotFound("No existen planes de estudio");
+            }
+
+            return Ok(users);
         }
 
         [HttpGet("{id:long}")]
-        public async Task<ActionResult<ResponseDTO<CurriculumDTO>>> GetById(long id)
+        public async Task<ActionResult<CurriculumDTO>> GetById(long id)
         {
-            var response = await curriculumRepository.GetById(id);
+            var curriculum = await curriculumRepository.GetById(id);
 
-            return StatusCode((int)response.StatusCode, response);
+            if (curriculum == null)
+            {
+                return NotFound("Plan de estudio no encontrado");
+            }
+
+            return Ok(curriculum);
         }
 
         [HttpPost]
-        public async Task<ActionResult<ResponseDTO<CurriculumDTO>>> Post(Curriculum curriculum)
+        public async Task<ActionResult<int>> Post(Curriculum curriculum)
         {
-                var response = await curriculumRepository.Post(curriculum);
-
-                return StatusCode((int)response.StatusCode, response);
+            try
+            {
+                await curriculumRepository.Post(curriculum);
+                return Ok(curriculum.Id);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpPut("{id:long}")]
-        public async Task<ActionResult<ResponseDTO<string>>> Put(long id, Curriculum curriculum)
+        public async Task<ActionResult> Put(long id, Curriculum curriculum)
         {
-            var response = await curriculumRepository.Put(id, curriculum);
-            return StatusCode((int)response.StatusCode, response);
+            var result = await curriculumRepository.Put(id, curriculum);
+            return Ok($"Curriculum with id {id} correctly updated");
         }
 
     }

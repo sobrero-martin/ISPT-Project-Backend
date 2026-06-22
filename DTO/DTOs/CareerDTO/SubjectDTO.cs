@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DTO.DTOs
+namespace DTO.DTOs.CareerDTO
 {
     public class SubjectDTO
     {
@@ -18,5 +18,7 @@ namespace DTO.DTOs
         public required string Type { get; set; }
 
         public int Duration { get; set; }
+
+        public bool IsCorrelative { get; set; }
     }
 }

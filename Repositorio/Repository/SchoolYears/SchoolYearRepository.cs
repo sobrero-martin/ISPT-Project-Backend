@@ -3,13 +3,13 @@ using BD.Entidades;
 using DTO.DTOs.DTO_Response;
 using DTO.DTOs.SchoolYearDTO;
 using Microsoft.EntityFrameworkCore;
-using Repositorio.Implementations;
+using Repositorio.Implementations.SchoolYears;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
 
-namespace Repositorio.Repository
+namespace Repositorio.Repository.SchoolYears
 {
     public class SchoolYearRepository : ISchoolYearRepository
     {

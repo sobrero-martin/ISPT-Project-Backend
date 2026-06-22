@@ -1,9 +1,12 @@
 ﻿using BD;
 using BD.Entidades;
-using DTO.DTOs;
+using DTO.DTOs.CareerDTO;
+using DTO.DTOs.DTO_Response;
 using Microsoft.EntityFrameworkCore;
+using Repositorio.Implementations.Careers;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 
 namespace Repositorio.Repository
@@ -17,14 +20,14 @@ namespace Repositorio.Repository
             this.context = context;
         }
 
-        public async Task<List<CareerDTO>> GetFull()
+        public async Task<ResponseDTO<List<CareerDTO>>> GetFull()
         {
-            try 
-            { 
+            try
+            {
                 var careers = await context.Set<Career>()
                     .AsNoTracking()
-                    .Select(c => new CareerDTO 
-                    { 
+                    .Select(c => new CareerDTO
+                    {
                         Id = c.Id,
                         Name = c.Name,
                         Title = c.Title
@@ -52,13 +55,13 @@ namespace Repositorio.Repository
 
         }
 
-        public async Task<CareerDTO> GetById(long id)
+        public async Task<ResponseDTO<CareerDTO>> GetById(long id)
         {
             try
             {
                 var career = await context.Set<Career>()
                     .AsNoTracking()
-                    .Where(c  => c.Id == id)
+                    .Where(c => c.Id == id)
                     .Select(c => new CareerDTO
                     {
                         Id = c.Id,
@@ -84,7 +87,7 @@ namespace Repositorio.Repository
                     Object = career
                 };
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 Console.WriteLine($"Error al obtener la carrera: {ex.Message}");
 
@@ -100,7 +103,7 @@ namespace Repositorio.Repository
 
         public async Task<ResponseDTO<CareerDTO>> Post(Career carrera)
         {
-            try 
+            try
             {
                 await context.Set<Career>().AddAsync(carrera);
                 await context.SaveChangesAsync();
@@ -130,20 +133,57 @@ namespace Repositorio.Repository
             }
         }
 
-        public async Task<bool> Put(long id, Career carrera)
+        public async Task<ResponseDTO<string>> Put(long id, Career carrera)
         {
-            if (id != carrera.Id) return false;
-
-            bool existe = await context.Set<Career>().AnyAsync(x => x.Id == id);
-            if (!existe) return false;
-
             try
             {
-                context.Set<Career>().Update(carrera);
+                if (id != carrera.Id)
+                {
+                    return new ResponseDTO<string>
+                    {
+                        StatusCode = HttpStatusCode.BadRequest,
+                        Message = "El ID proporcionado no coincide con el ID de la carrera.",
+                        Object = null
+                    };
+                }
+
+                var existingCareer = await context.Set<Career>().FirstOrDefaultAsync(c => c.Id == id);
+
+                if (existingCareer == null)
+                {
+                    return new ResponseDTO<string>
+                    {
+                        StatusCode = HttpStatusCode.NotFound,
+                        Message = "Carrera no encontrada.",
+                        Object = null
+                    };
+                }
+
+                existingCareer.Name = carrera.Name;
+                existingCareer.Title = carrera.Title;
+
                 await context.SaveChangesAsync();
-                return true;
+
+                return new ResponseDTO<string>
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Message = "Carrera actualizada exitosamente.",
+                    Object = null
+                };
             }
-            catch (Exception) { throw; }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al actualizar la carrera: {ex.Message}");
+
+                return new ResponseDTO<string>
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Message = "Ocurrió un error al actualizar la carrera.",
+                    Object = null
+                };
+            }
+
+
         }
     }
 }

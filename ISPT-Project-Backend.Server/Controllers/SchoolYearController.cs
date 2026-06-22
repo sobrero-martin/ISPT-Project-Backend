@@ -2,7 +2,7 @@
 using DTO.DTOs.DTO_Response;
 using DTO.DTOs.SchoolYearDTO;
 using Microsoft.AspNetCore.Mvc;
-using Repositorio.Implementations;
+using Repositorio.Implementations.SchoolYears;
 
 namespace ISPT_Project_Backend.Server.Controllers
 {

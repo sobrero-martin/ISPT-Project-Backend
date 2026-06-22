@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Repositorio.Implementations
+namespace Repositorio.Implementations.SchoolYears
 {
     public interface ISchoolYearRepository
     {

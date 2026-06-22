@@ -51,19 +51,7 @@ namespace Repositorio.Repository
                     Object = null
                 };
             }
-            /*
-            var careers = await context.Set<Career>().ToListAsync();
-            var careerDTOs = new List<CareerDTO>();
-            foreach (var career in careers)
-            {
-                careerDTOs.Add(new CareerDTO
-                {
-                    Id = career.Id,
-                    Name = career.Name,
-                    Title = career.Title
-                });
-            }
-            return careerDTOs;*/
+
         }
 
         public async Task<ResponseDTO<CareerDTO>> GetById(long id)
@@ -110,15 +98,6 @@ namespace Repositorio.Repository
                 };
             }
 
-            /*
-            var career = await context.Set<Career>().FirstOrDefaultAsync(x => x.Id == id);
-            if (career == null) return null;
-            return new CareerDTO
-            {
-                Id = career.Id,
-                Name = career.Name,
-                Title = career.Title
-            };*/
         }
 
         public async Task<ResponseDTO<CareerDTO>> Post(Career carrera)
@@ -151,24 +130,6 @@ namespace Repositorio.Repository
                     Object = null
                 };
             }
-
-            /*
-            try
-            {
-                await context.Set<Career>().AddAsync(carrera);
-                await context.SaveChangesAsync();
-                CareerDTO careerDTO = new CareerDTO
-                {
-                    Id = carrera.Id,
-                    Name = carrera.Name,
-                    Title = carrera.Title
-                };
-                return careerDTO;
-            }
-            catch (Exception)
-            {
-                throw;
-            }*/
         }
 
         public async Task<ResponseDTO<string>> Put(long id, Career carrera)

@@ -59,6 +59,8 @@ builder.Services.AddScoped<ICurriculumRepository, CurriculumRepository>();
 builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
 builder.Services.AddScoped<ICorrelativeRepository, CorrelativeRepository>();
 
+builder.Services.AddScoped<ISchoolYearRepository, SchoolYearRepository>();
+
 builder.Services.AddAuthorization();
 
 builder.Services.AddCors(options =>

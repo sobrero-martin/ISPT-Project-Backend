@@ -1,13 +1,14 @@
 ﻿using BD.Entidades;
 using DTO.DTOs.CareerDTO;
 using DTO.DTOs.DTO_Response;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Repositorio.Implementations.Careers;
 
 namespace ISPT_Project_Backend.Server.Controllers
 {
     [ApiController]
-    [Route("api/subjects")]
+    [Route("api-v1/subjects")]
     public class SubjectController : ControllerBase
     {
         private readonly ISubjectRepository subjectRepository;
@@ -19,6 +20,7 @@ namespace ISPT_Project_Backend.Server.Controllers
 
 
         [HttpGet("curriculum/{curriculumId:long}")]
+        [Authorize(Roles = "Directivo,Preceptor")]
         public async Task<ActionResult<ResponseDTO<List<SubjectDTO>>>> GetByCurriculum(long curriculumId)
         {
             var response = await subjectRepository.GetByCurriculum(curriculumId);
@@ -27,6 +29,7 @@ namespace ISPT_Project_Backend.Server.Controllers
         }
 
         [HttpGet("{id:long}")]
+        [Authorize(Roles = "Directivo,Preceptor")]
         public async Task<ActionResult<ResponseDTO<SubjectDTO>>> GetById(long id)
         {
             var response = await subjectRepository.GetById(id);
@@ -35,7 +38,8 @@ namespace ISPT_Project_Backend.Server.Controllers
         }
 
         [HttpGet("{curriculumId:long}/{subjectId:long}")]
-        public async Task<ActionResult<ResponseDTO<List<SubjectDTO>>>> GetPossibleCorrelatives(long curriculumId, long subjectId)
+        [Authorize(Roles = "Directivo,Preceptor")]
+        public async Task<ActionResult<ResponseDTO<List<SubjectCorrelativesDTO>>>> GetPossibleCorrelatives(long curriculumId, long subjectId)
         {
             var response = await subjectRepository.GetPossibleCorrelatives(curriculumId, subjectId);
 
@@ -44,7 +48,8 @@ namespace ISPT_Project_Backend.Server.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult<ResponseDTO<SubjectDTO>>> Post(Subject subject)
+        [Authorize(Roles = "Directivo")]
+        public async Task<ActionResult<ResponseDTO<SubjectDTO>>> Post(SubjectPostDTO subject)
         {
             var response = await subjectRepository.Post(subject);
 
@@ -52,13 +57,15 @@ namespace ISPT_Project_Backend.Server.Controllers
         }
 
         [HttpPut("{id:long}")]
-        public async Task<ActionResult<ResponseDTO<SubjectDTO>>> Put(long id, Subject subject)
+        [Authorize(Roles = "Directivo")]
+        public async Task<ActionResult<ResponseDTO<SubjectDTO>>> Put(long id, SubjectPostDTO subject)
         {
             var response = await subjectRepository.Put(id, subject);
             return StatusCode((int)response.StatusCode, response);
         }
 
         [HttpGet("schoolyear/{schoolYearId:long}")]
+        [Authorize(Roles = "Directivo,Preceptor")]
         public async Task<ActionResult<ResponseDTO<List<SubjectDTO>>>> GetBySchoolYear(long schoolYearId)
         {
             var response = await subjectRepository.GetBySchoolYear(schoolYearId);

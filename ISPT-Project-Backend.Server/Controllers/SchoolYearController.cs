@@ -7,7 +7,7 @@ using Repositorio.Implementations.SchoolYears;
 namespace ISPT_Project_Backend.Server.Controllers
 {
     [ApiController]
-    [Route("api/schoolyears")]
+    [Route("api-v1/schoolyears")]
     public class SchoolYearController : ControllerBase
     {
         private readonly ISchoolYearRepository schoolYearRepository;

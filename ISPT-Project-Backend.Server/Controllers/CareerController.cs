@@ -1,13 +1,14 @@
 ﻿using BD.Entidades;
 using DTO.DTOs.CareerDTO;
 using DTO.DTOs.DTO_Response;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Repositorio.Implementations.Careers;
 
 namespace ISPT_Project_Backend.Server.Controllers
 {
     [ApiController]
-    [Route("api/careers")]
+    [Route("api-v1/careers")]
     public class CareerController : ControllerBase
     {
         private readonly ICareerRepository careerRepository;
@@ -19,6 +20,7 @@ namespace ISPT_Project_Backend.Server.Controllers
 
 
         [HttpGet]
+        [Authorize(Roles = "Directivo,Preceptor")]
         public async Task<ActionResult<ResponseDTO<List<CareerDTO>>>> GetFull()
         {
             var response = await careerRepository.GetFull();
@@ -26,6 +28,7 @@ namespace ISPT_Project_Backend.Server.Controllers
         }
 
         [HttpGet("{id:long}")]
+        [Authorize(Roles = "Directivo,Preceptor")]
         public async Task<ActionResult<ResponseDTO<CareerDTO>>> GetById(long id)
         {
             var response = await careerRepository.GetById(id);
@@ -34,6 +37,7 @@ namespace ISPT_Project_Backend.Server.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Directivo")]
         public async Task<ActionResult<ResponseDTO<int>>> Post(Career career)
         {
             var response = await careerRepository.Post(career);
@@ -42,6 +46,7 @@ namespace ISPT_Project_Backend.Server.Controllers
         }
 
         [HttpPut("{id:long}")]
+        [Authorize(Roles = "Directivo")]
         public async Task<ActionResult<ResponseDTO<string>>> Put(long id, Career career)
         {
             var response = await careerRepository.Put(id, career);

@@ -8,7 +8,7 @@ using Repositorio.Repository.Careers;
 namespace ISPT_Project_Backend.Server.Controllers
 {
     [ApiController]
-    [Route("api/division-templates")]
+    [Route("api-v1/division-templates")]
     public class DivisionTemplateController : ControllerBase
     {
         private readonly IDivisionTemplateRepository divisionTemplateRepository;

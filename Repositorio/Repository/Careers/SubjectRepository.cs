@@ -46,9 +46,7 @@ namespace Repositorio.Repository.Careers
                         Code = s.Code,
                         Name = s.Name,
                         Year = s.Year,
-                        Format = s.Format,
-                        Type = s.Type,
-                        Duration = s.Duration
+                        Format = s.Format
                     })
                     .ToListAsync();
 
@@ -86,9 +84,7 @@ namespace Repositorio.Repository.Careers
                         Code = s.Code,
                         Name = s.Name,
                         Year = s.Year,
-                        Format = s.Format,
-                        Type = s.Type,
-                        Duration = s.Duration
+                        Format = s.Format
                     })
                     .FirstOrDefaultAsync(x => x.Id == id);
 
@@ -123,11 +119,22 @@ namespace Repositorio.Repository.Careers
 
         }
 
-        public async Task<ResponseDTO<SubjectDTO>> Post(Subject subject)
+        public async Task<ResponseDTO<SubjectDTO>> Post(SubjectPostDTO subject)
         {
             try
             {
-                await context.Set<Subject>().AddAsync(subject);
+                var newSubject = new Subject
+                {
+                    CurriculumId = subject.CurriculumId,
+                    Code = subject.Code,
+                    Name = subject.Name,
+                    Year = subject.Year,
+                    Format = subject.Format,
+                    Type = subject.Type,
+                    Duration = subject.Duration
+                };
+
+                await context.Set<Subject>().AddAsync(newSubject);
                 await context.SaveChangesAsync();
 
                 return new ResponseDTO<SubjectDTO>
@@ -135,19 +142,17 @@ namespace Repositorio.Repository.Careers
                     StatusCode = System.Net.HttpStatusCode.Created,
                     Object = new SubjectDTO
                     {
-                        Id = subject.Id,
-                        Code = subject.Code,
-                        Name = subject.Name,
-                        Year = subject.Year,
-                        Format = subject.Format,
-                        Type = subject.Type,
-                        Duration = subject.Duration
+                        Code = newSubject.Code,
+                        Name = newSubject.Name,
+                        Year = newSubject.Year,
+                        Format = newSubject.Format
                     },
                     Message = "Materia creada exitosamente."
                 };
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.StackTrace);
                 Console.WriteLine($"Error al crear materia: {ex.Message}");
 
                 return new ResponseDTO<SubjectDTO>
@@ -160,7 +165,7 @@ namespace Repositorio.Repository.Careers
 
         }
 
-        public async Task<ResponseDTO<string>> Put(long id, Subject subject)
+        public async Task<ResponseDTO<string>> Put(long id, SubjectPostDTO subject)
         {
             try
             {
@@ -216,7 +221,7 @@ namespace Repositorio.Repository.Careers
 
         }
 
-        public async Task<ResponseDTO<List<SubjectDTO>>> GetPossibleCorrelatives(long curriculumId, long subjectId)
+        public async Task<ResponseDTO<List<SubjectCorrelativesDTO>>> GetPossibleCorrelatives(long curriculumId, long subjectId)
         {
             try
             {
@@ -238,7 +243,7 @@ namespace Repositorio.Repository.Careers
 
                 if (curriculum == null)
                 {
-                    return new ResponseDTO<List<SubjectDTO>>
+                    return new ResponseDTO<List<SubjectCorrelativesDTO>>
                     {
                         StatusCode = System.Net.HttpStatusCode.NotFound,
                         Object = null,
@@ -249,20 +254,17 @@ namespace Repositorio.Repository.Careers
                     var subjects = await context.Set<Subject>()
                     .AsNoTracking()
                     .Where(s => s.CurriculumId == curriculumId && s.Year < subjectYear)
-                    .Select(s => new SubjectDTO
+                    .Select(s => new SubjectCorrelativesDTO
                     {
                         Id = s.Id,
                         Code = s.Code,
                         Name = s.Name,
-                        Year = s.Year,
                         Format = s.Format,
-                        Type = s.Type,
-                        Duration = s.Duration,
                         IsCorrelative = correlatives.Contains(s.Id)
                     })
                     .ToListAsync();
 
-                return new ResponseDTO<List<SubjectDTO>>
+                return new ResponseDTO<List<SubjectCorrelativesDTO>>
                 {
                     StatusCode = System.Net.HttpStatusCode.OK,
                     Object = subjects,
@@ -273,7 +275,7 @@ namespace Repositorio.Repository.Careers
             {
                 Console.WriteLine($"Error al obtener posibles correlativas: {ex.Message}");
 
-                return new ResponseDTO<List<SubjectDTO>>
+                return new ResponseDTO<List<SubjectCorrelativesDTO>>
                 {
                     StatusCode = System.Net.HttpStatusCode.InternalServerError,
                     Object = null,
@@ -310,9 +312,7 @@ namespace Repositorio.Repository.Careers
                         Code = s.Code,
                         Name = s.Name,
                         Year = s.Year,
-                        Format = s.Format,
-                        Type = s.Type,
-                        Duration = s.Duration
+                        Format = s.Format
                     })
                     .ToListAsync();
 

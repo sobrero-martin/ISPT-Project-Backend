@@ -9,7 +9,7 @@ namespace ISPT_Project_Backend.Server.Controllers
 {
 
     [ApiController]
-    [Route("api/correlatives")]
+    [Route("api-v1/correlatives")]
     public class CorrelativeController : ControllerBase
     {
         private readonly ICorrelativeRepository correlativeRepository;

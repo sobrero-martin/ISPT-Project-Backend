@@ -4,8 +4,12 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Repositorio.Implementations.Careers;
+using Repositorio.Implementations.SchoolYears;
 using Repositorio.Repository;
 using Repositorio.Repository.Positions;
+using Repositorio.Repository.Careers;
+using Repositorio.Repository.SchoolYears;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,6 +62,9 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ICareerRepository, CareerRepository>();
 builder.Services.AddScoped<ICurriculumRepository, CurriculumRepository>();
 builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
+builder.Services.AddScoped<ICorrelativeRepository, CorrelativeRepository>();
+
+builder.Services.AddScoped<ISchoolYearRepository, SchoolYearRepository>();
 
 builder.Services.AddAuthorization();
 

@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BD.Entidades
+namespace DTO.DTOs.SchoolYearDTO
 {
-    public class SchoolYear : BaseEntity
+    public class SchoolYearPostDTO
     {
+        public long Id { get; set; }
         public long CurriculumId { get; set; }
-        public Curriculum? Curriculum { get; set; }
         public int SchoolYearNumber { get; set; }
     }
 }

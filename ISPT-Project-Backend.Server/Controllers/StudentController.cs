@@ -89,4 +89,5 @@ public class StudentController : ControllerBase
         var res = await studentRepository.EditObservation(observationDTO);
         return StatusCode((int)res.StatusCode, res);
     }
+
 }

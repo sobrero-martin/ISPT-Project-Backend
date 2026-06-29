@@ -14,6 +14,6 @@ namespace Repositorio.Implementations.Careers
         Task<ResponseDTO<string>> Put(long id, Subject subject);
         Task<ResponseDTO<SubjectDTO>> Post(Subject subject);
         Task<ResponseDTO<List<SubjectDTO>>> GetPossibleCorrelatives(long curriculumId, long subjectId);
-
+        Task<ResponseDTO<List<SubjectDTO>>> GetBySchoolYear(long schoolYearId);
     }
 }

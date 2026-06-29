@@ -62,6 +62,7 @@ builder.Services.AddScoped<ICareerRepository, CareerRepository>();
 builder.Services.AddScoped<ICurriculumRepository, CurriculumRepository>();
 builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
 builder.Services.AddScoped<ICorrelativeRepository, CorrelativeRepository>();
+builder.Services.AddScoped<IDivisionTemplateRepository, DivisionTemplateRepository>();
 
 builder.Services.AddScoped<ISchoolYearRepository, SchoolYearRepository>();
 

@@ -29,6 +29,7 @@ namespace BD
         public DbSet<Grade> Grades { get; set; }
         public DbSet<DivisionExam> DivisionExams { get; set; }
         public DbSet<Division> Divisions { get; set; }
+        public DbSet<DivisionTemplate> DivisionTemplates { get; set; }
         public DbSet<Schedule> Schedules { get; set; }
 
         public DbSet<Career> Careers { get; set; }

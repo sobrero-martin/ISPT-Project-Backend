@@ -58,5 +58,13 @@ namespace ISPT_Project_Backend.Server.Controllers
             return StatusCode((int)response.StatusCode, response);
         }
 
+        [HttpGet("schoolyear/{schoolYearId:long}")]
+        public async Task<ActionResult<ResponseDTO<List<SubjectDTO>>>> GetBySchoolYear(long schoolYearId)
+        {
+            var response = await subjectRepository.GetBySchoolYear(schoolYearId);
+
+            return StatusCode((int)response.StatusCode, response);
+        }
+
     }
 }

@@ -1,4 +1,5 @@
 using DTO.DTOs.StudentsDTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Repositorio.Repository;
 
@@ -16,6 +17,7 @@ public class DegreesController : ControllerBase
     }
 
     [HttpGet("{personId:long}")]
+    [Authorize(Roles = "Directivo,Preceptor")]
     public async Task<IActionResult> GetDegreesByPersonId(long personId)
     {
         var res = await degreesRepository.GetDegreesByPersonId(personId);
@@ -23,6 +25,7 @@ public class DegreesController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Directivo,Preceptor")]
     public async Task<IActionResult> createDegree(DegreeDTO degreeDTO)
     {
         var res = await degreesRepository.createDegree(degreeDTO);
@@ -30,6 +33,7 @@ public class DegreesController : ControllerBase
     }
 
     [HttpDelete("{degreeId:long}")]
+    [Authorize(Roles = "Directivo,Preceptor")]
     public async Task<IActionResult> deleteDegree(long degreeId)
     {
         var res = await degreesRepository.deleteDegree(degreeId);

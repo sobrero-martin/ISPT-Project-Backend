@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using Repositorio.Implementations.Careers;
 using Repositorio.Implementations.SchoolYears;
 using Repositorio.Repository;
+using Repositorio.Repository.Positions;
 using Repositorio.Repository.Careers;
 using Repositorio.Repository.SchoolYears;
 
@@ -54,7 +55,7 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<IDegreesRepository, DegreesRepository>();
 builder.Services.AddScoped<ITeacherRepository, TeacherRepository>();
-//builder.Services.AddScoped<IPersonRepository, PositionRepository>();
+builder.Services.AddScoped<IPositionRepository, PositionRepository>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 

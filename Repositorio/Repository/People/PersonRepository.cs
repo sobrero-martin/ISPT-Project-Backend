@@ -16,6 +16,7 @@ public class PersonRepository : IPersonRepository
     private readonly List<string> roleNames;
     private readonly string singularTypeName;
     private readonly string pluralTypeName;
+    private readonly string singularTypeNameFirstLetterUpper;
 
     // ONLY ONE ROL
     public PersonRepository(AppDbContext bbdd, UserManager<IdentityUser> userManager,
@@ -26,6 +27,7 @@ public class PersonRepository : IPersonRepository
         roleNames = new List<string>() { roleName };
         this.singularTypeName = singularTypeName;
         this.pluralTypeName = pluralTypeName;
+        singularTypeNameFirstLetterUpper = char.ToUpper(singularTypeName[0]) + singularTypeName.Substring(1);
     }
 
     // MULTIPLE ROLES LIKE POSITION
@@ -165,7 +167,6 @@ public class PersonRepository : IPersonRepository
     public async Task<ResponseDTO<string>> AddPerson(PersonDTO personDTO)
     {
         using var transaction = await bbdd.Database.BeginTransactionAsync();
-
         try
         {
             var newUser = new IdentityUser()
@@ -240,7 +241,7 @@ public class PersonRepository : IPersonRepository
             {
                 StatusCode = HttpStatusCode.OK,
                 Message = "¡Operación éxitosa!",
-                Object = $"¡{singularTypeName} creado con éxito!"
+                Object = $"¡{singularTypeNameFirstLetterUpper} creado con éxito!"
             };
         }
         catch (Exception e)
@@ -264,6 +265,68 @@ public class PersonRepository : IPersonRepository
             {
                 StatusCode = HttpStatusCode.InternalServerError,
                 Message = $"¡Hubo un error al intentar crear al {singularTypeName}!",
+                Object = null
+            };
+        }
+    }
+
+    public async Task<ResponseDTO<string>> AddRoleToPerson(PersonWithCUIL personWithCUIL)
+    {
+        using var transaction = await bbdd.Database.BeginTransactionAsync();
+        try
+        {
+            var user = await userManager.FindByNameAsync(personWithCUIL.CUIL);
+            if (user == null)
+                return new ResponseDTO<string>()
+                {
+                    StatusCode = HttpStatusCode.NotFound,
+                    Message = "¡No existe una persona con ese CUIL en el sistema",
+                    Object = null
+                };
+
+            if (string.IsNullOrEmpty(personWithCUIL.RoleName))
+            {
+                var addResult = await userManager.AddToRoleAsync(user, roleNames.First());
+                if (!addResult.Succeeded) throw new Exception($"Error al asignar el rol de: {roleNames.First()}");
+            }
+            else
+            {
+                var currentRoles = await userManager.GetRolesAsync(user);
+                var rolesToRemove = currentRoles.Intersect(roleNames).ToList();
+                
+                if (rolesToRemove.Any())
+                {
+                     var removeResult = await userManager.RemoveFromRolesAsync(user, rolesToRemove);
+                     if (!removeResult.Succeeded) throw new Exception("Error al borrar los roles del usuario.");
+                }
+                
+                var addResult = await userManager.AddToRoleAsync(user, personWithCUIL.RoleName);
+                if (!addResult.Succeeded) throw new Exception($"Error al asignar el nuevo rol: {personWithCUIL.RoleName}");
+            }
+
+            await bbdd.SaveChangesAsync();
+            await transaction.CommitAsync();
+
+            return new ResponseDTO<string>()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Message = "¡Operación éxitosa!",
+                Object = string.IsNullOrEmpty(personWithCUIL.RoleName)
+                    ? $"¡Rol de {singularTypeName} asignado con éxito en la persona!"
+                    : "¡Rol de cargo asignado con éxito en la persona!"
+            };
+        }
+        catch (Exception e)
+        {
+            await transaction.RollbackAsync();
+            Console.WriteLine("Error al intentar asignarle un nuevo rol a la persona: " + e.Message);
+
+            return new ResponseDTO<string>()
+            {
+                StatusCode = HttpStatusCode.InternalServerError,
+                Message = string.IsNullOrEmpty(personWithCUIL.RoleName)
+                    ? $"¡Hubo un error al intentar actualizar al {singularTypeName}!"
+                    : "¡Hubo un error al intentar actualizar a una persona con cargo!",
                 Object = null
             };
         }
@@ -346,7 +409,7 @@ public class PersonRepository : IPersonRepository
                 StatusCode = HttpStatusCode.OK,
                 Message = "¡Operación éxitosa!",
                 Object = string.IsNullOrEmpty(personDTO.RoleName)
-                    ? $"¡{singularTypeName} actualizado con éxito!"
+                    ? $"¡{singularTypeNameFirstLetterUpper} actualizado con éxito!"
                     : "¡Persona con cargo actualizada con éxito!"
             };
         }
@@ -385,13 +448,13 @@ public class PersonRepository : IPersonRepository
         {
             var c = await bbdd.Contacts.FindAsync(contactDTO.ContactId);
             if (c == null) throw new Exception("El contacto que se desea actualizar no existe.");
-            
+
             c.UpdatedBy = contactDTO.UpdatedById;
             c.Email = contactDTO.Email;
             c.PhoneNumber = contactDTO.PhoneNumber;
             c.EmergencyNumber = contactDTO.EmergencyNumber;
             c.ContactNameEmergency = contactDTO.ContactNameEmergency;
-            
+
             await bbdd.SaveChangesAsync();
             await transaction.CommitAsync();
 
@@ -421,11 +484,13 @@ public class PersonRepository : IPersonRepository
         try
         {
             var p = await bbdd.People.FindAsync(observationDTO.PersonId);
-            if (p == null) throw new Exception("La observación de la persona que se desea actualizar no se puede porque la persona no existe.");
-            
+            if (p == null)
+                throw new Exception(
+                    "La observación de la persona que se desea actualizar no se puede porque la persona no existe.");
+
             p.UpdatedBy = observationDTO.UpdatedById;
             p.Observations = observationDTO.Observation;
-            
+
             await bbdd.SaveChangesAsync();
             await transaction.CommitAsync();
 

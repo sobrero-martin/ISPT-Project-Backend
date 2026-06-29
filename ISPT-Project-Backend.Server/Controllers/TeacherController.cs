@@ -1,4 +1,3 @@
-using BD.Entidades;
 using DTO.DTOs.PersonDTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,29 +6,29 @@ using Repositorio.Repository;
 namespace ISPT_Project_Backend.Server.Controllers;
 
 [ApiController]
-[Route("api-v1/students")]
-public class StudentController : ControllerBase
+[Route("api-v1/teachers")]
+public class TeacherController : ControllerBase
 {
-    private readonly IStudentRepository studentRepository;
+    private readonly ITeacherRepository teacherRepository;
 
-    public StudentController(IStudentRepository studentRepository)
+    public TeacherController(ITeacherRepository teacherRepository)
     {
-        this.studentRepository = studentRepository;
+        this.teacherRepository = teacherRepository;
     }
-
+    
     [HttpGet]
     [Authorize(Roles = "Directivo,Preceptor")]
-    public async Task<IActionResult> GetAllStudents()
+    public async Task<IActionResult> GetAllTeachers()
     {
-        var res = await studentRepository.GetAllStudents();
+        var res = await teacherRepository.GetAllTeachers();
         return StatusCode((int)res.StatusCode, res);
     }
-
+    
     [HttpGet("{id:long}")]
     [Authorize(Roles = "Directivo,Preceptor")]
-    public async Task<IActionResult> GetStudentById(long id)
+    public async Task<IActionResult> GetTeacherById(long id)
     {
-        var res = await studentRepository.GetPerson(id);
+        var res = await teacherRepository.GetPerson(id);
         return StatusCode((int)res.StatusCode, res);
     }
 
@@ -37,7 +36,7 @@ public class StudentController : ControllerBase
     [Authorize(Roles = "Directivo,Preceptor,Preceptor_Auxiliar,Docente")]
     public async Task<IActionResult> GetContactByPersonId(long personId)
     {
-        var res = await studentRepository.GetContactByPersonId(personId);
+        var res = await teacherRepository.GetContactByPersonId(personId);
         return StatusCode((int)res.StatusCode, res);
     }
 
@@ -45,48 +44,48 @@ public class StudentController : ControllerBase
     [Authorize(Roles = "Directivo,Preceptor,Preceptor_Auxiliar,Docente")]
     public async Task<IActionResult> GetObservationByPersonId(long personId)
     {
-        var res = await studentRepository.GetObservationByPersonId(personId);
+        var res = await teacherRepository.GetObservationByPersonId(personId);
         return StatusCode((int)res.StatusCode, res);
     }
 
     [HttpPost]
-    [Authorize(Roles = "Directivo,Preceptor")]
-    public async Task<IActionResult> CreateStudent(PersonDTO personDTO)
+    [Authorize(Roles = "Directivo")]
+    public async Task<IActionResult> CreateTeacher(PersonDTO personDTO)
     {
-        var res = await studentRepository.AddPerson(personDTO);
+        var res = await teacherRepository.AddPerson(personDTO);
         return StatusCode((int)res.StatusCode, res);
     }
-
+    
     [HttpPost("add-with-cuil")]
-    [Authorize(Roles = "Directivo,Preceptor")]
-    public async Task<IActionResult> AddPersonInStudent(PersonWithCUIL personWithCUIL)
+    [Authorize(Roles = "Directivo")]
+    public async Task<IActionResult> AddPersonInTeacher(PersonWithCUIL personWithCUIL)
     {
         personWithCUIL.RoleName = string.Empty;
-        var res = await studentRepository.AddRoleToPerson(personWithCUIL);
+        var res = await teacherRepository.AddRoleToPerson(personWithCUIL);
         return StatusCode((int)res.StatusCode, res);
     }
 
     [HttpPut]
-    [Authorize(Roles = "Directivo,Preceptor")]
-    public async Task<IActionResult> UpdateStudent(PersonDTO personDTO)
+    [Authorize(Roles = "Directivo")]
+    public async Task<IActionResult> UpdateTeacher(PersonDTO personDTO)
     {
-        var res = await studentRepository.EditPerson(personDTO);
+        var res = await teacherRepository.EditPerson(personDTO);
         return StatusCode((int)res.StatusCode, res);
     }
 
     [HttpPut("contact")]
-    [Authorize(Roles = "Directivo,Preceptor")]
+    [Authorize(Roles = "Directivo")]
     public async Task<IActionResult> UpdateContact(ContactDTO contactDTO)
     {
-        var res = await studentRepository.EditContact(contactDTO);
+        var res = await teacherRepository.EditContact(contactDTO);
         return StatusCode((int)res.StatusCode, res);
     }
 
     [HttpPut("observation")]
-    [Authorize(Roles = "Directivo,Preceptor")]
+    [Authorize(Roles = "Directivo")]
     public async Task<IActionResult> UpdateObservation(ObservationDTO observationDTO)
     {
-        var res = await studentRepository.EditObservation(observationDTO);
+        var res = await teacherRepository.EditObservation(observationDTO);
         return StatusCode((int)res.StatusCode, res);
     }
 }

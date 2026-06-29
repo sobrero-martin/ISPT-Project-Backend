@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Repositorio.Repository;
+using Repositorio.Repository.Positions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,7 +51,7 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<IDegreesRepository, DegreesRepository>();
 builder.Services.AddScoped<ITeacherRepository, TeacherRepository>();
-//builder.Services.AddScoped<IPersonRepository, PositionRepository>();
+builder.Services.AddScoped<IPositionRepository, PositionRepository>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 

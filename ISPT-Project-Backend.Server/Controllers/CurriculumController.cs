@@ -39,18 +39,18 @@ namespace ISPT_Project_Backend.Server.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Directivo")]
-        public async Task<ActionResult<ResponseDTO<CurriculumDTO>>> Post(Curriculum curriculum)
+        public async Task<ActionResult<ResponseDTO<CurriculumDTO>>> Post(CurriculumPostDTO curriculumPostDTO)
         {
-                var response = await curriculumRepository.Post(curriculum);
+                var response = await curriculumRepository.Post(curriculumPostDTO);
 
                 return StatusCode((int)response.StatusCode, response);
         }
 
         [HttpPut("{id:long}")]
         [Authorize(Roles = "Directivo")]
-        public async Task<ActionResult<ResponseDTO<string>>> Put(long id, Curriculum curriculum)
+        public async Task<ActionResult<ResponseDTO<string>>> Put(long id, CurriculumPostDTO curriculumPostDTO)
         {
-            var response = await curriculumRepository.Put(id, curriculum);
+            var response = await curriculumRepository.Put(id, curriculumPostDTO);
             return StatusCode((int)response.StatusCode, response);
         }
 

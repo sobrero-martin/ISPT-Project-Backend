@@ -38,18 +38,18 @@ namespace ISPT_Project_Backend.Server.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Directivo")]
-        public async Task<ActionResult<ResponseDTO<int>>> Post(Career career)
+        public async Task<ActionResult<ResponseDTO<int>>> Post(CareerPostDTO careerPostDTO)
         {
-            var response = await careerRepository.Post(career);
+            var response = await careerRepository.Post(careerPostDTO);
 
             return StatusCode((int)response.StatusCode, response);
         }
 
         [HttpPut("{id:long}")]
         [Authorize(Roles = "Directivo")]
-        public async Task<ActionResult<ResponseDTO<string>>> Put(long id, Career career)
+        public async Task<ActionResult<ResponseDTO<string>>> Put(long id, CareerPostDTO careerPostDTO)
         {
-            var response = await careerRepository.Put(id, career);
+            var response = await careerRepository.Put(id, careerPostDTO);
             return StatusCode((int)response.StatusCode, response);
         }
 

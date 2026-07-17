@@ -164,7 +164,8 @@ namespace Repositorio.Repository.Careers
                         await context.Set<Correlative>().AddAsync(new Correlative
                         {
                             SubjectId = subjectId,
-                            SubjectCorrelativeId = change.SubjectCorrelativeId
+                            SubjectCorrelativeId = change.SubjectCorrelativeId,
+                            CreatedBy = change.CreatedById ?? Guid.Empty
                         });
                     }
                     else if (!change.IsCorrelative && correlativa != null)

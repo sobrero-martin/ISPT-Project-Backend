@@ -67,7 +67,7 @@ namespace Repositorio.Repository.Careers
             }
         }
 
-        public async Task<ResponseDTO<DivisionTemplateDTO>> Post(long subjectId)
+        public async Task<ResponseDTO<DivisionTemplateDTO>> Post(long subjectId, Guid? CreatedById)
         {
             try
             {
@@ -96,7 +96,8 @@ namespace Repositorio.Repository.Careers
                 var divisionTemplate = new DivisionTemplate
                 {
                     SubjectId = subjectId,
-                    Name = nextName
+                    Name = nextName,
+                    CreatedBy = CreatedById ?? Guid.Empty
                 };
 
                 context.Set<DivisionTemplate>().Add(divisionTemplate);

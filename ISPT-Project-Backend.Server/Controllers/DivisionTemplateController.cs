@@ -1,8 +1,10 @@
 ﻿using DTO.DTOs.CareerDTO;
 using DTO.DTOs.DTO_Response;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Repositorio.Implementations.Careers;
 using Repositorio.Repository.Careers;
+using System.Security.Claims;
 
 
 namespace ISPT_Project_Backend.Server.Controllers
@@ -21,6 +23,7 @@ namespace ISPT_Project_Backend.Server.Controllers
 
 
         [HttpGet("subject/{subjectId:long}")]
+        [Authorize(Roles = "Directivo,Preceptor")]
         public async Task<ActionResult<ResponseDTO<List<DivisionTemplateDTO>>>> GetBySubject(long subjectId)
         {
             var response = await divisionTemplateRepository.GetBySubject(subjectId);
@@ -28,10 +31,11 @@ namespace ISPT_Project_Backend.Server.Controllers
             return StatusCode((int)response.StatusCode, response);
         }
 
-        [HttpPost("subject/{subjectId:long}")]
-        public async Task<ActionResult<ResponseDTO<DivisionTemplateDTO>>> Post(long subjectId)
+        [HttpPost("subject/{subjectId:long}/{CreatedById:Guid}")]
+        [Authorize(Roles = "Directivo")]
+        public async Task<ActionResult<ResponseDTO<DivisionTemplateDTO>>> Post(long subjectId,Guid? CreatedById)
         {
-            var response = await divisionTemplateRepository.Post(subjectId);
+            var response = await divisionTemplateRepository.Post(subjectId, CreatedById);
 
             return StatusCode((int)response.StatusCode, response);
         }

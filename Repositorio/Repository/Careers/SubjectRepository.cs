@@ -131,7 +131,8 @@ namespace Repositorio.Repository.Careers
                     Year = subject.Year,
                     Format = subject.Format,
                     Type = subject.Type,
-                    Duration = subject.Duration
+                    Duration = subject.Duration,
+                    CreatedBy = subject.CreatedById ?? Guid.Empty
                 };
 
                 await context.Set<Subject>().AddAsync(newSubject);
@@ -197,6 +198,7 @@ namespace Repositorio.Repository.Careers
                 existingSubject.Format = subject.Format;
                 existingSubject.Type = subject.Type;
                 existingSubject.Duration = subject.Duration;
+                existingSubject.UpdatedBy = subject.UpdatedById ?? Guid.Empty;
 
                 await context.SaveChangesAsync();
 

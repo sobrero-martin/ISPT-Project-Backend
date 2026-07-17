@@ -144,7 +144,8 @@ namespace Repositorio.Repository.SchoolYears
                 {
                     Id = schoolYear.Id,
                     CurriculumId = schoolYear.CurriculumId,
-                    SchoolYearNumber = schoolYear.SchoolYearNumber
+                    SchoolYearNumber = schoolYear.SchoolYearNumber,
+                    CreatedBy = schoolYear.CreatedById ?? Guid.Empty,
                 };
 
                 await context.Set<SchoolYear>().AddAsync(schoolYearEntity);
@@ -158,7 +159,8 @@ namespace Repositorio.Repository.SchoolYears
                     {
                         Id = schoolYear.Id,
                         CurriculumId = schoolYear.CurriculumId,
-                        SchoolYearNumber = schoolYear.SchoolYearNumber
+                        SchoolYearNumber = schoolYear.SchoolYearNumber,
+                        CreatedById = schoolYear.CreatedById ?? Guid.Empty,
                     }
                 };
             }

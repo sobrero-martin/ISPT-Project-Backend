@@ -45,7 +45,6 @@ namespace Repositorio.Repository.Careers
                         Id = c.Id,
                         Resolution = c.Resolution,
                         Duration = c.Duration,
-                        StartDate = c.StartDate,
                         VigencyDate = c.VigencyDate,
                         EndDate = c.EndDate
                     })
@@ -54,8 +53,8 @@ namespace Repositorio.Repository.Careers
                 return new ResponseDTO<List<CurriculumDTO>>
                 {
                     StatusCode = System.Net.HttpStatusCode.OK,
+                    Object = curriculum,
                     Message = "Planes de estudio obtenidos exitosamente",
-                    Object = curriculum
                 };
             }
             catch (Exception ex)
@@ -85,7 +84,6 @@ namespace Repositorio.Repository.Careers
                         Id = c.Id,
                         Resolution = c.Resolution,
                         Duration = c.Duration,
-                        StartDate = c.StartDate,
                         VigencyDate = c.VigencyDate,
                         EndDate = c.EndDate
                     })
@@ -129,7 +127,6 @@ namespace Repositorio.Repository.Careers
                 {
                     Resolution = curriculumPostDTO.Resolution,
                     Duration = curriculumPostDTO.Duration,
-                    StartDate = curriculumPostDTO.StartDate,
                     VigencyDate = curriculumPostDTO.VigencyDate,
                     EndDate = curriculumPostDTO.EndDate,
                     CreatedBy = curriculumPostDTO.CreatedById ?? Guid.Empty,
@@ -146,7 +143,6 @@ namespace Repositorio.Repository.Careers
                         Id = curriculumPostDTO.Id,
                         Resolution = curriculumPostDTO.Resolution,
                         Duration = curriculumPostDTO.Duration,
-                        StartDate = curriculumPostDTO.StartDate,
                         VigencyDate = curriculumPostDTO.VigencyDate,
                         EndDate = curriculumPostDTO.EndDate,
                     },
@@ -163,7 +159,6 @@ namespace Repositorio.Repository.Careers
                     Message = "Ocurrió un error al crear el plan de estudio"
                 };
             }
-
         }
 
         public async Task<ResponseDTO<string>> Put(long id, CurriculumPostDTO curriculumPostDTO)
@@ -195,7 +190,6 @@ namespace Repositorio.Repository.Careers
 
                 existingCurriculum.Resolution = curriculumPostDTO.Resolution;
                 existingCurriculum.Duration = curriculumPostDTO.Duration;
-                existingCurriculum.StartDate = curriculumPostDTO.StartDate;
                 existingCurriculum.VigencyDate = curriculumPostDTO.VigencyDate;
                 existingCurriculum.EndDate = curriculumPostDTO.EndDate;
                 existingCurriculum.UpdatedBy = curriculumPostDTO.UpdatedById ?? Guid.Empty;

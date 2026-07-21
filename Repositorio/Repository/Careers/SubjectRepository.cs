@@ -19,7 +19,7 @@ namespace Repositorio.Repository.Careers
             this.context = context;
         }
 
-        public async Task<ResponseDTO<List<SubjectDTO>>> GetByCurriculum(long curriculumId)
+        public async Task<ResponseDTO<List<SubjectTableDTO>>> GetByCurriculum(long curriculumId)
         {
             try
             {
@@ -29,7 +29,7 @@ namespace Repositorio.Repository.Careers
 
                 if (curriculum == null)
                 {
-                    return new ResponseDTO<List<SubjectDTO>>
+                    return new ResponseDTO<List<SubjectTableDTO>>
                     {
                         StatusCode = System.Net.HttpStatusCode.NotFound,
                         Object = null,
@@ -40,17 +40,17 @@ namespace Repositorio.Repository.Careers
                 var subjects = await context.Set<Subject>()
                     .AsNoTracking()
                     .Where(s => s.CurriculumId == curriculumId)
-                    .Select(s => new SubjectDTO
+                    .Select(s => new SubjectTableDTO()
                     {
                         Id = s.Id,
                         Code = s.Code,
                         Name = s.Name,
                         Year = s.Year,
-                        Format = s.Format
+                        Format = s.Format,
                     })
                     .ToListAsync();
 
-                return new ResponseDTO<List<SubjectDTO>>
+                return new ResponseDTO<List<SubjectTableDTO>>
                 {
                     StatusCode = System.Net.HttpStatusCode.OK,
                     Object = subjects,
@@ -61,7 +61,7 @@ namespace Repositorio.Repository.Careers
             {
                 Console.WriteLine($"Error al obtener materias por plan de estudio: {ex.Message}");
 
-                return new ResponseDTO<List<SubjectDTO>>
+                return new ResponseDTO<List<SubjectTableDTO>>
                 {
                     StatusCode = System.Net.HttpStatusCode.InternalServerError,
                     Object = null,
@@ -84,7 +84,9 @@ namespace Repositorio.Repository.Careers
                         Code = s.Code,
                         Name = s.Name,
                         Year = s.Year,
-                        Format = s.Format
+                        Format = s.Format,
+                        Type = s.Type,
+                        ContactHour = s.ContactHour
                     })
                     .FirstOrDefaultAsync(x => x.Id == id);
 
@@ -131,7 +133,7 @@ namespace Repositorio.Repository.Careers
                     Year = subject.Year,
                     Format = subject.Format,
                     Type = subject.Type,
-                    Duration = subject.Duration,
+                    ContactHour = subject.ContactHour,
                     CreatedBy = subject.CreatedById ?? Guid.Empty
                 };
 
@@ -146,7 +148,9 @@ namespace Repositorio.Repository.Careers
                         Code = newSubject.Code,
                         Name = newSubject.Name,
                         Year = newSubject.Year,
-                        Format = newSubject.Format
+                        Format = newSubject.Format,
+                        Type = newSubject.Type,
+                        ContactHour = newSubject.ContactHour
                     },
                     Message = "Materia creada exitosamente."
                 };
@@ -197,7 +201,7 @@ namespace Repositorio.Repository.Careers
                 existingSubject.Year = subject.Year;
                 existingSubject.Format = subject.Format;
                 existingSubject.Type = subject.Type;
-                existingSubject.Duration = subject.Duration;
+                existingSubject.ContactHour = subject.ContactHour;
                 existingSubject.UpdatedBy = subject.UpdatedById ?? Guid.Empty;
 
                 await context.SaveChangesAsync();
@@ -287,7 +291,7 @@ namespace Repositorio.Repository.Careers
 
         }
 
-        public async Task<ResponseDTO<List<SubjectDTO>>> GetBySchoolYear(long schoolYearId)
+        public async Task<ResponseDTO<List<SubjectTableDTO>>> GetBySchoolYear(long schoolYearId)
         {
             try
             {
@@ -297,7 +301,7 @@ namespace Repositorio.Repository.Careers
 
                 if (schoolYear == null)
                 {
-                    return new ResponseDTO<List<SubjectDTO>>
+                    return new ResponseDTO<List<SubjectTableDTO>>
                     {
                         StatusCode = System.Net.HttpStatusCode.NotFound,
                         Object = null,
@@ -308,7 +312,7 @@ namespace Repositorio.Repository.Careers
                 var subjects = await context.Set<Subject>()
                     .AsNoTracking()
                     .Where(s => s.CurriculumId == schoolYear.CurriculumId)
-                    .Select(s => new SubjectDTO
+                    .Select(s => new SubjectTableDTO
                     {
                         Id = s.Id,
                         Code = s.Code,
@@ -318,7 +322,7 @@ namespace Repositorio.Repository.Careers
                     })
                     .ToListAsync();
 
-                return new ResponseDTO<List<SubjectDTO>>
+                return new ResponseDTO<List<SubjectTableDTO>>
                 {
                     StatusCode = System.Net.HttpStatusCode.OK,
                     Object = subjects,
@@ -330,7 +334,7 @@ namespace Repositorio.Repository.Careers
             {
                 Console.WriteLine($"Error al obtener materias por año escolar: {ex.Message}");
 
-                return new ResponseDTO<List<SubjectDTO>>
+                return new ResponseDTO<List<SubjectTableDTO>>
                 {
                     StatusCode = System.Net.HttpStatusCode.InternalServerError,
                     Object = null,

@@ -8,12 +8,10 @@ namespace DTO.DTOs.CareerDTO
     {
         public long Id { get; set; }
         public required string Code { get; set; }
-
         public required string Name { get; set; }
-
         public int Year { get; set; }
-
         public required string Format { get; set; }
-
+        public required string Type { get; set; }
+        public int ContactHour { get; set; }
     }
 }

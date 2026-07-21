@@ -11,13 +11,10 @@ namespace DTO.DTOs.CareerDTO
         public Guid? UpdatedById { get; set; }
         public required long CurriculumId { get; set; }
         public required string Code { get; set; }
-        public int Year { get; set; }
         public required string Name { get; set; }
-
+        public int Year { get; set; }
         public required string Format { get; set; }
-
         public required string Type { get; set; }
-
-        public int Duration { get; set; }
+        public int ContactHour { get; set; }
     }
 }

@@ -21,6 +21,6 @@ namespace BD.Entidades
 
         public required string Type { get; set; }
 
-        public int Duration { get; set; }
+        public int ContactHour { get; set; }
     }
 }

@@ -42,7 +42,6 @@ namespace ISPT_Project_Backend.Server.Controllers
         public async Task<ActionResult<ResponseDTO<List<SubjectCorrelativesDTO>>>> GetPossibleCorrelatives(long curriculumId, long subjectId)
         {
             var response = await subjectRepository.GetPossibleCorrelatives(curriculumId, subjectId);
-
             return StatusCode((int)response.StatusCode, response);
         }
 

@@ -7,6 +7,8 @@ namespace DTO.DTOs.CareerDTO
     public class SubjectPostDTO
     {
         public long Id { get; set; }
+        public Guid? CreatedById { get; set; }
+        public Guid? UpdatedById { get; set; }
         public required long CurriculumId { get; set; }
         public required string Code { get; set; }
         public int Year { get; set; }

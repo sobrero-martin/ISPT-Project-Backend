@@ -1,6 +1,7 @@
 ﻿using BD.Entidades;
 using DTO.DTOs.DTO_Response;
 using DTO.DTOs.SchoolYearDTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Repositorio.Implementations.SchoolYears;
 
@@ -18,6 +19,7 @@ namespace ISPT_Project_Backend.Server.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Directivo, Preceptor")]
         public async Task<ActionResult<ResponseDTO<List<SchoolYearDTO>>>> GetFull()
         {
             var response = await schoolYearRepository.GetFull();
@@ -25,6 +27,7 @@ namespace ISPT_Project_Backend.Server.Controllers
         }
 
         [HttpGet("raw")]
+        [Authorize(Roles = "Directivo, Preceptor")]
         public async Task<ActionResult<ResponseDTO<List<SchoolYearPostDTO>>>> GetRaw()
         {
             var response = await schoolYearRepository.GetRaw();
@@ -32,6 +35,7 @@ namespace ISPT_Project_Backend.Server.Controllers
         }
 
         [HttpGet("{id:long}")]
+        [Authorize(Roles = "Directivo, Preceptor")]
         public async Task<ActionResult<ResponseDTO<SchoolYearPostDTO>>> GetById(long id)
         {
             var response = await schoolYearRepository.GetById(id);
@@ -40,6 +44,7 @@ namespace ISPT_Project_Backend.Server.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Directivo")]
         public async Task<ActionResult<ResponseDTO<SchoolYearPostDTO>>> Post(SchoolYearPostDTO schoolYear)
         {
             var response = await schoolYearRepository.Post(schoolYear);

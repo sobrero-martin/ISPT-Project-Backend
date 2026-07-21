@@ -45,6 +45,7 @@ namespace Repositorio.Repository.Careers
                         Id = c.Id,
                         Resolution = c.Resolution,
                         Duration = c.Duration,
+                        StartDate = c.StartDate,
                         VigencyDate = c.VigencyDate,
                         EndDate = c.EndDate
                     })
@@ -67,6 +68,8 @@ namespace Repositorio.Repository.Careers
                     Object = null,
                     Message = $"Ocurrió un error al obtener los planes de estudio"
                 };
+
+
             }
         }
 
@@ -82,6 +85,7 @@ namespace Repositorio.Repository.Careers
                         Id = c.Id,
                         Resolution = c.Resolution,
                         Duration = c.Duration,
+                        StartDate = c.StartDate,
                         VigencyDate = c.VigencyDate,
                         EndDate = c.EndDate
                     })
@@ -114,13 +118,24 @@ namespace Repositorio.Repository.Careers
                     Message = "Ocurrió un error al obtener el plan de estudio"
                 };
             }
+
         }
 
-        public async Task<ResponseDTO<CurriculumDTO>> Post(Curriculum curriculum)
+        public async Task<ResponseDTO<CurriculumDTO>> Post(CurriculumPostDTO curriculumPostDTO)
         {
             try
             {
-                await context.Set<Curriculum>().AddAsync(curriculum);
+                var curriculumEntity = new Curriculum
+                {
+                    Resolution = curriculumPostDTO.Resolution,
+                    Duration = curriculumPostDTO.Duration,
+                    StartDate = curriculumPostDTO.StartDate,
+                    VigencyDate = curriculumPostDTO.VigencyDate,
+                    EndDate = curriculumPostDTO.EndDate,
+                    CreatedBy = curriculumPostDTO.CreatedById ?? Guid.Empty,
+                    CareerId = curriculumPostDTO.CareerId
+                };
+                await context.Set<Curriculum>().AddAsync(curriculumEntity);
                 await context.SaveChangesAsync();
 
                 return new ResponseDTO<CurriculumDTO>
@@ -128,11 +143,12 @@ namespace Repositorio.Repository.Careers
                     StatusCode = System.Net.HttpStatusCode.Created,
                     Object = new CurriculumDTO
                     {
-                        Id = curriculum.Id,
-                        Resolution = curriculum.Resolution,
-                        Duration = curriculum.Duration,
-                        VigencyDate = curriculum.VigencyDate,
-                        EndDate = curriculum.EndDate
+                        Id = curriculumPostDTO.Id,
+                        Resolution = curriculumPostDTO.Resolution,
+                        Duration = curriculumPostDTO.Duration,
+                        StartDate = curriculumPostDTO.StartDate,
+                        VigencyDate = curriculumPostDTO.VigencyDate,
+                        EndDate = curriculumPostDTO.EndDate,
                     },
                     Message = "Plan de estudio creado exitosamente"
                 };
@@ -147,13 +163,15 @@ namespace Repositorio.Repository.Careers
                     Message = "Ocurrió un error al crear el plan de estudio"
                 };
             }
+
         }
 
-        public async Task<ResponseDTO<string>> Put(long id, Curriculum curriculum)
+        public async Task<ResponseDTO<string>> Put(long id, CurriculumPostDTO curriculumPostDTO)
         {
             try
             {
-                if (id != curriculum.Id)
+
+                if (id != curriculumPostDTO.Id)
                 {
                     return new ResponseDTO<string>
                     {
@@ -175,10 +193,12 @@ namespace Repositorio.Repository.Careers
                     };
                 }
 
-                existingCurriculum.Resolution = curriculum.Resolution;
-                existingCurriculum.Duration = curriculum.Duration;
-                existingCurriculum.VigencyDate = curriculum.VigencyDate;
-                existingCurriculum.EndDate = curriculum.EndDate;
+                existingCurriculum.Resolution = curriculumPostDTO.Resolution;
+                existingCurriculum.Duration = curriculumPostDTO.Duration;
+                existingCurriculum.StartDate = curriculumPostDTO.StartDate;
+                existingCurriculum.VigencyDate = curriculumPostDTO.VigencyDate;
+                existingCurriculum.EndDate = curriculumPostDTO.EndDate;
+                existingCurriculum.UpdatedBy = curriculumPostDTO.UpdatedById ?? Guid.Empty;
 
                 await context.SaveChangesAsync();
 
@@ -200,6 +220,7 @@ namespace Repositorio.Repository.Careers
                     Message = "Ocurrió un error al actualizar el plan de estudio"
                 };
             }
+
         }
     }
 

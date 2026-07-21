@@ -9,6 +9,6 @@ namespace Repositorio.Implementations.Careers
     public interface IDivisionTemplateRepository
     {
         Task<ResponseDTO<List<DivisionTemplateDTO>>> GetBySubject(long subjectId);
-        Task<ResponseDTO<DivisionTemplateDTO>> Post(long subjectId);
+        Task<ResponseDTO<DivisionTemplateDTO>> Post(long subjectId, Guid? CreatedById);
     }
 }

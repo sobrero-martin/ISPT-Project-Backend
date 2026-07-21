@@ -101,11 +101,19 @@ namespace Repositorio.Repository
 
         }
 
-        public async Task<ResponseDTO<CareerDTO>> Post(Career carrera)
+        public async Task<ResponseDTO<CareerDTO>> Post(CareerPostDTO careerPostDTO)
         {
             try
             {
-                await context.Set<Career>().AddAsync(carrera);
+                var careerEntity = new Career
+                {
+                    Id = careerPostDTO.Id,
+                    Name = careerPostDTO.Name,
+                    Title = careerPostDTO.Title,
+                    CreatedBy = careerPostDTO.CreatedById ?? Guid.Empty
+                };
+
+                await context.Set<Career>().AddAsync(careerEntity);
                 await context.SaveChangesAsync();
 
                 return new ResponseDTO<CareerDTO>
@@ -114,9 +122,9 @@ namespace Repositorio.Repository
                     Message = "Carrera creada exitosamente.",
                     Object = new CareerDTO
                     {
-                        Id = carrera.Id,
-                        Name = carrera.Name,
-                        Title = carrera.Title
+                        Id = careerPostDTO.Id,
+                        Name = careerPostDTO.Name,
+                        Title = careerPostDTO.Title
                     }
                 };
             }
@@ -133,11 +141,11 @@ namespace Repositorio.Repository
             }
         }
 
-        public async Task<ResponseDTO<string>> Put(long id, Career carrera)
+        public async Task<ResponseDTO<string>> Put(long id, CareerPostDTO careerPostDTO)
         {
             try
             {
-                if (id != carrera.Id)
+                if (id != careerPostDTO.Id)
                 {
                     return new ResponseDTO<string>
                     {
@@ -159,8 +167,9 @@ namespace Repositorio.Repository
                     };
                 }
 
-                existingCareer.Name = carrera.Name;
-                existingCareer.Title = carrera.Title;
+                existingCareer.Name = careerPostDTO.Name;
+                existingCareer.Title = careerPostDTO.Title;
+                existingCareer.UpdatedBy = careerPostDTO.UpdatedById ?? Guid.Empty;
 
                 await context.SaveChangesAsync();
 

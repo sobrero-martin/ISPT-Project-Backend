@@ -45,7 +45,6 @@ namespace Repositorio.Repository.Careers
                         Id = c.Id,
                         Resolution = c.Resolution,
                         Duration = c.Duration,
-                        StartDate = c.StartDate,
                         VigencyDate = c.VigencyDate,
                         EndDate = c.EndDate
                     })
@@ -68,24 +67,6 @@ namespace Repositorio.Repository.Careers
                     Object = null,
                     Message = $"Ocurrió un error al obtener los planes de estudio"
                 };
-
-                /*
-                var careers = await context.Set<Curriculum>().Where(c => c.CareerId == careerId).ToListAsync();
-            var curriculumDTOs = new List<CurriculumDTO>();
-            foreach (var career in careers)
-            {
-                curriculumDTOs.Add(new CurriculumDTO
-                {
-                    Id = career.Id,
-                    Resolution = career.Resolution,
-                    Duration = career.Duration,
-                    StartDate = career.StartDate,
-                    VigencyDate = career.VigencyDate,
-                    EndDate = career.EndDate
-                });
-            }
-                return curriculumDTOs;*/
-
             }
         }
 
@@ -101,7 +82,6 @@ namespace Repositorio.Repository.Careers
                         Id = c.Id,
                         Resolution = c.Resolution,
                         Duration = c.Duration,
-                        StartDate = c.StartDate,
                         VigencyDate = c.VigencyDate,
                         EndDate = c.EndDate
                     })
@@ -134,21 +114,6 @@ namespace Repositorio.Repository.Careers
                     Message = "Ocurrió un error al obtener el plan de estudio"
                 };
             }
-
-            /*
-            var curriculum = await context.Set<Curriculum>().FirstOrDefaultAsync(x => x.Id == id);
-
-            if (curriculum == null) return null;
-
-            return new CurriculumDTO
-            {
-                Id = curriculum.Id,
-                Resolution = curriculum.Resolution,
-                Duration = curriculum.Duration,
-                StartDate = curriculum.StartDate,
-                VigencyDate = curriculum.VigencyDate,
-                EndDate = curriculum.EndDate
-            };*/
         }
 
         public async Task<ResponseDTO<CurriculumDTO>> Post(Curriculum curriculum)
@@ -166,7 +131,6 @@ namespace Repositorio.Repository.Careers
                         Id = curriculum.Id,
                         Resolution = curriculum.Resolution,
                         Duration = curriculum.Duration,
-                        StartDate = curriculum.StartDate,
                         VigencyDate = curriculum.VigencyDate,
                         EndDate = curriculum.EndDate
                     },
@@ -183,26 +147,6 @@ namespace Repositorio.Repository.Careers
                     Message = "Ocurrió un error al crear el plan de estudio"
                 };
             }
-            /*
-            try
-            {
-                await context.Set<Curriculum>().AddAsync(curriculum);
-                await context.SaveChangesAsync();
-                CurriculumDTO curriculumDTO = new CurriculumDTO
-                {
-                    Id = curriculum.Id,
-                    Resolution = curriculum.Resolution,
-                    Duration = curriculum.Duration,
-                    StartDate = curriculum.StartDate,
-                    VigencyDate = curriculum.VigencyDate,
-                    EndDate = curriculum.EndDate
-                };
-                return curriculumDTO;
-            }
-            catch (Exception)
-            {
-                throw;
-            }*/
         }
 
         public async Task<ResponseDTO<string>> Put(long id, Curriculum curriculum)
@@ -233,7 +177,6 @@ namespace Repositorio.Repository.Careers
 
                 existingCurriculum.Resolution = curriculum.Resolution;
                 existingCurriculum.Duration = curriculum.Duration;
-                existingCurriculum.StartDate = curriculum.StartDate;
                 existingCurriculum.VigencyDate = curriculum.VigencyDate;
                 existingCurriculum.EndDate = curriculum.EndDate;
 
@@ -257,22 +200,6 @@ namespace Repositorio.Repository.Careers
                     Message = "Ocurrió un error al actualizar el plan de estudio"
                 };
             }
-            /*
-            if (id != curriculum.Id) return false;
-
-            var existing = await context.Set<Curriculum>()
-                .FirstOrDefaultAsync(x => x.Id == id);
-
-            if (existing == null) return false;
-
-            existing.Resolution = curriculum.Resolution;
-            existing.Duration = curriculum.Duration;
-            existing.StartDate = curriculum.StartDate;
-            existing.EndDate = curriculum.EndDate;
-            existing.VigencyDate = curriculum.VigencyDate;
-
-            await context.SaveChangesAsync();
-            return true;*/
         }
     }
 

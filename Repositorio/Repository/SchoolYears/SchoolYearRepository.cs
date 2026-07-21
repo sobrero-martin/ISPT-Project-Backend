@@ -151,6 +151,26 @@ namespace Repositorio.Repository.SchoolYears
                 await context.Set<SchoolYear>().AddAsync(schoolYearEntity);
                 await context.SaveChangesAsync();
 
+                var subjectIds = await context.Set<Subject>()
+                    .Where(s => s.CurriculumId == schoolYearEntity.CurriculumId)
+                    .Select(s => s.Id)
+                    .ToListAsync();
+
+                var divisionTemplates = await context.Set<DivisionTemplate>()
+                    .Where(d => subjectIds.Contains(d.SubjectId))
+                    .ToListAsync();
+
+                var divisions = divisionTemplates.Select(dt => new Division
+                {
+                    DivisionTemplateId = dt.Id,
+                    SchoolYearId = schoolYearEntity.Id,
+                    DivisionState = "Active",
+                    CreatedBy = schoolYear.CreatedById ?? Guid.Empty,
+                }).ToList();
+
+                await context.Set<Division>().AddRangeAsync(divisions);
+                await context.SaveChangesAsync();
+
                 return new ResponseDTO<SchoolYearPostDTO>
                 {
                     StatusCode = HttpStatusCode.Created,

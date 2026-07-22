@@ -119,7 +119,7 @@ namespace Repositorio.Repository.Careers
 
         }
 
-        public async Task<ResponseDTO<CurriculumDTO>> Post(CurriculumPostDTO curriculumPostDTO)
+        public async Task<ResponseDTO<string>> Post(CurriculumPostDTO curriculumPostDTO)
         {
             try
             {
@@ -135,24 +135,17 @@ namespace Repositorio.Repository.Careers
                 await context.Set<Curriculum>().AddAsync(curriculumEntity);
                 await context.SaveChangesAsync();
 
-                return new ResponseDTO<CurriculumDTO>
+                return new ResponseDTO<string>
                 {
                     StatusCode = System.Net.HttpStatusCode.Created,
-                    Object = new CurriculumDTO
-                    {
-                        Id = curriculumPostDTO.Id,
-                        Resolution = curriculumPostDTO.Resolution,
-                        Duration = curriculumPostDTO.Duration,
-                        VigencyDate = curriculumPostDTO.VigencyDate,
-                        EndDate = curriculumPostDTO.EndDate,
-                    },
-                    Message = "Plan de estudio creado exitosamente"
+                    Object = $"Plan de estudio {curriculumEntity.Resolution} creado exitosamente",
+                    Message = "Operación exitosa."
                 };
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error al crear el plan de estudio: {ex.Message}");
-                return new ResponseDTO<CurriculumDTO>
+                return new ResponseDTO<string>
                 {
                     StatusCode = System.Net.HttpStatusCode.InternalServerError,
                     Object = null,
@@ -168,24 +161,14 @@ namespace Repositorio.Repository.Careers
 
                 if (id != curriculumPostDTO.Id)
                 {
-                    return new ResponseDTO<string>
-                    {
-                        StatusCode = System.Net.HttpStatusCode.BadRequest,
-                        Object = null,
-                        Message = "El ID del plan de estudio no coincide con el ID proporcionado"
-                    };
+                    throw new Exception("idMismatch");
                 }
 
                 var existingCurriculum = await context.Set<Curriculum>().FirstOrDefaultAsync(c => c.Id == id);
 
                 if (existingCurriculum == null)
                 {
-                    return new ResponseDTO<string>
-                    {
-                        StatusCode = System.Net.HttpStatusCode.NotFound,
-                        Object = null,
-                        Message = "Plan de estudio no encontrado"
-                    };
+                    throw new Exception("curriculumNotFound");
                 }
 
                 existingCurriculum.Resolution = curriculumPostDTO.Resolution;
@@ -199,13 +182,33 @@ namespace Repositorio.Repository.Careers
                 return new ResponseDTO<string>
                 {
                     StatusCode = System.Net.HttpStatusCode.OK,
-                    Object = null,
-                    Message = "Plan de estudio actualizado exitosamente"
+                    Object = $"Plan de estudio {existingCurriculum.Resolution} actualizado exitosamente",
+                    Message = "Operación exitosa."
                 };
             }
             catch (Exception ex) 
             { 
                 Console.WriteLine($"Error al actualizar el plan de estudio: {ex.Message}");
+
+                if(ex.Message == "idMismatch")
+                {
+                    return new ResponseDTO<string>
+                    {
+                        StatusCode = System.Net.HttpStatusCode.BadRequest,
+                        Object = null,
+                        Message = "El ID del plan de estudio no coincide con el ID proporcionado"
+                    };
+                }
+
+                if(ex.Message == "curriculumNotFound")
+                {
+                    return new ResponseDTO<string>
+                    {
+                        StatusCode = System.Net.HttpStatusCode.NotFound,
+                        Object = null,
+                        Message = "Plan de estudio no encontrado"
+                    };
+                }
 
                 return new ResponseDTO<string>
                 {

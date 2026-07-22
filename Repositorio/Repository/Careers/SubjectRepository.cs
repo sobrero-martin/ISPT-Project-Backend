@@ -121,7 +121,7 @@ namespace Repositorio.Repository.Careers
 
         }
 
-        public async Task<ResponseDTO<SubjectDTO>> Post(SubjectPostDTO subject)
+        public async Task<ResponseDTO<string>> Post(SubjectPostDTO subject)
         {
             try
             {
@@ -140,19 +140,11 @@ namespace Repositorio.Repository.Careers
                 await context.Set<Subject>().AddAsync(newSubject);
                 await context.SaveChangesAsync();
 
-                return new ResponseDTO<SubjectDTO>
+                return new ResponseDTO<string>
                 {
                     StatusCode = System.Net.HttpStatusCode.Created,
-                    Object = new SubjectDTO
-                    {
-                        Code = newSubject.Code,
-                        Name = newSubject.Name,
-                        Year = newSubject.Year,
-                        Format = newSubject.Format,
-                        Type = newSubject.Type,
-                        ContactHour = newSubject.ContactHour
-                    },
-                    Message = "Materia creada exitosamente."
+                    Object = $"Materia {newSubject.Name} creada exitosamente.",
+                    Message = "Operación exitosa."
                 };
             }
             catch (Exception ex)
@@ -160,7 +152,7 @@ namespace Repositorio.Repository.Careers
                 Console.WriteLine(ex.StackTrace);
                 Console.WriteLine($"Error al crear materia: {ex.Message}");
 
-                return new ResponseDTO<SubjectDTO>
+                return new ResponseDTO<string>
                 {
                     StatusCode = System.Net.HttpStatusCode.InternalServerError,
                     Object = null,
@@ -176,24 +168,14 @@ namespace Repositorio.Repository.Careers
             {
                 if(id != subject.Id)
                 {
-                    return new ResponseDTO<string>
-                    {
-                        StatusCode = System.Net.HttpStatusCode.BadRequest,
-                        Object = null,
-                        Message = "El ID de la materia no coincide con el ID proporcionado."
-                    };
+                    throw new Exception("idMismatch");
                 }
 
                 var existingSubject = await context.Set<Subject>().FirstOrDefaultAsync(x => x.Id == id);
 
                 if(existingSubject == null)
                 {
-                    return new ResponseDTO<string>
-                    {
-                        StatusCode = System.Net.HttpStatusCode.NotFound,
-                        Object = null,
-                        Message = "Materia no encontrada."
-                    };
+                    throw new Exception("subjectNotFound");
                 }
 
                 existingSubject.Code = subject.Code;
@@ -209,13 +191,33 @@ namespace Repositorio.Repository.Careers
                 return new ResponseDTO<string>
                 {
                     StatusCode = System.Net.HttpStatusCode.OK,
-                    Object = null,
-                    Message = "Materia actualizada exitosamente."
+                    Object = $"Materia {existingSubject.Name} actualizada exitosamente.",
+                    Message = "Operación exitosa."
                 };
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error al actualizar materia: {ex.Message}");
+
+                if(ex.Message == "idMismatch")
+                {
+                    return new ResponseDTO<string>
+                    {
+                        StatusCode = System.Net.HttpStatusCode.BadRequest,
+                        Object = null,
+                        Message = "El ID de la materia no coincide con el ID proporcionado."
+                    };
+                }
+
+                if(ex.Message == "subjectNotFound")
+                {
+                    return new ResponseDTO<string>
+                    {
+                        StatusCode = System.Net.HttpStatusCode.NotFound,
+                        Object = null,
+                        Message = "Materia no encontrada."
+                    };
+                }
 
                 return new ResponseDTO<string>
                 {

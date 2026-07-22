@@ -67,7 +67,7 @@ namespace Repositorio.Repository.Careers
             }
         }
 
-        public async Task<ResponseDTO<DivisionTemplateDTO>> Post(long subjectId, Guid? CreatedById)
+        public async Task<ResponseDTO<string>> Post(long subjectId, Guid? CreatedById)
         {
             try
             {
@@ -76,12 +76,7 @@ namespace Repositorio.Repository.Careers
 
                 if (!subjectExists)
                 {
-                    return new ResponseDTO<DivisionTemplateDTO>
-                    {
-                        StatusCode = System.Net.HttpStatusCode.NotFound,
-                        Object = null,
-                        Message = "Materia no encontrada."
-                    };
+                    throw new Exception("SubjectNotFound");
                 }
 
                 var lastTemplate = await context.Set<DivisionTemplate>()
@@ -103,22 +98,28 @@ namespace Repositorio.Repository.Careers
                 context.Set<DivisionTemplate>().Add(divisionTemplate);
                 await context.SaveChangesAsync();
 
-                return new ResponseDTO<DivisionTemplateDTO>
+                return new ResponseDTO<string>
                 {
                     StatusCode = System.Net.HttpStatusCode.Created,
-                    Object = new DivisionTemplateDTO
-                    {
-                        Id = divisionTemplate.Id,
-                        Name = divisionTemplate.Name
-                    },
-                    Message = "Plantilla de división creada exitosamente."
+                    Object = $"Plantilla de división {divisionTemplate.Name} creada exitosamente.",
+                    Message = "Operación exitosa."
                 };
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error al crear plantilla de división: {ex.Message}");
 
-                return new ResponseDTO<DivisionTemplateDTO>
+                if (ex.Message == "SubjectNotFound")
+                {
+                    return new ResponseDTO<string>
+                    {
+                        StatusCode = System.Net.HttpStatusCode.NotFound,
+                        Object = null,
+                        Message = "Materia no encontrada."
+                    };
+                }
+
+                return new ResponseDTO<string>
                 {
                     StatusCode = System.Net.HttpStatusCode.InternalServerError,
                     Object = null,

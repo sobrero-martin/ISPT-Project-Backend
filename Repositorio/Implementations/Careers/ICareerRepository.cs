@@ -12,6 +12,6 @@ namespace Repositorio.Implementations.Careers
         Task<ResponseDTO<List<CareerDTO>>> GetFull();
         Task<ResponseDTO<CareerDTO>> GetById(long id);
         Task<ResponseDTO<string>> Put(long id, CareerPostDTO careerPostDTO);
-        Task<ResponseDTO<CareerDTO>> Post(CareerPostDTO careerPostDTO);
+        Task<ResponseDTO<string>> Post(CareerPostDTO careerPostDTO);
     }
 }

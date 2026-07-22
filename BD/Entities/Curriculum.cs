@@ -1,7 +1,8 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
-using Microsoft.EntityFrameworkCore;
 
 namespace BD.Entidades
 {
@@ -16,6 +17,7 @@ namespace BD.Entidades
         public DateTime VigencyDate { get; set; }
         public DateTime EndDate { get; set; }
 
+        [Range(1, 500, ErrorMessage = "La duración debe ser un valor entre 1 y 500")]
         public int Duration { get; set; }
     }
 }

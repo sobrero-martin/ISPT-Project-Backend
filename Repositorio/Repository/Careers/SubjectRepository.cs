@@ -68,7 +68,6 @@ namespace Repositorio.Repository.Careers
                     Message = "Ocurrió un error al obtener las materias."
                 };
             }
-
         }
 
         public async Task<ResponseDTO<SubjectDTO>> GetById(long id)
@@ -90,7 +89,7 @@ namespace Repositorio.Repository.Careers
                     })
                     .FirstOrDefaultAsync(x => x.Id == id);
 
-                if(subject == null)
+                if (subject == null)
                 {
                     return new ResponseDTO<SubjectDTO>
                     {
@@ -118,10 +117,9 @@ namespace Repositorio.Repository.Careers
                     Message = "Ocurrió un error al obtener la materia."
                 };
             }
-
         }
 
-        public async Task<ResponseDTO<SubjectDTO>> Post(SubjectPostDTO subject)
+        public async Task<ResponseDTO<string>> Post(SubjectPostDTO subject)
         {
             try
             {
@@ -140,19 +138,11 @@ namespace Repositorio.Repository.Careers
                 await context.Set<Subject>().AddAsync(newSubject);
                 await context.SaveChangesAsync();
 
-                return new ResponseDTO<SubjectDTO>
+                return new ResponseDTO<string>
                 {
                     StatusCode = System.Net.HttpStatusCode.Created,
-                    Object = new SubjectDTO
-                    {
-                        Code = newSubject.Code,
-                        Name = newSubject.Name,
-                        Year = newSubject.Year,
-                        Format = newSubject.Format,
-                        Type = newSubject.Type,
-                        ContactHour = newSubject.ContactHour
-                    },
-                    Message = "Materia creada exitosamente."
+                    Object = $"Materia {newSubject.Name} creada exitosamente.",
+                    Message = "Operación exitosa."
                 };
             }
             catch (Exception ex)
@@ -162,48 +152,37 @@ namespace Repositorio.Repository.Careers
 
                 if (ex.Message.Contains("Duplicate entry"))
                 {
-                    return new ResponseDTO<SubjectDTO>
+                    return new ResponseDTO<string>
                     {
                         StatusCode = System.Net.HttpStatusCode.Conflict,
                         Object = null,
                         Message = "¡El código de la materia  ya existe en el sistema, no puede haber duplicados!"
                     };
                 }
-                
-                return new ResponseDTO<SubjectDTO>
+
+                return new ResponseDTO<string>
                 {
                     StatusCode = System.Net.HttpStatusCode.InternalServerError,
                     Object = null,
                     Message = "Ocurrió un error al crear la materia."
                 };
             }
-
         }
 
         public async Task<ResponseDTO<string>> Put(long id, SubjectPostDTO subject)
         {
             try
             {
-                if(id != subject.Id)
+                if (id != subject.Id)
                 {
-                    return new ResponseDTO<string>
-                    {
-                        StatusCode = System.Net.HttpStatusCode.BadRequest,
-                        Object = null,
-                        Message = "El ID de la materia no coincide con el ID proporcionado."
-                    };
+                    throw new Exception("idMismatch");
                 }
 
                 var existingSubject = await context.Set<Subject>().FirstOrDefaultAsync(x => x.Id == id);
 
-                if(existingSubject == null)
+                if (existingSubject == null)
                 {
-                    return new ResponseDTO<string>
-                    {
-                        StatusCode = System.Net.HttpStatusCode.NotFound,
-                        Object = null,
-                        Message = "Materia no encontrada."
-                    };
+                    throw new Exception("subjectNotFound");
                 }
 
                 if (context.Subjects.Any(x => x.Code == subject.Code)) throw new Exception("Duplicate entry");
@@ -221,8 +200,8 @@ namespace Repositorio.Repository.Careers
                 return new ResponseDTO<string>
                 {
                     StatusCode = System.Net.HttpStatusCode.OK,
-                    Object = null,
-                    Message = "Materia actualizada exitosamente."
+                    Object = $"Materia {existingSubject.Name} actualizada exitosamente.",
+                    Message = "Operación exitosa."
                 };
             }
             catch (Exception ex)
@@ -238,7 +217,27 @@ namespace Repositorio.Repository.Careers
                         Message = "¡El código de la materia  ya existe en el sistema, no puede haber duplicados!"
                     };
                 }
-                
+
+                if (ex.Message == "idMismatch")
+                {
+                    return new ResponseDTO<string>
+                    {
+                        StatusCode = System.Net.HttpStatusCode.BadRequest,
+                        Object = null,
+                        Message = "El ID de la materia no coincide con el ID proporcionado."
+                    };
+                }
+
+                if (ex.Message == "subjectNotFound")
+                {
+                    return new ResponseDTO<string>
+                    {
+                        StatusCode = System.Net.HttpStatusCode.NotFound,
+                        Object = null,
+                        Message = "Materia no encontrada."
+                    };
+                }
+
                 return new ResponseDTO<string>
                 {
                     StatusCode = System.Net.HttpStatusCode.InternalServerError,
@@ -248,7 +247,8 @@ namespace Repositorio.Repository.Careers
             }
         }
 
-        public async Task<ResponseDTO<List<SubjectCorrelativesDTO>>> GetPossibleCorrelatives(long curriculumId, long subjectId)
+        public async Task<ResponseDTO<List<SubjectCorrelativesDTO>>> GetPossibleCorrelatives(long curriculumId,
+            long subjectId)
         {
             try
             {
@@ -278,7 +278,7 @@ namespace Repositorio.Repository.Careers
                     };
                 }
 
-                    var subjects = await context.Set<Subject>()
+                var subjects = await context.Set<Subject>()
                     .AsNoTracking()
                     .Where(s => s.CurriculumId == curriculumId && s.Year < subjectYear)
                     .Select(s => new SubjectCorrelativesDTO
@@ -309,7 +309,6 @@ namespace Repositorio.Repository.Careers
                     Message = "Ocurrió un error al obtener las posibles correlativas."
                 };
             }
-
         }
 
         public async Task<ResponseDTO<List<SubjectTableDTO>>> GetBySchoolYear(long schoolYearId)
@@ -349,7 +348,6 @@ namespace Repositorio.Repository.Careers
                     Object = subjects,
                     Message = "Materias obtenidas exitosamente."
                 };
-
             }
             catch (Exception ex)
             {
@@ -365,6 +363,3 @@ namespace Repositorio.Repository.Careers
         }
     }
 }
-
-
-

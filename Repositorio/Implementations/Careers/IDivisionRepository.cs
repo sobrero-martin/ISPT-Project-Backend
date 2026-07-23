@@ -8,7 +8,6 @@ namespace Repositorio.Implementations.Careers
 {
     public interface IDivisionRepository
     {
-        Task<ResponseDTO<List<DivisionDTO>>> GetBySubject(long subjectId);
-        Task<ResponseDTO<DivisionDTO>> Post(long subjectId);
+        Task<ResponseDTO<List<DivisionDTO>>> GetBySchoolYearSubject(long schoolYearId, long subjectId);
     }
 }

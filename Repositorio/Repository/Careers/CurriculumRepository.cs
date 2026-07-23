@@ -119,7 +119,7 @@ namespace Repositorio.Repository.Careers
 
         }
 
-        public async Task<ResponseDTO<CurriculumDTO>> Post(CurriculumPostDTO curriculumPostDTO)
+        public async Task<ResponseDTO<string>> Post(CurriculumPostDTO curriculumPostDTO)
         {
             try
             {
@@ -135,18 +135,11 @@ namespace Repositorio.Repository.Careers
                 await context.Set<Curriculum>().AddAsync(curriculumEntity);
                 await context.SaveChangesAsync();
 
-                return new ResponseDTO<CurriculumDTO>
+                return new ResponseDTO<string>
                 {
                     StatusCode = System.Net.HttpStatusCode.Created,
-                    Object = new CurriculumDTO
-                    {
-                        Id = curriculumPostDTO.Id,
-                        Resolution = curriculumPostDTO.Resolution,
-                        Duration = curriculumPostDTO.Duration,
-                        VigencyDate = curriculumPostDTO.VigencyDate,
-                        EndDate = curriculumPostDTO.EndDate ?? DateTime.MinValue,
-                    },
-                    Message = "Plan de estudio creado exitosamente"
+                    Object = $"Plan de estudio {curriculumEntity.Resolution} creado exitosamente",
+                    Message = "Operación exitosa."
                 };
             }
             catch (Exception ex)
@@ -155,15 +148,15 @@ namespace Repositorio.Repository.Careers
 
                 if (ex.InnerException != null && ex.InnerException.Message.Contains("Duplicate entry"))
                 {
-                    return new ResponseDTO<CurriculumDTO>
+                    return new ResponseDTO<string>
                     {
                         StatusCode = System.Net.HttpStatusCode.Conflict,
                         Object = null,
                         Message = "¡El código de la resolución ya existe en el sistema, no puede haber duplicados!"
                     };
                 }
-                
-                return new ResponseDTO<CurriculumDTO>
+
+                return new ResponseDTO<string>
                 {
                     StatusCode = System.Net.HttpStatusCode.InternalServerError,
                     Object = null,
@@ -178,24 +171,14 @@ namespace Repositorio.Repository.Careers
             {
                 if (id != curriculumPostDTO.Id)
                 {
-                    return new ResponseDTO<string>
-                    {
-                        StatusCode = System.Net.HttpStatusCode.BadRequest,
-                        Object = null,
-                        Message = "El ID del plan de estudio no coincide con el ID proporcionado"
-                    };
+                    throw new Exception("idMismatch");
                 }
 
                 var existingCurriculum = await context.Set<Curriculum>().FirstOrDefaultAsync(c => c.Id == id);
 
                 if (existingCurriculum == null)
                 {
-                    return new ResponseDTO<string>
-                    {
-                        StatusCode = System.Net.HttpStatusCode.NotFound,
-                        Object = null,
-                        Message = "Plan de estudio no encontrado"
-                    };
+                    throw new Exception("curriculumNotFound");
                 }
 
                 if (context.Curriculums.Any(x => x.Resolution == curriculumPostDTO.Resolution && x.CareerId == curriculumPostDTO.CareerId)) 
@@ -212,14 +195,14 @@ namespace Repositorio.Repository.Careers
                 return new ResponseDTO<string>
                 {
                     StatusCode = System.Net.HttpStatusCode.OK,
-                    Object = null,
-                    Message = "Plan de estudio actualizado exitosamente"
+                    Object = $"Plan de estudio {existingCurriculum.Resolution} actualizado exitosamente",
+                    Message = "Operación exitosa."
                 };
             }
             catch (Exception ex) 
             { 
                 Console.WriteLine($"Error al actualizar el plan de estudio: {ex.Message}");
-
+                
                 if (ex.Message.Contains("Duplicate entry"))
                 {
                     return new ResponseDTO<string>
@@ -227,6 +210,26 @@ namespace Repositorio.Repository.Careers
                         StatusCode = System.Net.HttpStatusCode.Conflict,
                         Object = null,
                         Message = "¡El código de la resolución ya existe en el sistema, no puede haber duplicados!"
+                    };
+                }
+                
+                if(ex.Message == "idMismatch")
+                {
+                    return new ResponseDTO<string>
+                    {
+                        StatusCode = System.Net.HttpStatusCode.BadRequest,
+                        Object = null,
+                        Message = "El ID del plan de estudio no coincide con el ID proporcionado"
+                    };
+                }
+
+                if(ex.Message == "curriculumNotFound")
+                {
+                    return new ResponseDTO<string>
+                    {
+                        StatusCode = System.Net.HttpStatusCode.NotFound,
+                        Object = null,
+                        Message = "Plan de estudio no encontrado"
                     };
                 }
                 

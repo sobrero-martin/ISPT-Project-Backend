@@ -101,7 +101,7 @@ namespace Repositorio.Repository
 
         }
 
-        public async Task<ResponseDTO<CareerDTO>> Post(CareerPostDTO careerPostDTO)
+        public async Task<ResponseDTO<string>> Post(CareerPostDTO careerPostDTO)
         {
             try
             {
@@ -116,23 +116,18 @@ namespace Repositorio.Repository
                 await context.Set<Career>().AddAsync(careerEntity);
                 await context.SaveChangesAsync();
 
-                return new ResponseDTO<CareerDTO>
+                return new ResponseDTO<string>
                 {
                     StatusCode = HttpStatusCode.Created,
-                    Message = "Carrera creada exitosamente.",
-                    Object = new CareerDTO
-                    {
-                        Id = careerPostDTO.Id,
-                        Name = careerPostDTO.Name,
-                        Title = careerPostDTO.Title
-                    }
+                    Message = "Operación exitosa.",
+                    Object = $"¡Carrera:{careerPostDTO.Name} creada con éxito!"
                 };
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error al crear la carrera: {ex.Message}");
 
-                return new ResponseDTO<CareerDTO>
+                return new ResponseDTO<string>
                 {
                     StatusCode = HttpStatusCode.InternalServerError,
                     Message = "Ocurrió un error al crear la carrera.",
@@ -147,24 +142,14 @@ namespace Repositorio.Repository
             {
                 if (id != careerPostDTO.Id)
                 {
-                    return new ResponseDTO<string>
-                    {
-                        StatusCode = HttpStatusCode.BadRequest,
-                        Message = "El ID proporcionado no coincide con el ID de la carrera.",
-                        Object = null
-                    };
+                    throw new Exception("IdMismatch");         
                 }
 
                 var existingCareer = await context.Set<Career>().FirstOrDefaultAsync(c => c.Id == id);
 
                 if (existingCareer == null)
                 {
-                    return new ResponseDTO<string>
-                    {
-                        StatusCode = HttpStatusCode.NotFound,
-                        Message = "Carrera no encontrada.",
-                        Object = null
-                    };
+                    throw new Exception("careerNotFound");
                 }
 
                 existingCareer.Name = careerPostDTO.Name;
@@ -176,13 +161,34 @@ namespace Repositorio.Repository
                 return new ResponseDTO<string>
                 {
                     StatusCode = HttpStatusCode.OK,
-                    Message = "Carrera actualizada exitosamente.",
-                    Object = null
+                    Message = "Operación exitosa.",
+                    Object = $"Carrera:{careerPostDTO.Name} actualizada con éxito"
                 };
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error al actualizar la carrera: {ex.Message}");
+
+                if (ex.Message == "IdMismatch")
+                {
+                    return new ResponseDTO<string>
+                    {
+                        StatusCode = HttpStatusCode.BadRequest,
+                        Message = "El ID proporcionado no coincide con el ID de la carrera",
+                        Object = $"ID proporcionado: {careerPostDTO.Id}, ID de la carrera: {id}."
+                    };
+                }
+
+                if(ex.Message == "careerNotFound")
+                {
+                    return new ResponseDTO<string>
+                    {
+                        StatusCode = HttpStatusCode.NotFound,
+                        Message = "Carrera no encontrada.",
+                        Object = null
+                    };
+                }
+
 
                 return new ResponseDTO<string>
                 {

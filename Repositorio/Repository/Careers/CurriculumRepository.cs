@@ -46,7 +46,7 @@ namespace Repositorio.Repository.Careers
                         Resolution = c.Resolution,
                         Duration = c.Duration,
                         VigencyDate = c.VigencyDate,
-                        EndDate = c.EndDate
+                        EndDate = c.EndDate ?? DateTime.MinValue
                     })
                     .ToListAsync();
 
@@ -85,7 +85,7 @@ namespace Repositorio.Repository.Careers
                         Resolution = c.Resolution,
                         Duration = c.Duration,
                         VigencyDate = c.VigencyDate,
-                        EndDate = c.EndDate
+                        EndDate = c.EndDate ?? DateTime.MinValue
                     })
                     .FirstOrDefaultAsync();
 
@@ -144,7 +144,7 @@ namespace Repositorio.Repository.Careers
                         Resolution = curriculumPostDTO.Resolution,
                         Duration = curriculumPostDTO.Duration,
                         VigencyDate = curriculumPostDTO.VigencyDate,
-                        EndDate = curriculumPostDTO.EndDate,
+                        EndDate = curriculumPostDTO.EndDate ?? DateTime.MinValue,
                     },
                     Message = "Plan de estudio creado exitosamente"
                 };
@@ -152,6 +152,17 @@ namespace Repositorio.Repository.Careers
             catch (Exception ex)
             {
                 Console.WriteLine($"Error al crear el plan de estudio: {ex.Message}");
+
+                if (ex.InnerException != null && ex.InnerException.Message.Contains("Duplicate entry"))
+                {
+                    return new ResponseDTO<CurriculumDTO>
+                    {
+                        StatusCode = System.Net.HttpStatusCode.Conflict,
+                        Object = null,
+                        Message = "¡El código de la resolución ya existe en el sistema, no puede haber duplicados!"
+                    };
+                }
+                
                 return new ResponseDTO<CurriculumDTO>
                 {
                     StatusCode = System.Net.HttpStatusCode.InternalServerError,
@@ -165,7 +176,6 @@ namespace Repositorio.Repository.Careers
         {
             try
             {
-
                 if (id != curriculumPostDTO.Id)
                 {
                     return new ResponseDTO<string>
@@ -188,10 +198,13 @@ namespace Repositorio.Repository.Careers
                     };
                 }
 
+                if (context.Curriculums.Any(x => x.Resolution == curriculumPostDTO.Resolution && x.CareerId == curriculumPostDTO.CareerId)) 
+                    throw new Exception("Duplicate entry");
+
                 existingCurriculum.Resolution = curriculumPostDTO.Resolution;
                 existingCurriculum.Duration = curriculumPostDTO.Duration;
                 existingCurriculum.VigencyDate = curriculumPostDTO.VigencyDate;
-                existingCurriculum.EndDate = curriculumPostDTO.EndDate;
+                if(curriculumPostDTO.EndDate != null) existingCurriculum.EndDate = (DateTime) curriculumPostDTO.EndDate;
                 existingCurriculum.UpdatedBy = curriculumPostDTO.UpdatedById ?? Guid.Empty;
 
                 await context.SaveChangesAsync();
@@ -207,6 +220,16 @@ namespace Repositorio.Repository.Careers
             { 
                 Console.WriteLine($"Error al actualizar el plan de estudio: {ex.Message}");
 
+                if (ex.Message.Contains("Duplicate entry"))
+                {
+                    return new ResponseDTO<string>
+                    {
+                        StatusCode = System.Net.HttpStatusCode.Conflict,
+                        Object = null,
+                        Message = "¡El código de la resolución ya existe en el sistema, no puede haber duplicados!"
+                    };
+                }
+                
                 return new ResponseDTO<string>
                 {
                     StatusCode = System.Net.HttpStatusCode.InternalServerError,

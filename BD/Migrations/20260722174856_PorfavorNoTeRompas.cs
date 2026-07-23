@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BD.Migrations
 {
     /// <inheritdoc />
-    public partial class inicio2 : Migration
+    public partial class PorfavorNoTeRompas : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -269,11 +269,10 @@ namespace BD.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     CareerId = table.Column<long>(type: "bigint", nullable: false),
-                    Resolution = table.Column<string>(type: "longtext", nullable: false)
+                    Resolution = table.Column<string>(type: "varchar(255)", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    StartDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     VigencyDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Duration = table.Column<int>(type: "int", nullable: false),
                     state = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
@@ -491,7 +490,7 @@ namespace BD.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Type = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Duration = table.Column<int>(type: "int", nullable: false),
+                    ContactHour = table.Column<int>(type: "int", nullable: false),
                     state = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
@@ -898,17 +897,17 @@ namespace BD.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "1d274dd5-0d24-4e5d-bf0a-9ac3d93f1504", "5", "Estudiante", "ESTUDIANTE" },
-                    { "200ae8f9-b361-4566-b15f-405a6618a5e5", "3", "Preceptor_Auxiliar", "PRECEPTOR_AUXILIAR" },
-                    { "7f732606-8c07-44b1-b454-a26b61d9a28a", "2", "Preceptor", "PRECEPTOR" },
-                    { "d3a48b0c-64ab-44a8-ad07-36b935fc194a", "4", "Docente", "DOCENTE" },
+                    { "03ef498e-7a15-487c-937a-a316e9684bd6", "4", "Docente", "DOCENTE" },
+                    { "37ce94d6-5bd3-4121-8933-9371d9a31fb1", "3", "Preceptor_Auxiliar", "PRECEPTOR_AUXILIAR" },
+                    { "61c42a8a-e467-46b2-9865-767a9f8ef1a3", "5", "Estudiante", "ESTUDIANTE" },
+                    { "852ef5e1-2c7e-4768-a087-50e1af37b5c1", "2", "Preceptor", "PRECEPTOR" },
                     { "rol-directivo-id", "1", "Directivo", "DIRECTIVO" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "ae65a54a-aab5-4d0c-aa17-554334b49e8c", 0, "739e7a30-5fa2-4b1b-9323-d9014ecd0550", "", true, false, null, "", "SUPERADMINISPT-2026", "AQAAAAIAAYagAAAAENBI43HjPrTc88N2mIs8Z/B/SznMxKgnFQmOmEeeJGmhkaYyNm63WpismkJxA2xLLA==", null, false, "bc952f55-92c2-4235-9ad6-56e828d0e80b", false, "SuperadminISPT-2026" });
+                values: new object[] { "ae65a54a-aab5-4d0c-aa17-554334b49e8c", 0, "363a1bc8-fd03-40f6-8e2a-36de201436eb", "", true, false, null, "", "SUPERADMINISPT-2026", "AQAAAAIAAYagAAAAEKcJjEfsXExvb5HSkY1p9xn58sqWSQ8FQnEYayTVsLin1Jm6P4qtb0hLydJRVlbo9w==", null, false, "1e6d6705-3dad-4aaf-bb2f-cb97164cddd5", false, "SuperadminISPT-2026" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
@@ -984,9 +983,10 @@ namespace BD.Migrations
                 column: "SubjectId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Curriculums_CareerId",
+                name: "IX_Curriculums_CareerId_Resolution",
                 table: "Curriculums",
-                column: "CareerId");
+                columns: new[] { "CareerId", "Resolution" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Degrees_PersonId",

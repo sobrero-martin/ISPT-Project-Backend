@@ -160,6 +160,16 @@ namespace Repositorio.Repository.Careers
                 Console.WriteLine(ex.StackTrace);
                 Console.WriteLine($"Error al crear materia: {ex.Message}");
 
+                if (ex.Message.Contains("Duplicate entry"))
+                {
+                    return new ResponseDTO<SubjectDTO>
+                    {
+                        StatusCode = System.Net.HttpStatusCode.Conflict,
+                        Object = null,
+                        Message = "¡El código de la materia  ya existe en el sistema, no puede haber duplicados!"
+                    };
+                }
+                
                 return new ResponseDTO<SubjectDTO>
                 {
                     StatusCode = System.Net.HttpStatusCode.InternalServerError,
@@ -196,6 +206,8 @@ namespace Repositorio.Repository.Careers
                     };
                 }
 
+                if (context.Subjects.Any(x => x.Code == subject.Code)) throw new Exception("Duplicate entry");
+
                 existingSubject.Code = subject.Code;
                 existingSubject.Name = subject.Name;
                 existingSubject.Year = subject.Year;
@@ -217,6 +229,16 @@ namespace Repositorio.Repository.Careers
             {
                 Console.WriteLine($"Error al actualizar materia: {ex.Message}");
 
+                if (ex.Message.Contains("Duplicate entry"))
+                {
+                    return new ResponseDTO<string>
+                    {
+                        StatusCode = System.Net.HttpStatusCode.Conflict,
+                        Object = null,
+                        Message = "¡El código de la materia  ya existe en el sistema, no puede haber duplicados!"
+                    };
+                }
+                
                 return new ResponseDTO<string>
                 {
                     StatusCode = System.Net.HttpStatusCode.InternalServerError,
@@ -224,7 +246,6 @@ namespace Repositorio.Repository.Careers
                     Message = "Ocurrió un error al actualizar la materia."
                 };
             }
-
         }
 
         public async Task<ResponseDTO<List<SubjectCorrelativesDTO>>> GetPossibleCorrelatives(long curriculumId, long subjectId)
@@ -341,7 +362,6 @@ namespace Repositorio.Repository.Careers
                     Message = "Ocurrió un error al obtener las materias."
                 };
             }
-
         }
     }
 }

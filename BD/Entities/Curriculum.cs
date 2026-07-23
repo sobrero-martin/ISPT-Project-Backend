@@ -14,7 +14,7 @@ namespace BD.Entidades
         public required string Resolution { get; set; }
 
         public DateTime VigencyDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public DateTime? EndDate { get; set; }
 
         public int Duration { get; set; }
     }

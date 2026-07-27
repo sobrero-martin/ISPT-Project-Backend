@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Repositorio.Implementations.Careers;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 
 namespace Repositorio.Repository.Careers
@@ -33,7 +34,7 @@ namespace Repositorio.Repository.Careers
                     {
                         StatusCode = System.Net.HttpStatusCode.NotFound,
                         Object = null,
-                        Message = "Materia no encontrada."
+                        Message = "Espacio curricular no encontrado."
                     };
                 }
 
@@ -44,6 +45,7 @@ namespace Repositorio.Repository.Careers
                     {
                         Id = s.Id,
                         Name = s.Name,
+                        State = s.TemplateState
                     })
                     .ToListAsync();
 
@@ -56,7 +58,7 @@ namespace Repositorio.Repository.Careers
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error al obtener divisiones por materia: {ex.Message}");
+                Console.WriteLine($"Error al obtener divisiones por espacio curricular: {ex.Message}");
 
                 return new ResponseDTO<List<DivisionTemplateDTO>>
                 {
@@ -92,6 +94,7 @@ namespace Repositorio.Repository.Careers
                 {
                     SubjectId = subjectId,
                     Name = nextName,
+                    TemplateState = true,
                     CreatedBy = CreatedById ?? Guid.Empty
                 };
 
@@ -115,7 +118,7 @@ namespace Repositorio.Repository.Careers
                     {
                         StatusCode = System.Net.HttpStatusCode.NotFound,
                         Object = null,
-                        Message = "Materia no encontrada."
+                        Message = "Espacio curricular no encontrado."
                     };
                 }
 
@@ -124,6 +127,51 @@ namespace Repositorio.Repository.Careers
                     StatusCode = System.Net.HttpStatusCode.InternalServerError,
                     Object = null,
                     Message = "Ocurrió un error al crear la plantilla de división."
+                };
+            }
+        }
+
+        public async Task<ResponseDTO<string>> ChangeStatus(long divisionTemplateId)
+        {
+            using var transaction = await context.Database.BeginTransactionAsync();
+            try
+            {
+                Console.WriteLine($"Division template: {divisionTemplateId}");
+                var divisionTemplate = await context.DivisionTemplates.FirstOrDefaultAsync(d => d.Id == divisionTemplateId);
+
+                if (divisionTemplate == null) throw new Exception("SubjectNotFound");
+                
+                divisionTemplate.TemplateState = !divisionTemplate.TemplateState;
+                await context.SaveChangesAsync();
+                
+                await transaction.CommitAsync();
+                return new ResponseDTO<string>()
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Message = "Éxito",
+                    Object = "¡Estado de división cambiado con éxito!"
+                };
+            }
+            catch (Exception e)
+            {
+                await transaction.RollbackAsync();
+                Console.WriteLine("Error al intentar cambiar el estado de una división: " + e.Message);
+
+                if (e.Message == "SubjectNotFound")
+                {
+                    return new ResponseDTO<string>
+                    {
+                        StatusCode = HttpStatusCode.NotFound,
+                        Object = null,
+                        Message = "División no encontrada."
+                    };
+                }
+                
+                return new ResponseDTO<string>()
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Message = "¡Hubo un error al intentar cambiar el estado de la división!",
+                    Object = null
                 };
             }
         }

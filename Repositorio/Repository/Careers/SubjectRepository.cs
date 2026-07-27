@@ -54,18 +54,18 @@ namespace Repositorio.Repository.Careers
                 {
                     StatusCode = System.Net.HttpStatusCode.OK,
                     Object = subjects,
-                    Message = "Materias obtenidas exitosamente."
+                    Message = "Espacios curriculares obtenidos exitosamente."
                 };
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error al obtener materias por plan de estudio: {ex.Message}");
+                Console.WriteLine($"Error al obtener espacio curricular por plan de estudio: {ex.Message}");
 
                 return new ResponseDTO<List<SubjectTableDTO>>
                 {
                     StatusCode = System.Net.HttpStatusCode.InternalServerError,
                     Object = null,
-                    Message = "Ocurrió un error al obtener las materias."
+                    Message = "Ocurrió un error al obtener los espacios curriculares."
                 };
             }
         }
@@ -95,7 +95,7 @@ namespace Repositorio.Repository.Careers
                     {
                         StatusCode = System.Net.HttpStatusCode.NotFound,
                         Object = null,
-                        Message = "Materia no encontrada."
+                        Message = "Espacio curricular no encontrado."
                     };
                 }
 
@@ -103,7 +103,7 @@ namespace Repositorio.Repository.Careers
                 {
                     StatusCode = System.Net.HttpStatusCode.OK,
                     Object = subject,
-                    Message = "Materia obtenida exitosamente."
+                    Message = "Espacio curricular obtenido exitosamente."
                 };
             }
             catch (Exception ex)
@@ -114,7 +114,7 @@ namespace Repositorio.Repository.Careers
                 {
                     StatusCode = System.Net.HttpStatusCode.InternalServerError,
                     Object = null,
-                    Message = "Ocurrió un error al obtener la materia."
+                    Message = "Ocurrió un error al obtener el espacio curricular."
                 };
             }
         }
@@ -141,14 +141,14 @@ namespace Repositorio.Repository.Careers
                 return new ResponseDTO<string>
                 {
                     StatusCode = System.Net.HttpStatusCode.Created,
-                    Object = $"Materia {newSubject.Name} creada exitosamente.",
+                    Object = $"Espacio curricular: {newSubject.Name} creado exitosamente.",
                     Message = "Operación exitosa."
                 };
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.StackTrace);
-                Console.WriteLine($"Error al crear materia: {ex.Message}");
+                Console.WriteLine($"Error al crear espacio curricular: {ex.Message}");
 
                 if (ex.Message.Contains("Duplicate entry"))
                 {
@@ -156,7 +156,7 @@ namespace Repositorio.Repository.Careers
                     {
                         StatusCode = System.Net.HttpStatusCode.Conflict,
                         Object = null,
-                        Message = "¡El código de la materia  ya existe en el sistema, no puede haber duplicados!"
+                        Message = "¡El código del espacio curricular ya existe en el sistema, no puede haber duplicados!"
                     };
                 }
 
@@ -164,7 +164,7 @@ namespace Repositorio.Repository.Careers
                 {
                     StatusCode = System.Net.HttpStatusCode.InternalServerError,
                     Object = null,
-                    Message = "Ocurrió un error al crear la materia."
+                    Message = "Ocurrió un error al crear el espacio curricular."
                 };
             }
         }
@@ -185,7 +185,7 @@ namespace Repositorio.Repository.Careers
                     throw new Exception("subjectNotFound");
                 }
 
-                if (context.Subjects.Any(x => x.Code == subject.Code)) throw new Exception("Duplicate entry");
+                if (context.Subjects.Any(x => x.Id != subject.Id && x.Code == subject.Code)) throw new Exception("Duplicate entry");
 
                 existingSubject.Code = subject.Code;
                 existingSubject.Name = subject.Name;
@@ -200,7 +200,7 @@ namespace Repositorio.Repository.Careers
                 return new ResponseDTO<string>
                 {
                     StatusCode = System.Net.HttpStatusCode.OK,
-                    Object = $"Materia {existingSubject.Name} actualizada exitosamente.",
+                    Object = $"Espacio curricular: {existingSubject.Name} actualizado exitosamente.",
                     Message = "Operación exitosa."
                 };
             }
@@ -214,7 +214,7 @@ namespace Repositorio.Repository.Careers
                     {
                         StatusCode = System.Net.HttpStatusCode.Conflict,
                         Object = null,
-                        Message = "¡El código de la materia  ya existe en el sistema, no puede haber duplicados!"
+                        Message = "¡El código del espacio curricular ya existe en el sistema, no puede haber duplicados!"
                     };
                 }
 
@@ -224,7 +224,7 @@ namespace Repositorio.Repository.Careers
                     {
                         StatusCode = System.Net.HttpStatusCode.BadRequest,
                         Object = null,
-                        Message = "El ID de la materia no coincide con el ID proporcionado."
+                        Message = "El ID del espacio curricular no coincide con el ID proporcionado."
                     };
                 }
 
@@ -234,7 +234,7 @@ namespace Repositorio.Repository.Careers
                     {
                         StatusCode = System.Net.HttpStatusCode.NotFound,
                         Object = null,
-                        Message = "Materia no encontrada."
+                        Message = "Espacio curricular no encontrado."
                     };
                 }
 
@@ -242,7 +242,7 @@ namespace Repositorio.Repository.Careers
                 {
                     StatusCode = System.Net.HttpStatusCode.InternalServerError,
                     Object = null,
-                    Message = "Ocurrió un error al actualizar la materia."
+                    Message = "Ocurrió un error al actualizar el espacio curricular."
                 };
             }
         }
@@ -295,7 +295,7 @@ namespace Repositorio.Repository.Careers
                 {
                     StatusCode = System.Net.HttpStatusCode.OK,
                     Object = subjects,
-                    Message = "Materias obtenidas exitosamente."
+                    Message = "Espacios curriculares obtenidos exitosamente."
                 };
             }
             catch (Exception ex)
@@ -346,18 +346,18 @@ namespace Repositorio.Repository.Careers
                 {
                     StatusCode = System.Net.HttpStatusCode.OK,
                     Object = subjects,
-                    Message = "Materias obtenidas exitosamente."
+                    Message = "Espacios curriculares obtenidos exitosamente."
                 };
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error al obtener materias por año escolar: {ex.Message}");
+                Console.WriteLine($"Error al obtener espacio curricular por año escolar: {ex.Message}");
 
                 return new ResponseDTO<List<SubjectTableDTO>>
                 {
                     StatusCode = System.Net.HttpStatusCode.InternalServerError,
                     Object = null,
-                    Message = "Ocurrió un error al obtener las materias."
+                    Message = "Ocurrió un error al obtener los espacios curriculares."
                 };
             }
         }

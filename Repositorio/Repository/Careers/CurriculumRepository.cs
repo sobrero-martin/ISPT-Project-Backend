@@ -181,7 +181,8 @@ namespace Repositorio.Repository.Careers
                     throw new Exception("curriculumNotFound");
                 }
 
-                if (context.Curriculums.Any(x => x.Resolution == curriculumPostDTO.Resolution && x.CareerId == curriculumPostDTO.CareerId)) 
+                if (context.Curriculums.Any(x => x.Id != curriculumPostDTO.Id && 
+                                                 x.Resolution == curriculumPostDTO.Resolution && x.CareerId == curriculumPostDTO.CareerId)) 
                     throw new Exception("Duplicate entry");
 
                 existingCurriculum.Resolution = curriculumPostDTO.Resolution;

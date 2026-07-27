@@ -11,6 +11,6 @@ namespace BD.Entidades
 
         public required string Name { get; set; }
 
-        public string? TemplateState { get; set; } 
+        public bool TemplateState { get; set; } 
     }
 }

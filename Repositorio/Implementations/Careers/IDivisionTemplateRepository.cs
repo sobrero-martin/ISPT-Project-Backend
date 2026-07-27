@@ -10,5 +10,6 @@ namespace Repositorio.Implementations.Careers
     {
         Task<ResponseDTO<List<DivisionTemplateDTO>>> GetBySubject(long subjectId);
         Task<ResponseDTO<string>> Post(long subjectId, Guid? CreatedById);
+        Task<ResponseDTO<string>> ChangeStatus(long divisionTemplateId);
     }
 }

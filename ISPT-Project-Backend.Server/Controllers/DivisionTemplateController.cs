@@ -20,8 +20,6 @@ namespace ISPT_Project_Backend.Server.Controllers
             this.divisionTemplateRepository = divisionTemplateRepository;
         }
 
-
-
         [HttpGet("subject/{subjectId:long}")]
         [Authorize(Roles = "Directivo,Preceptor")]
         public async Task<ActionResult<ResponseDTO<List<DivisionTemplateDTO>>>> GetBySubject(long subjectId)
@@ -38,6 +36,14 @@ namespace ISPT_Project_Backend.Server.Controllers
             var response = await divisionTemplateRepository.Post(subjectId, CreatedById);
 
             return StatusCode((int)response.StatusCode, response);
+        }
+
+        [HttpPut("subject/{divisionTemplateId:long}")]
+        [Authorize(Roles = "Directivo")]
+        public async Task<ActionResult<ResponseDTO<string>>> ChangeDivisionTemplateStatus(long divisionTemplateId)
+        {
+            var res = await divisionTemplateRepository.ChangeStatus(divisionTemplateId);
+            return StatusCode((int)res.StatusCode, res);
         }
     }
 }

@@ -9,6 +9,7 @@ namespace Repositorio.Implementations.Careers
 {
     public interface ISubjectRepository
     {
+        Task<ResponseDTO<List<SubjectTableDTO>>> GetAll();
         Task<ResponseDTO<List<SubjectTableDTO>>> GetByCurriculum(long curriculumId);
         Task<ResponseDTO<SubjectDTO>> GetById(long id);
         Task<ResponseDTO<string>> Put(long id, SubjectPostDTO subject);

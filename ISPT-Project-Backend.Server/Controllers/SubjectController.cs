@@ -18,6 +18,13 @@ namespace ISPT_Project_Backend.Server.Controllers
             this.subjectRepository = subjectRepository;
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Directivo,Preceptor")]
+        public async Task<ActionResult<ResponseDTO<List<SubjectDTO>>>> GetAll()
+        {
+            var response = await subjectRepository.GetAll();
+            return StatusCode((int)response.StatusCode, response);
+        }
 
         [HttpGet("curriculum/{curriculumId:long}")]
         [Authorize(Roles = "Directivo,Preceptor")]

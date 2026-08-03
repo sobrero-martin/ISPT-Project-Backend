@@ -1,27 +1,28 @@
-# Etapa 1: Construcción y compilación
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+# Etapa 1: Restaurar y compilar la solución con .NET 10
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
-# Copiar el archivo csproj y restaurar dependencias
-COPY ["TuProyecto/TuProyecto.csproj", "TuProyecto/"]
-RUN dotnet restore "TuProyecto/TuProyecto.csproj"
+# 1. Copiar primero los archivos de proyecto (.csproj) manteniendo su estructura de carpetas
+COPY ["BD/BD.csproj", "BD/"]
+COPY ["DTO/DTO.csproj", "DTO/"]
+COPY ["Repositorio/Repositorio.csproj", "Repositorio/"]
+COPY ["ISPT-Project-Backend.Server/ISPT-Project-Backend.Server.csproj", "ISPT-Project-Backend.Server/"]
 
-# Copiar el resto del código y compilar
+# 2. Restaurar dependencias de toda la solución
+RUN dotnet restore "ISPT-Project-Backend.Server/ISPT-Project-Backend.Server.csproj"
+
+# 3. Copiar todo el código fuente restante
 COPY . .
-WORKDIR "/src/TuProyecto"
-RUN dotnet build "TuProyecto.csproj" -c Release -o /app/build
 
-# Etapa 2: Publicación
-FROM build AS publish
-RUN dotnet publish "TuProyecto.csproj" -c Release -o /app/publish /p:UseAppHost=false
+# 4. Compilar y publicar el proyecto principal (la API)
+WORKDIR "/src/ISPT-Project-Backend.Server"
+RUN dotnet publish "ISPT-Project-Backend.Server.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
-# Etapa 3: Imagen final para ejecución
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
+# Etapa 2: Imagen final optimizada para ejecución con el runtime de .NET 10
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
 WORKDIR /app
 EXPOSE 8080
-
-# Configurar el puerto para que Render pueda enrutar el tráfico correctamente
 ENV ASPNETCORE_URLS=http://+:8080
 
-COPY --from:publish /app/publish .
-ENTRYPOINT ["dotnet", "TuProyecto.dll"]
+COPY --from=build /app/publish .
+ENTRYPOINT ["dotnet", "ISPT-Project-Backend.Server.dll"]

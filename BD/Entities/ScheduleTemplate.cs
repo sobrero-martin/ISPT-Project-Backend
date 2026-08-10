@@ -11,5 +11,6 @@ namespace BD.Entities
         public DivisionTemplate? DivisionTemplate { get; set; }
         public TimeOnly StartTime { get; set; }
         public TimeOnly EndTime { get; set; }
+        public string Day { get; set; }
     }
 }

@@ -4,7 +4,6 @@ using BD;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -12,11 +11,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BD.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260731201029_inicio")]
-    partial class inicio
+    partial class AppDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,7 +39,7 @@ namespace BD.Migrations
                     b.Property<Guid>("CreatedBy")
                         .HasColumnType("char(36)");
 
-                    b.Property<long>("FileId")
+                    b.Property<long>("FileDivisionId")
                         .HasColumnType("bigint");
 
                     b.Property<bool>("Status")
@@ -61,7 +58,7 @@ namespace BD.Migrations
 
                     b.HasIndex("AttendanceDayId");
 
-                    b.HasIndex("FileId");
+                    b.HasIndex("FileDivisionId");
 
                     b.ToTable("Attendances");
                 });
@@ -498,14 +495,15 @@ namespace BD.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
 
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<Guid>("CreatedBy")
                         .HasColumnType("char(36)");
-
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime(6)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -524,9 +522,51 @@ namespace BD.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Code")
+                        .IsUnique();
+
                     b.HasIndex("StudentId");
 
                     b.ToTable("Files");
+                });
+
+            modelBuilder.Entity("BD.Entidades.FileCurriculum", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("char(36)");
+
+                    b.Property<long>("CurriculumId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("FileId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("char(36)");
+
+                    b.Property<bool>("state")
+                        .HasColumnType("tinyint(1)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CurriculumId");
+
+                    b.HasIndex("FileId", "CurriculumId")
+                        .IsUnique();
+
+                    b.ToTable("FileCurriculum");
                 });
 
             modelBuilder.Entity("BD.Entidades.FileDivision", b =>
@@ -546,15 +586,15 @@ namespace BD.Migrations
                     b.Property<long>("DivisionId")
                         .HasColumnType("bigint");
 
+                    b.Property<long>("FileCurriculumId")
+                        .HasColumnType("bigint");
+
                     b.Property<long?>("FileDivisionObservations")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("FileDivisionState")
+                    b.Property<string>("FileDivisionStatus")
                         .IsRequired()
                         .HasColumnType("longtext");
-
-                    b.Property<long>("FileId")
-                        .HasColumnType("bigint");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -569,7 +609,7 @@ namespace BD.Migrations
 
                     b.HasIndex("DivisionId");
 
-                    b.HasIndex("FileId");
+                    b.HasIndex("FileCurriculumId");
 
                     b.ToTable("FileDivisions");
                 });
@@ -638,7 +678,7 @@ namespace BD.Migrations
                     b.Property<Guid>("CreatedBy")
                         .HasColumnType("char(36)");
 
-                    b.Property<long>("FileId")
+                    b.Property<long>("FileDivisionId")
                         .HasColumnType("bigint");
 
                     b.Property<long>("FinalExamId")
@@ -662,7 +702,7 @@ namespace BD.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FileId");
+                    b.HasIndex("FileDivisionId");
 
                     b.HasIndex("FinalExamId");
 
@@ -686,7 +726,7 @@ namespace BD.Migrations
                     b.Property<long>("DivisionExamId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("FileId")
+                    b.Property<long>("FileDivisionId")
                         .HasColumnType("bigint");
 
                     b.Property<short>("GradeNumber")
@@ -705,7 +745,7 @@ namespace BD.Migrations
 
                     b.HasIndex("DivisionExamId");
 
-                    b.HasIndex("FileId");
+                    b.HasIndex("FileDivisionId");
 
                     b.ToTable("Grades");
                 });
@@ -980,7 +1020,7 @@ namespace BD.Migrations
                     b.Property<long>("DivisionId")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime>("EndDate")
+                    b.Property<DateTime?>("EndDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Observations")
@@ -1049,28 +1089,28 @@ namespace BD.Migrations
                         },
                         new
                         {
-                            Id = "224a6188-3ef5-4ec9-ba3d-933bfedfa1bb",
+                            Id = "d88e5502-b117-42f3-b434-658d2dfdba4d",
                             ConcurrencyStamp = "2",
                             Name = "Preceptor",
                             NormalizedName = "PRECEPTOR"
                         },
                         new
                         {
-                            Id = "f9034956-95cc-4cbf-b839-7d2f812d538e",
+                            Id = "c22f856e-5fad-47ad-9dd0-30cd4e3f584d",
                             ConcurrencyStamp = "3",
                             Name = "Preceptor_Auxiliar",
                             NormalizedName = "PRECEPTOR_AUXILIAR"
                         },
                         new
                         {
-                            Id = "e85340b7-c17e-4f4e-bcc0-fc17f85d3d71",
+                            Id = "44eca712-b41e-44ea-a847-a3d278c7edbb",
                             ConcurrencyStamp = "4",
                             Name = "Docente",
                             NormalizedName = "DOCENTE"
                         },
                         new
                         {
-                            Id = "50210c18-a380-491d-bd69-89bd1b585642",
+                            Id = "8030e705-d00a-40a3-a58b-5cdf6a79c426",
                             ConcurrencyStamp = "5",
                             Name = "Estudiante",
                             NormalizedName = "ESTUDIANTE"
@@ -1170,15 +1210,15 @@ namespace BD.Migrations
                         {
                             Id = "ae65a54a-aab5-4d0c-aa17-554334b49e8c",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "13056c58-9a20-40fe-8455-f7847f20d565",
+                            ConcurrencyStamp = "be843dc3-c07f-4ef7-b349-c340ead57383",
                             Email = "",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "",
                             NormalizedUserName = "SUPERADMINISPT-2026",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDFveDABeblkyrlTRKCm1g4BwvyJYXKBbO0I1LnAhw6Dl2Tg11iKUY054x8rlr3EUQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJtKWJe8aACOk/UMV5lUZgFR88D8W4i70qK6Zlygn9CxxiQuvzDf7vFIdSCgrXK9ew==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "7cdf6dad-4619-40ff-b777-bfa23263e6a2",
+                            SecurityStamp = "7bdf39b8-a54f-4343-8433-61348421877b",
                             TwoFactorEnabled = false,
                             UserName = "SuperadminISPT-2026"
                         });
@@ -1280,15 +1320,15 @@ namespace BD.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BD.Entidades.File", "File")
+                    b.HasOne("BD.Entidades.FileDivision", "FileDivision")
                         .WithMany("Attendances")
-                        .HasForeignKey("FileId")
+                        .HasForeignKey("FileDivisionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("AttendanceDay");
 
-                    b.Navigation("File");
+                    b.Navigation("FileDivision");
                 });
 
             modelBuilder.Entity("BD.Entidades.AttendanceDay", b =>
@@ -1417,11 +1457,11 @@ namespace BD.Migrations
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("BD.Entidades.FileDivision", b =>
+            modelBuilder.Entity("BD.Entidades.FileCurriculum", b =>
                 {
-                    b.HasOne("BD.Entidades.Division", "Division")
+                    b.HasOne("BD.Entidades.Curriculum", "Curriculum")
                         .WithMany()
-                        .HasForeignKey("DivisionId")
+                        .HasForeignKey("CurriculumId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1431,9 +1471,28 @@ namespace BD.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Division");
+                    b.Navigation("Curriculum");
 
                     b.Navigation("File");
+                });
+
+            modelBuilder.Entity("BD.Entidades.FileDivision", b =>
+                {
+                    b.HasOne("BD.Entidades.Division", "Division")
+                        .WithMany()
+                        .HasForeignKey("DivisionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BD.Entidades.FileCurriculum", "FileCurriculum")
+                        .WithMany()
+                        .HasForeignKey("FileCurriculumId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Division");
+
+                    b.Navigation("FileCurriculum");
                 });
 
             modelBuilder.Entity("BD.Entidades.FinalExam", b =>
@@ -1457,9 +1516,9 @@ namespace BD.Migrations
 
             modelBuilder.Entity("BD.Entidades.FinalExamGrade", b =>
                 {
-                    b.HasOne("BD.Entidades.File", "File")
-                        .WithMany()
-                        .HasForeignKey("FileId")
+                    b.HasOne("BD.Entidades.FileDivision", "FileDivision")
+                        .WithMany("FinalExamGrades")
+                        .HasForeignKey("FileDivisionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1469,7 +1528,7 @@ namespace BD.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("File");
+                    b.Navigation("FileDivision");
 
                     b.Navigation("FinalExam");
                 });
@@ -1482,15 +1541,15 @@ namespace BD.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BD.Entidades.File", "File")
+                    b.HasOne("BD.Entidades.FileDivision", "FileDivision")
                         .WithMany("Grades")
-                        .HasForeignKey("FileId")
+                        .HasForeignKey("FileDivisionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("DivisionExam");
 
-                    b.Navigation("File");
+                    b.Navigation("FileDivision");
                 });
 
             modelBuilder.Entity("BD.Entidades.Location", b =>
@@ -1548,7 +1607,7 @@ namespace BD.Migrations
 
             modelBuilder.Entity("BD.Entidades.TeacherDivision", b =>
                 {
-                    b.HasOne("BD.Entidades.Division", "Division")
+                    b.HasOne("BD.Entidades.DivisionTemplate", "Division")
                         .WithMany()
                         .HasForeignKey("DivisionId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1628,9 +1687,14 @@ namespace BD.Migrations
 
             modelBuilder.Entity("BD.Entidades.File", b =>
                 {
+                    b.Navigation("Documentations");
+                });
+
+            modelBuilder.Entity("BD.Entidades.FileDivision", b =>
+                {
                     b.Navigation("Attendances");
 
-                    b.Navigation("Documentations");
+                    b.Navigation("FinalExamGrades");
 
                     b.Navigation("Grades");
                 });

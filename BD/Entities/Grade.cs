@@ -6,8 +6,8 @@ namespace BD.Entidades
 {
     public class Grade : BaseEntity
     {
-        public long FileId { get; set; }
-        public File File { get; set; }
+        public long FileDivisionId { get; set; }
+        public FileDivision FileDivision { get; set; }
         
         public long DivisionExamId  { get; set; }
         public DivisionExam DivisionExam { get; set; }

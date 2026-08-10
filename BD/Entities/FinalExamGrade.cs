@@ -9,8 +9,8 @@ namespace BD.Entidades
         public long FinalExamId { get; set; }
         public FinalExam? FinalExam { get; set; }
 
-        public long FileId { get; set; }
-        public File? File { get; set; }
+        public long FileDivisionId { get; set; }
+        public FileDivision? FileDivision { get; set; }
 
         public int Grade { get; set; }
 

@@ -22,24 +22,6 @@ namespace ISPT_Project_Backend.Server.Controllers
 
 
 
-        [HttpPost]
-        [Authorize(Roles = "Directivo")]
-        public async Task<ActionResult<ResponseDTO<CorrelativeDTO>>> Post(Correlative correlative)
-        {
-            var response = await correlativeRepository.Post(correlative);
-
-            return StatusCode((int)response.StatusCode, response);
-        }
-
-        [HttpDelete("{subjectId:long}/{correlativeId:long}")]
-        [Authorize(Roles = "Directivo")]
-        public async Task<ActionResult<ResponseDTO<bool>>> Delete(long subjectId, long correlativeId)
-        {
-            var response = await correlativeRepository.Delete(subjectId, correlativeId);
-
-            return StatusCode((int)response.StatusCode, response);
-        }
-
         [HttpPost("{subjectId:long}/saveChanges")]
         [Authorize(Roles = "Directivo")]
         public async Task<ActionResult<ResponseDTO<bool>>> SaveChanges(long subjectId, [FromBody] List<CorrelativeChangeDTO> changes)

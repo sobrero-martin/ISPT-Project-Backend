@@ -19,6 +19,40 @@ namespace Repositorio.Repository.Careers
             this.context = context;
         }
 
+        public async Task<ResponseDTO<List<SubjectTableDTO>>> GetAll()
+        {
+            try
+            {
+                var subjects = await context.Set<Subject>()
+                    .AsNoTracking()
+                    .Select(s => new SubjectTableDTO()
+                    {
+                        Id = s.Id,
+                        Code = s.Code,
+                        Name = s.Name,
+                        Year = s.Year,
+                        Format = s.Format,
+                    })
+                    .ToListAsync();
+                return new ResponseDTO<List<SubjectTableDTO>>
+                {
+                    StatusCode = System.Net.HttpStatusCode.OK,
+                    Object = subjects,
+                    Message = "Espacios curriculares obtenidos exitosamente."
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al obtener espacios curriculares: {ex.Message}");
+                return new ResponseDTO<List<SubjectTableDTO>>
+                {
+                    StatusCode = System.Net.HttpStatusCode.InternalServerError,
+                    Object = null,
+                    Message = "Ocurrió un error al obtener los espacios curriculares."
+                };
+            }
+        }
+
         public async Task<ResponseDTO<List<SubjectTableDTO>>> GetByCurriculum(long curriculumId)
         {
             try

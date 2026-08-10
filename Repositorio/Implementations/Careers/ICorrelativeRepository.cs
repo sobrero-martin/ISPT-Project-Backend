@@ -9,9 +9,6 @@ namespace Repositorio.Implementations.Careers
 {
     public interface ICorrelativeRepository
     {
-        Task<ResponseDTO<bool>> Exists(long subjectId1, long subjectId2);
-        Task<ResponseDTO<string>> Post(Correlative correlative);
-        Task<ResponseDTO<bool>> Delete(long subjectId, long correlativeId);
         Task<ResponseDTO<bool>> SaveChanges (long subjectId, List<CorrelativeChangeDTO> changes);
     }
 }

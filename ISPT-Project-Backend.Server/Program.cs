@@ -10,6 +10,8 @@ using Repositorio.Repository;
 using Repositorio.Repository.Positions;
 using Repositorio.Repository.Careers;
 using Repositorio.Repository.SchoolYears;
+using Repositorio.Implementations.Exams;
+using Repositorio.Repository.Exams;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -68,6 +70,8 @@ builder.Services.AddScoped<IDivisionRepository, DivisionRepository>();
 builder.Services.AddScoped<ITeacherDivisionRepository, TeacherDivisionRepository>();
 
 builder.Services.AddScoped<ISchoolYearRepository, SchoolYearRepository>();
+
+builder.Services.AddScoped<IFinalExamRepository, FinalExamRepository>();
 
 builder.Services.AddAuthorization();
 

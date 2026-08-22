@@ -12,5 +12,6 @@ namespace BD.Entidades
         public Division? Division { get; set; }
         public TimeOnly StartTime { get; set; }
         public TimeOnly EndTime { get; set; }
+        public string Day { get; set; } = string.Empty;
     }
 }

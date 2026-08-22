@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using BD.Entidades;
+using BD.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -30,6 +31,7 @@ namespace BD
         public DbSet<DivisionExam> DivisionExams { get; set; }
         public DbSet<Division> Divisions { get; set; }
         public DbSet<DivisionTemplate> DivisionTemplates { get; set; }
+        public DbSet<ScheduleTemplate> ScheduleTemplates { get; set; }
         public DbSet<Schedule> Schedules { get; set; }
 
         public DbSet<Career> Careers { get; set; }

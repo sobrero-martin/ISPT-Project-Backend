@@ -67,9 +67,11 @@ builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
 builder.Services.AddScoped<ICorrelativeRepository, CorrelativeRepository>();
 builder.Services.AddScoped<IDivisionTemplateRepository, DivisionTemplateRepository>();
 builder.Services.AddScoped<IDivisionRepository, DivisionRepository>();
+builder.Services.AddScoped<IScheduleTemplateRepository, ScheduleTemplateRepository>();
 builder.Services.AddScoped<ITeacherDivisionRepository, TeacherDivisionRepository>();
 
 builder.Services.AddScoped<ISchoolYearRepository, SchoolYearRepository>();
+builder.Services.AddScoped<IScheduleRepository, ScheduleRepository>();
 
 builder.Services.AddScoped<IFinalExamRepository, FinalExamRepository>();
 

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BD.Migrations
 {
     /// <inheritdoc />
-    public partial class BaseDeDatosTerminada : Migration
+    public partial class test1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -670,6 +670,35 @@ namespace BD.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "ScheduleTemplates",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    DivisionTemplateId = table.Column<long>(type: "bigint", nullable: false),
+                    StartTime = table.Column<TimeOnly>(type: "time(6)", nullable: false),
+                    EndTime = table.Column<TimeOnly>(type: "time(6)", nullable: false),
+                    Day = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    state = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    CreatedBy = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    UpdatedBy = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ScheduleTemplates", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ScheduleTemplates_DivisionTemplates_DivisionTemplateId",
+                        column: x => x.DivisionTemplateId,
+                        principalTable: "DivisionTemplates",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "TeacherDivisions",
                 columns: table => new
                 {
@@ -805,6 +834,8 @@ namespace BD.Migrations
                     DivisionId = table.Column<long>(type: "bigint", nullable: false),
                     StartTime = table.Column<TimeOnly>(type: "time(6)", nullable: false),
                     EndTime = table.Column<TimeOnly>(type: "time(6)", nullable: false),
+                    Day = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     state = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
@@ -929,17 +960,17 @@ namespace BD.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "44eca712-b41e-44ea-a847-a3d278c7edbb", "4", "Docente", "DOCENTE" },
-                    { "8030e705-d00a-40a3-a58b-5cdf6a79c426", "5", "Estudiante", "ESTUDIANTE" },
-                    { "c22f856e-5fad-47ad-9dd0-30cd4e3f584d", "3", "Preceptor_Auxiliar", "PRECEPTOR_AUXILIAR" },
-                    { "d88e5502-b117-42f3-b434-658d2dfdba4d", "2", "Preceptor", "PRECEPTOR" },
+                    { "2c44587c-2b66-4145-88ea-aeccad8d4f0d", "4", "Docente", "DOCENTE" },
+                    { "a5168e47-6461-4bcc-9108-a69b0c5bffb9", "2", "Preceptor", "PRECEPTOR" },
+                    { "aa68a696-895c-443a-be83-2548dfab1bb9", "3", "Preceptor_Auxiliar", "PRECEPTOR_AUXILIAR" },
+                    { "f0362067-a6b6-465b-b007-e76ec0892ca6", "5", "Estudiante", "ESTUDIANTE" },
                     { "rol-directivo-id", "1", "Directivo", "DIRECTIVO" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "ae65a54a-aab5-4d0c-aa17-554334b49e8c", 0, "be843dc3-c07f-4ef7-b349-c340ead57383", "", true, false, null, "", "SUPERADMINISPT-2026", "AQAAAAIAAYagAAAAEJtKWJe8aACOk/UMV5lUZgFR88D8W4i70qK6Zlygn9CxxiQuvzDf7vFIdSCgrXK9ew==", null, false, "7bdf39b8-a54f-4343-8433-61348421877b", false, "SuperadminISPT-2026" });
+                values: new object[] { "ae65a54a-aab5-4d0c-aa17-554334b49e8c", 0, "4e452685-b94d-473d-80da-4d401fd67ed1", "", true, false, null, "", "SUPERADMINISPT-2026", "AQAAAAIAAYagAAAAEE13XnAz/i3F8cJu/y4x84pASlsei+Po2Vs5eTtmPfswUPXsYg9KBgjVvBbV0GJa+A==", null, false, "204c421a-6d07-405b-90ea-008181305881", false, "SuperadminISPT-2026" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
@@ -1136,6 +1167,11 @@ namespace BD.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_ScheduleTemplates_DivisionTemplateId",
+                table: "ScheduleTemplates",
+                column: "DivisionTemplateId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_SchoolYears_CurriculumId",
                 table: "SchoolYears",
                 column: "CurriculumId");
@@ -1206,6 +1242,9 @@ namespace BD.Migrations
 
             migrationBuilder.DropTable(
                 name: "Schedules");
+
+            migrationBuilder.DropTable(
+                name: "ScheduleTemplates");
 
             migrationBuilder.DropTable(
                 name: "TeacherDivisions");

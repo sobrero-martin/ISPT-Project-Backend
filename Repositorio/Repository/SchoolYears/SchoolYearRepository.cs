@@ -1,5 +1,6 @@
 ﻿using BD;
 using BD.Entidades;
+using BD.Entities;
 using DTO.DTOs.DTO_Response;
 using DTO.DTOs.SchoolYearDTO;
 using Microsoft.EntityFrameworkCore;
@@ -169,6 +170,22 @@ namespace Repositorio.Repository.SchoolYears
                 }).ToList();
 
                 await context.Set<Division>().AddRangeAsync(divisions);
+                await context.SaveChangesAsync();
+
+                var scheduleTemplates = await context.Set<ScheduleTemplate>()
+                    .Where(s => divisionTemplates.Select(dt => dt.Id).Contains(s.DivisionTemplateId))
+                    .ToListAsync();
+
+                var schedules = scheduleTemplates.Select(st => new Schedule
+                {
+                    DivisionId = divisions.First(d => d.DivisionTemplateId == st.DivisionTemplateId).Id,
+                    Day = st.Day,
+                    StartTime = st.StartTime,
+                    EndTime = st.EndTime,
+                    CreatedBy = schoolYear.CreatedById ?? Guid.Empty,
+                }).ToList();
+
+                await context.Set<Schedule>().AddRangeAsync(schedules);
                 await context.SaveChangesAsync();
 
                 return new ResponseDTO<SchoolYearPostDTO>

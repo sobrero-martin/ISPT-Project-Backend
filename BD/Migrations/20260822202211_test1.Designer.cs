@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BD.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260810121828_BaseDeDatosTerminada?")]
-    partial class BaseDeDatosTerminada
+    [Migration("20260822202211_test1")]
+    partial class test1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -886,6 +886,10 @@ namespace BD.Migrations
                     b.Property<Guid>("CreatedBy")
                         .HasColumnType("char(36)");
 
+                    b.Property<string>("Day")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<long>("DivisionId")
                         .HasColumnType("bigint");
 
@@ -1057,6 +1061,49 @@ namespace BD.Migrations
                     b.ToTable("TeacherDivisions");
                 });
 
+            modelBuilder.Entity("BD.Entities.ScheduleTemplate", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Day")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<long>("DivisionTemplateId")
+                        .HasColumnType("bigint");
+
+                    b.Property<TimeOnly>("EndTime")
+                        .HasColumnType("time(6)");
+
+                    b.Property<TimeOnly>("StartTime")
+                        .HasColumnType("time(6)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("char(36)");
+
+                    b.Property<bool>("state")
+                        .HasColumnType("tinyint(1)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DivisionTemplateId");
+
+                    b.ToTable("ScheduleTemplates");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -1092,28 +1139,28 @@ namespace BD.Migrations
                         },
                         new
                         {
-                            Id = "d88e5502-b117-42f3-b434-658d2dfdba4d",
+                            Id = "a5168e47-6461-4bcc-9108-a69b0c5bffb9",
                             ConcurrencyStamp = "2",
                             Name = "Preceptor",
                             NormalizedName = "PRECEPTOR"
                         },
                         new
                         {
-                            Id = "c22f856e-5fad-47ad-9dd0-30cd4e3f584d",
+                            Id = "aa68a696-895c-443a-be83-2548dfab1bb9",
                             ConcurrencyStamp = "3",
                             Name = "Preceptor_Auxiliar",
                             NormalizedName = "PRECEPTOR_AUXILIAR"
                         },
                         new
                         {
-                            Id = "44eca712-b41e-44ea-a847-a3d278c7edbb",
+                            Id = "2c44587c-2b66-4145-88ea-aeccad8d4f0d",
                             ConcurrencyStamp = "4",
                             Name = "Docente",
                             NormalizedName = "DOCENTE"
                         },
                         new
                         {
-                            Id = "8030e705-d00a-40a3-a58b-5cdf6a79c426",
+                            Id = "f0362067-a6b6-465b-b007-e76ec0892ca6",
                             ConcurrencyStamp = "5",
                             Name = "Estudiante",
                             NormalizedName = "ESTUDIANTE"
@@ -1213,15 +1260,15 @@ namespace BD.Migrations
                         {
                             Id = "ae65a54a-aab5-4d0c-aa17-554334b49e8c",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "be843dc3-c07f-4ef7-b349-c340ead57383",
+                            ConcurrencyStamp = "4e452685-b94d-473d-80da-4d401fd67ed1",
                             Email = "",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "",
                             NormalizedUserName = "SUPERADMINISPT-2026",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJtKWJe8aACOk/UMV5lUZgFR88D8W4i70qK6Zlygn9CxxiQuvzDf7vFIdSCgrXK9ew==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEE13XnAz/i3F8cJu/y4x84pASlsei+Po2Vs5eTtmPfswUPXsYg9KBgjVvBbV0GJa+A==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "7bdf39b8-a54f-4343-8433-61348421877b",
+                            SecurityStamp = "204c421a-6d07-405b-90ea-008181305881",
                             TwoFactorEnabled = false,
                             UserName = "SuperadminISPT-2026"
                         });
@@ -1625,6 +1672,17 @@ namespace BD.Migrations
                     b.Navigation("Division");
 
                     b.Navigation("Teacher");
+                });
+
+            modelBuilder.Entity("BD.Entities.ScheduleTemplate", b =>
+                {
+                    b.HasOne("BD.Entidades.DivisionTemplate", "DivisionTemplate")
+                        .WithMany()
+                        .HasForeignKey("DivisionTemplateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DivisionTemplate");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

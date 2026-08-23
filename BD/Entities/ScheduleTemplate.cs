@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BD.Entities
 {
-    public class ScheduleTemplate
+    public class ScheduleTemplate : BaseEntity
     {
         public long DivisionTemplateId { get; set; }
         public DivisionTemplate? DivisionTemplate { get; set; }

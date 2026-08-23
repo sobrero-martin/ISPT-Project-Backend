@@ -54,7 +54,8 @@ public class DegreesRepository : IDegreesRepository
             bbdd.Degrees.Add(new Degree()
             {
                 PersonId = degreeDTO.personId,
-                TitleName = degreeDTO.Name
+                TitleName = degreeDTO.Name,
+                CreatedBy = degreeDTO.CreatedById ?? Guid.Empty
             });
             
             await bbdd.SaveChangesAsync();

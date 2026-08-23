@@ -56,6 +56,8 @@ builder.Services.AddControllers();
 
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<IDegreesRepository, DegreesRepository>();
+builder.Services.AddScoped<IFileRepository, FileRepository>();
+
 builder.Services.AddScoped<ITeacherRepository, TeacherRepository>();
 builder.Services.AddScoped<IPositionRepository, PositionRepository>();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();

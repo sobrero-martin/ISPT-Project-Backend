@@ -21,6 +21,7 @@ namespace BD
         public DbSet<Contact> Contacts { get; set; }
         
         public DbSet<File> Files { get; set; }
+        public DbSet<FileCurriculum> FileCurriculum { get; set; }
         public DbSet<FileDivision> FileDivisions { get; set; }
         public DbSet<TeacherDivision> TeacherDivisions { get; set; }
         

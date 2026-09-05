@@ -74,6 +74,7 @@ builder.Services.AddScoped<ITeacherDivisionRepository, TeacherDivisionRepository
 
 builder.Services.AddScoped<ISchoolYearRepository, SchoolYearRepository>();
 builder.Services.AddScoped<IScheduleRepository, ScheduleRepository>();
+builder.Services.AddScoped<IFileDivisionRepository, FileDivisionRepository>();
 
 builder.Services.AddScoped<IFinalExamRepository, FinalExamRepository>();
 
@@ -89,6 +90,8 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod();
     });
 });
+
+System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
 var app = builder.Build();
 

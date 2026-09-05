@@ -11,5 +11,8 @@ namespace Repositorio.Implementations.Careers
         Task<ResponseDTO<List<ScheduleTemplateDTO>>> GetByDivisionTemplateId(long divisionTemplateId);
         Task<ResponseDTO<string>> Post(long divisionTemplateId, ScheduleTemplatePostDTO scheduleTemplateDTO);
         Task<ResponseDTO<ScheduleTemplateDTO>> GetById(long scheduleTemplateId);
+        /*
+        Task<ResponseDTO<string>> Update(long scheduleTemplateId, ScheduleTemplatePostDTO scheduleTemplateDTO);
+        */
     }
 }

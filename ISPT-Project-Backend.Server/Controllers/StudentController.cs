@@ -1,8 +1,10 @@
 using BD.Entidades;
+using DTO.DTOs.DTO_Response;
 using DTO.DTOs.PersonDTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Repositorio.Repository;
+using System.Net;
 
 namespace ISPT_Project_Backend.Server.Controllers;
 
@@ -88,6 +90,48 @@ public class StudentController : ControllerBase
     {
         var res = await studentRepository.EditObservation(observationDTO);
         return StatusCode((int)res.StatusCode, res);
+    }
+
+    [HttpGet("school-year/{schoolYearId:long}")]
+    [Authorize(Roles = "Directivo,Preceptor")]
+    public async Task<IActionResult> GetStudentsBySchoolYearId(long schoolYearId)
+    {
+        var res = await studentRepository.GetStudentsBySchoolYearId(schoolYearId);
+        return StatusCode((int)res.StatusCode, res);
+    }
+
+    [HttpPost("import-excel")]
+    public async Task<IActionResult> ImportExcel(IFormFile file)
+    {
+        if (file == null || file.Length == 0)
+        {
+            return BadRequest(new ResponseDTO<int>
+            {
+                StatusCode = HttpStatusCode.BadRequest,
+                Message = "Por favor, seleccione un archivo válido.",
+                Object = 0
+            });
+        }
+
+        var extension = Path.GetExtension(file.FileName).ToLower();
+        if (extension != ".xlsx" && extension != ".xls")
+        {
+            return BadRequest(new ResponseDTO<int>
+            {
+                StatusCode = HttpStatusCode.BadRequest,
+                Message = "Formato no soportado. El archivo debe ser .xlsx o .xls",
+                Object = 0
+            });
+        }
+
+        using (var memoryStream = new MemoryStream())
+        {
+            await file.CopyToAsync(memoryStream);
+            memoryStream.Position = 0; 
+
+            var result = await studentRepository.ImportStudentsFromExcel(memoryStream);
+            return StatusCode((int)result.StatusCode, result);
+        }
     }
 
 }

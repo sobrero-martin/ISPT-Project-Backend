@@ -148,5 +148,47 @@ namespace Repositorio.Repository.Careers
                 };
             }
         }
+        /*
+        public async Task<ResponseDTO<string>> Update(long scheduleTemplateId, ScheduleTemplatePostDTO scheduleTemplateDTO)
+        {
+            try
+            {
+                var existingScheduleTemplate = await context.Set<ScheduleTemplate>()
+                    .FirstOrDefaultAsync(s => s.Id == scheduleTemplateId);
+
+                if (existingScheduleTemplate == null)
+                {
+                    return new ResponseDTO<string>
+                    {
+                        StatusCode = HttpStatusCode.NotFound,
+                        Message = "Plantilla de horario no encontrada.",
+                        Object = null
+                    };
+                }
+
+
+
+                await context.Set<ScheduleTemplate>().AddAsync(scheduleTemplateEntity);
+                await context.SaveChangesAsync();
+
+                return new ResponseDTO<string>
+                {
+                    StatusCode = HttpStatusCode.Created,
+                    Message = "Operación exitosa.",
+                    Object = $"¡Plantilla de horario:{scheduleTemplateDTO.Id} creada con éxito!"
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al crear la plantilla de horario: {ex.Message}");
+
+                return new ResponseDTO<string>
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Message = "Ocurrió un error al crear la plantilla de horario.",
+                    Object = null
+                };
+            }
+        }*/
     }
 }

@@ -9,6 +9,6 @@ namespace Repositorio.Implementations.SchoolYears
     public interface IFileDivisionRepository
     {
         Task<ResponseDTO<List<FileDivisionDTO>>> GetByDivisionId(long divisionId);
-        Task<ResponseDTO<string>> Post(FileDivisionPostDTO fileDivisionDTO);
+        Task<ResponseDTO<string>> Post(StudentFileDivisionPostDTO studentFileDivisionDTO);
     }
 }

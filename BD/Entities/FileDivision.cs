@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json.Serialization;
 
 namespace BD.Entidades
 {
+    [Index(nameof(FileCurriculumId), nameof(DivisionId), IsUnique = true)]
     public class FileDivision : BaseEntity
     { 
        public long FileCurriculumId { get; set; }

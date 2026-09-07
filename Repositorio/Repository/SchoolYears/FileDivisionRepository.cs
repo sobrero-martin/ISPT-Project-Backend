@@ -54,17 +54,17 @@ namespace Repositorio.Repository.SchoolYears
             }
         }
 
-        public async Task<ResponseDTO<string>> Post(FileDivisionPostDTO fileDivisionDTO)
+        public async Task<ResponseDTO<string>> Post(StudentFileDivisionPostDTO studentFileDivisionDTO)
         {
             try
             {
                 var fileDivisionEntity = new FileDivision
                 {
-                    FileCurriculumId = fileDivisionDTO.FileCurriculumId,
-                    DivisionId = fileDivisionDTO.DivisionId,
-                    FileDivisionStatus = fileDivisionDTO.FileDivisionStatus,
-                    FileDivisionObservations = fileDivisionDTO.FileDivisionObservations,
-                    CreatedBy = fileDivisionDTO.CreatedById ?? Guid.Empty,
+                    FileCurriculumId = studentFileDivisionDTO.FileId,
+                    DivisionId = studentFileDivisionDTO.DivisionId,
+                    FileDivisionStatus = "Activo",
+                    FileDivisionObservations = null,
+                    CreatedBy = studentFileDivisionDTO.CreatedBy ?? Guid.Empty,
                 };
                 context.Set<FileDivision>().Add(fileDivisionEntity);
                 await context.SaveChangesAsync();

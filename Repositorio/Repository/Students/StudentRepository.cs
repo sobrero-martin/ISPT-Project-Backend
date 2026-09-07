@@ -225,7 +225,27 @@ public class StudentRepository : PersonRepository, IStudentRepository
                             CreatedAt = DateTime.Now,
                             state = true,
                             Observations = string.Empty,
-                            PracticePlace = string.Empty
+                            PracticePlace = string.Empty,
+
+                            Location = new Location
+                            {
+                                Country = string.Empty,
+                                Province = string.Empty,
+                                Department = string.Empty,
+                                Address = string.Empty,
+                                CreatedAt = DateTime.Now,
+                                state = true
+                            },
+
+                            Contact = new Contact
+                            {
+                                Email = string.Empty,
+                                PhoneNumber = string.Empty,
+                                EmergencyNumber = string.Empty,
+                                ContactNameEmergency = string.Empty,
+                                CreatedAt = DateTime.Now,
+                                state = true
+                            }
                         });
                     }
                 }

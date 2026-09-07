@@ -960,17 +960,17 @@ namespace BD.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "2c44587c-2b66-4145-88ea-aeccad8d4f0d", "4", "Docente", "DOCENTE" },
-                    { "a5168e47-6461-4bcc-9108-a69b0c5bffb9", "2", "Preceptor", "PRECEPTOR" },
-                    { "aa68a696-895c-443a-be83-2548dfab1bb9", "3", "Preceptor_Auxiliar", "PRECEPTOR_AUXILIAR" },
-                    { "f0362067-a6b6-465b-b007-e76ec0892ca6", "5", "Estudiante", "ESTUDIANTE" },
+                    { "213860dd-a4de-40c5-a523-2bfb98890b1d", "4", "Docente", "DOCENTE" },
+                    { "3d53996e-99f2-4555-8c71-31916dca4864", "3", "Preceptor_Auxiliar", "PRECEPTOR_AUXILIAR" },
+                    { "d0671f6c-54f9-4139-b797-2c781eb47fda", "2", "Preceptor", "PRECEPTOR" },
+                    { "eec0caf7-95b3-44f3-9a98-35f7b652517e", "5", "Estudiante", "ESTUDIANTE" },
                     { "rol-directivo-id", "1", "Directivo", "DIRECTIVO" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "ae65a54a-aab5-4d0c-aa17-554334b49e8c", 0, "4e452685-b94d-473d-80da-4d401fd67ed1", "", true, false, null, "", "SUPERADMINISPT-2026", "AQAAAAIAAYagAAAAEE13XnAz/i3F8cJu/y4x84pASlsei+Po2Vs5eTtmPfswUPXsYg9KBgjVvBbV0GJa+A==", null, false, "204c421a-6d07-405b-90ea-008181305881", false, "SuperadminISPT-2026" });
+                values: new object[] { "ae65a54a-aab5-4d0c-aa17-554334b49e8c", 0, "6aeb0ca5-f6e1-4012-98b1-9a39eeaccfcb", "", true, false, null, "", "SUPERADMINISPT-2026", "AQAAAAIAAYagAAAAEEUc+v8Iogu+bL3JWxtDc2mRO1uKgI13pmyEvH7E2RzOw+qcw7FLUKWs20LSABqoig==", null, false, "2ebee52f-f938-4594-9f43-7b1f73594609", false, "SuperadminISPT-2026" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
@@ -1098,9 +1098,10 @@ namespace BD.Migrations
                 column: "DivisionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FileDivisions_FileCurriculumId",
+                name: "IX_FileDivisions_FileCurriculumId_DivisionId",
                 table: "FileDivisions",
-                column: "FileCurriculumId");
+                columns: new[] { "FileCurriculumId", "DivisionId" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Files_Code",

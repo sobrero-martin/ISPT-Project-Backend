@@ -24,9 +24,9 @@ namespace ISPT_Project_Backend.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostFileDivision(FileDivisionPostDTO fileDivisionDTO)
+        public async Task<IActionResult> PostFileDivision(StudentFileDivisionPostDTO studentFileDivisionDTO)
         {
-            var response = await fileDivisionRepository.Post(fileDivisionDTO);
+            var response = await fileDivisionRepository.Post(studentFileDivisionDTO);
             return StatusCode((int)response.StatusCode, response);
         }
     }

@@ -1,6 +1,7 @@
 using DTO.DTOs.StudentsDTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Repositorio.Implementations.Students;
 using Repositorio.Repository;
 
 namespace ISPT_Project_Backend.Server.Controllers;

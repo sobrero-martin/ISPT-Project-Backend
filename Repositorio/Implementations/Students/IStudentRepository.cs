@@ -1,9 +1,9 @@
 using DTO.DTOs.DTO_Response;
-using DTO.DTOs.PersonDTO;
 using DTO.DTOs.SchoolYearDTO;
 using DTO.DTOs.StudentsDTO;
+using Repositorio.Repository;
 
-namespace Repositorio.Repository;
+namespace Repositorio.Implementations.Students;
 
 public interface IStudentRepository : IPersonRepository
 {

@@ -11,6 +11,7 @@ using Repositorio.Repository.Positions;
 using Repositorio.Repository.Careers;
 using Repositorio.Repository.SchoolYears;
 using Repositorio.Implementations.Exams;
+using Repositorio.Implementations.Students;
 using Repositorio.Repository.Exams;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -57,6 +58,7 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<IDegreesRepository, DegreesRepository>();
 builder.Services.AddScoped<IFileRepository, FileRepository>();
+builder.Services.AddScoped<IFileDocsRepository, FileDocsRepository>();
 
 builder.Services.AddScoped<ITeacherRepository, TeacherRepository>();
 builder.Services.AddScoped<IPositionRepository, PositionRepository>();

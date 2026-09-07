@@ -5,6 +5,7 @@ using DTO.DTOs.DTO_Response;
 using DTO.DTOs.StudentsDTO;
 using DTO.ENUM;
 using Microsoft.EntityFrameworkCore;
+using Repositorio.Implementations.Students;
 using File = BD.Entidades.File;
 
 namespace Repositorio.Repository;
@@ -169,9 +170,9 @@ public class FileRepository : IFileRepository
             file.File.Code = filePostDto.Code;
             file.File.UpdatedBy = filePostDto.UpdatedById ?? Guid.Empty;
             file.UpdatedBy = filePostDto.UpdatedById ?? Guid.Empty;
-            file.CurriculumId =  filePostDto.CurriculumId;
+            file.CurriculumId = filePostDto.CurriculumId;
             file.File.Status = filePostDto.Status;
-
+            
             await bbdd.SaveChangesAsync();
             await transaction.CommitAsync();
 

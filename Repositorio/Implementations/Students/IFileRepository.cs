@@ -1,7 +1,7 @@
 using DTO.DTOs.DTO_Response;
 using DTO.DTOs.StudentsDTO;
 
-namespace Repositorio.Repository;
+namespace Repositorio.Implementations.Students;
 
 public interface IFileRepository
 {

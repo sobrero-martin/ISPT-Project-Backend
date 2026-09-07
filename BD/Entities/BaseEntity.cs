@@ -10,9 +10,8 @@ namespace BD.Entidades
     {
         [Key]
         public long Id { get; set; }
-        
-        [JsonIgnore]
-        public bool state { get; set; }
+
+        [JsonIgnore] public bool state { get; set; } = true;
         
         [JsonIgnore]
         public DateTime CreatedAt { get; set; }

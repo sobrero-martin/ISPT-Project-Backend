@@ -4,6 +4,7 @@ using BD.Entidades;
 using DTO.DTOs.DTO_Response;
 using DTO.DTOs.StudentsDTO;
 using Microsoft.EntityFrameworkCore;
+using Repositorio.Implementations.Students;
 
 namespace Repositorio.Repository;
 

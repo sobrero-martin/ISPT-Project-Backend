@@ -438,9 +438,6 @@ namespace BD.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<bool>("BirthdateDocument")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<bool>("CDA")
                         .HasColumnType("tinyint(1)");
 
@@ -459,17 +456,11 @@ namespace BD.Migrations
                     b.Property<Guid>("CreatedBy")
                         .HasColumnType("char(36)");
 
-                    b.Property<bool>("DNI")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime(6)");
+                    b.Property<int>("Date")
+                        .HasColumnType("int");
 
                     b.Property<long>("FileId")
                         .HasColumnType("bigint");
-
-                    b.Property<bool>("Picture")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -482,7 +473,8 @@ namespace BD.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FileId");
+                    b.HasIndex("FileId", "Date")
+                        .IsUnique();
 
                     b.ToTable("Documentations");
                 });
@@ -495,6 +487,9 @@ namespace BD.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
 
+                    b.Property<bool>("BirthdateDocument")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasColumnType("varchar(255)");
@@ -504,6 +499,12 @@ namespace BD.Migrations
 
                     b.Property<Guid>("CreatedBy")
                         .HasColumnType("char(36)");
+
+                    b.Property<bool>("DNI")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("Picture")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -1136,28 +1137,28 @@ namespace BD.Migrations
                         },
                         new
                         {
-                            Id = "a5168e47-6461-4bcc-9108-a69b0c5bffb9",
+                            Id = "3f8e8a40-0c78-4bea-8d7d-1d39d823c661",
                             ConcurrencyStamp = "2",
                             Name = "Preceptor",
                             NormalizedName = "PRECEPTOR"
                         },
                         new
                         {
-                            Id = "aa68a696-895c-443a-be83-2548dfab1bb9",
+                            Id = "5a65968a-1abc-4981-bee0-7828a2cdc7f5",
                             ConcurrencyStamp = "3",
                             Name = "Preceptor_Auxiliar",
                             NormalizedName = "PRECEPTOR_AUXILIAR"
                         },
                         new
                         {
-                            Id = "2c44587c-2b66-4145-88ea-aeccad8d4f0d",
+                            Id = "e1f4ba94-b1c1-4905-b76d-a629cdb9f2c3",
                             ConcurrencyStamp = "4",
                             Name = "Docente",
                             NormalizedName = "DOCENTE"
                         },
                         new
                         {
-                            Id = "f0362067-a6b6-465b-b007-e76ec0892ca6",
+                            Id = "30f27d0d-2fba-497c-aa61-90742a9aaf72",
                             ConcurrencyStamp = "5",
                             Name = "Estudiante",
                             NormalizedName = "ESTUDIANTE"
@@ -1257,15 +1258,15 @@ namespace BD.Migrations
                         {
                             Id = "ae65a54a-aab5-4d0c-aa17-554334b49e8c",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "4e452685-b94d-473d-80da-4d401fd67ed1",
+                            ConcurrencyStamp = "1f14a794-912b-4d7d-91b8-98e83e6a296e",
                             Email = "",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "",
                             NormalizedUserName = "SUPERADMINISPT-2026",
-                            PasswordHash = "AQAAAAIAAYagAAAAEE13XnAz/i3F8cJu/y4x84pASlsei+Po2Vs5eTtmPfswUPXsYg9KBgjVvBbV0GJa+A==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEMh0n8n3Hu2L1KTLiIoODY+zV7IQo/lYRS2puaN8UbyjLyhEgibdqB6Zzz3DmzTZgQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "204c421a-6d07-405b-90ea-008181305881",
+                            SecurityStamp = "e825eba8-129a-4959-9612-08599fb6d7bb",
                             TwoFactorEnabled = false,
                             UserName = "SuperadminISPT-2026"
                         });

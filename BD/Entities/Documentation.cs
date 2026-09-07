@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 
 namespace BD.Entidades
 {
+    [Index(nameof(FileId), nameof(Date), IsUnique = true)]
     public class Documentation : BaseEntity
     {
         public long FileId { get; set; }
         public File File { get; set; }
-        
-        // One-Time deliverable documents
-        public bool DNI { get; set; }
-        public bool Picture { get; set; }
-        public bool BirthdateDocument { get; set; }
         
         // Deliverable documents
         public bool CUS { get; set; }
@@ -20,6 +17,6 @@ namespace BD.Entidades
         public bool CDA { get; set; }
         public bool Cooperative { get; set; }
         
-        public DateTime Date { get; set; }
+        public int Date { get; set; }
     }
 }

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Repositorio.Repository;
 using System.Net;
+using Repositorio.Implementations.Students;
 
 namespace ISPT_Project_Backend.Server.Controllers;
 

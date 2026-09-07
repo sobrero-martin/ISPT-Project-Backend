@@ -17,6 +17,11 @@ namespace BD.Entidades
         
         public EnumStudentStatus Status { get; set; }
         
+        // One-Time deliverable documents
+        public bool DNI { get; set; } = false;
+        public bool Picture { get; set; } = false;
+        public bool BirthdateDocument { get; set; } = false;
+        
         public List<Documentation> Documentations { get; set; }
     }
 }

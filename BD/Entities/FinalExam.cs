@@ -9,15 +9,12 @@ namespace BD.Entidades
         public long SubjectId { get; set; }
         public Subject? Subject { get; set; }
 
-        public long PersonId { get; set; }
-        public Person? Person { get; set; }
-
         public DateTime Date { get; set; }
 
         public TimeOnly Time { get; set; }
 
-        public int RecordBook  { get; set; }
+        public int? RecordBook  { get; set; }
 
-        public int PageNumber { get; set; }
+        public int? PageNumber { get; set; }
     }
 }

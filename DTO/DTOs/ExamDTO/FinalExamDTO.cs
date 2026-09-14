@@ -10,7 +10,7 @@ namespace DTO.DTOs.ExamDTO
         public string SubjectName { get; set; } = string.Empty;
         public DateTime Date { get; set; }
         public TimeOnly Time { get; set; }
-        public int RecordBook { get; set; }
-        public int PageNumber { get; set; }
+        public int? RecordBook { get; set; }
+        public int? PageNumber { get; set; }
     }
 }

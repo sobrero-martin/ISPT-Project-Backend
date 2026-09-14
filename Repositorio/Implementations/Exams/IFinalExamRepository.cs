@@ -10,5 +10,7 @@ namespace Repositorio.Implementations.Exams
     {
         Task<ResponseDTO<List<FinalExamDTO>>> GetFull();
         Task<ResponseDTO<string>> Post(FinalExamPostDTO exam);
+        Task<ResponseDTO<string>> Edit(FinalExamPostDTO exam);
+        Task<ResponseDTO<string>> Delete(long id);
     }
 }

@@ -1,14 +1,10 @@
 ﻿using BD;
 using BD.Entidades;
-using DTO.DTOs.CareerDTO;
 using DTO.DTOs.DTO_Response;
 using DTO.DTOs.ExamDTO;
 using Microsoft.EntityFrameworkCore;
 using Repositorio.Implementations.Exams;
-using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Text;
 
 namespace Repositorio.Repository.Exams
 {
@@ -25,10 +21,9 @@ namespace Repositorio.Repository.Exams
         {
             try
             {
-
-
                 var exams = await context.Set<FinalExam>()
                     .AsNoTracking()
+                    .Where(fe => fe.state)
                     .Select(e => new FinalExamDTO
                     {
                         Id = e.Id,
@@ -61,6 +56,7 @@ namespace Repositorio.Repository.Exams
 
         public async Task<ResponseDTO<string>> Post(FinalExamPostDTO exam)
         {
+            using var transaction = await context.Database.BeginTransactionAsync();
             try
             {
                 var finalExamEntity = new FinalExam
@@ -68,7 +64,6 @@ namespace Repositorio.Repository.Exams
                     Id = exam.Id,
                     CreatedBy = exam.CreatedById ?? Guid.Empty,
                     SubjectId = exam.SubjectId,
-                    PersonId = exam.PersonId,
                     Date = exam.Date,
                     Time = exam.Time,
                     RecordBook = exam.RecordBook,
@@ -77,6 +72,7 @@ namespace Repositorio.Repository.Exams
 
                 await context.Set<FinalExam>().AddAsync(finalExamEntity);
                 await context.SaveChangesAsync();
+                await transaction.CommitAsync();
 
                 return new ResponseDTO<string>
                 {
@@ -88,11 +84,58 @@ namespace Repositorio.Repository.Exams
             catch (Exception ex)
             {
                 Console.WriteLine($"Error al crear la mesa de examen: {ex.Message}");
+                await transaction.RollbackAsync();
 
                 return new ResponseDTO<string>
                 {
                     StatusCode = HttpStatusCode.InternalServerError,
                     Message = "Ocurrió un error al crear la mesa de examen.",
+                    Object = null
+                };
+            }
+        }
+
+        public Task<ResponseDTO<string>> Edit(FinalExamPostDTO exam)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<ResponseDTO<string>> Delete(long id)
+        {
+            using var transaction = context.Database.BeginTransaction();
+            try
+            {
+                var me = await context.Set<FinalExam>().FirstOrDefaultAsync(f => f.Id == id);
+                if (me == null) throw new Exception("FinalExamNotFound");
+
+                me.state = false;
+                await context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return new ResponseDTO<string>
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Message = "¡Operación éxitosa!",
+                    Object = "¡Mesa de examen borrada con éxito!"
+                };
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Error al eliminar la mesa de examen: {e.Message}");
+                await transaction.RollbackAsync();
+
+                if (e.Message.Contains("FinalExamNotFound"))
+                    return new ResponseDTO<string>
+                    {
+                        StatusCode = HttpStatusCode.NotFound,
+                        Message = "La mesa de examen que se desea eliminar no existe.",
+                        Object = null
+                    };
+
+                return new ResponseDTO<string>
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Message = "Ocurrió un error al eliminar la mesa de examen.",
                     Object = null
                 };
             }

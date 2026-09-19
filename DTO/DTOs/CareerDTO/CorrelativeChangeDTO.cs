@@ -10,5 +10,6 @@ namespace DTO.DTOs.CareerDTO
         public Guid? CreatedById { get; set; }
         public Guid? UpdatedById { get; set; }
         public bool IsCorrelative { get; set; }
+        public bool IsMandatory { get; set; }
     }
 }

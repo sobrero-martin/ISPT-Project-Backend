@@ -14,5 +14,6 @@ namespace DTO.DTOs.CareerDTO
         public required string Format { get; set; }
 
         public bool IsCorrelative { get; set; }
+        public bool IsMandatory { get; set; }
     }
 }

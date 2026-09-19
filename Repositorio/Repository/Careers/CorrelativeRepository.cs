@@ -34,12 +34,18 @@ namespace Repositorio.Repository.Careers
                         {
                             SubjectId = subjectId,
                             SubjectCorrelativeId = change.SubjectCorrelativeId,
-                            CreatedBy = change.CreatedById ?? Guid.Empty
+                            CreatedBy = change.CreatedById ?? Guid.Empty,
+                            IsMandatory = change.IsMandatory
                         });
                     }
                     else if (!change.IsCorrelative && correlativa != null)
                     {
                         context.Set<Correlative>().Remove(correlativa);
+                    }
+
+                    if (correlativa != null && correlativa.IsMandatory != change.IsMandatory)
+                    {
+                        correlativa.IsMandatory = change.IsMandatory;
                     }
                 }
                 await context.SaveChangesAsync();

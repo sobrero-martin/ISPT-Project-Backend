@@ -11,5 +11,7 @@ namespace BD.Entidades
 
         public long SubjectCorrelativeId { get; set; }
         public Subject? SubjectCorrelative { get; set; }
+
+        public bool IsMandatory { get; set; }
     }
 }

@@ -9,5 +9,6 @@ namespace DTO.DTOs.CareerDTO
         public long Id { get; set; }
 
         public long SubjectId { get; set; }
+        public bool IsMandatory { get; set; } 
     }
 }

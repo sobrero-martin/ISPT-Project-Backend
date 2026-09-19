@@ -298,6 +298,11 @@ namespace Repositorio.Repository.Careers
                     .Select(c => c.SubjectCorrelativeId)
                     .ToListAsync();
 
+                var correlativesDict = await context.Set<Correlative>()
+                    .AsNoTracking()
+                    .Where(c => c.SubjectId == subjectId)
+                    .ToDictionaryAsync(c => c.SubjectCorrelativeId, c => c.IsMandatory);
+
                 var curriculum = await context.Set<Curriculum>()
                     .AsNoTracking()
                     .FirstOrDefaultAsync(c => c.Id == curriculumId);
@@ -315,20 +320,39 @@ namespace Repositorio.Repository.Careers
                 var subjects = await context.Set<Subject>()
                     .AsNoTracking()
                     .Where(s => s.CurriculumId == curriculumId && s.Year < subjectYear)
-                    .Select(s => new SubjectCorrelativesDTO
+                    .Select(s => new //SubjectCorrelativesDTO
+                    {
+                        s.Id,
+                        s.Code,
+                        s.Name,
+                        s.Format
+                        /*
+                        Id = s.Id,
+                        Code = s.Code,
+                        Name = s.Name,
+                        Format = s.Format,
+                        IsCorrelative = correlatives.Contains(s.Id)*/
+                    })
+                    .ToListAsync();
+
+                var result = subjects.Select(s =>
+                {
+                    bool isCorrelative = correlativesDict.TryGetValue(s.Id, out bool isMandatory);
+                    return new SubjectCorrelativesDTO
                     {
                         Id = s.Id,
                         Code = s.Code,
                         Name = s.Name,
                         Format = s.Format,
-                        IsCorrelative = correlatives.Contains(s.Id)
-                    })
-                    .ToListAsync();
+                        IsCorrelative = isCorrelative,
+                        IsMandatory = isMandatory
+                    };
+                }).ToList();
 
                 return new ResponseDTO<List<SubjectCorrelativesDTO>>
                 {
                     StatusCode = System.Net.HttpStatusCode.OK,
-                    Object = subjects,
+                    Object = result,
                     Message = "Espacios curriculares obtenidos exitosamente."
                 };
             }

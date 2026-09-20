@@ -5,6 +5,8 @@ using DTO.DTOs.ExamDTO;
 using Microsoft.EntityFrameworkCore;
 using Repositorio.Implementations.Exams;
 using System.Net;
+using BD.Entities;
+using DTO.ENUM;
 
 namespace Repositorio.Repository.Exams
 {
@@ -54,6 +56,71 @@ namespace Repositorio.Repository.Exams
             }
         }
 
+        public async Task<ResponseDTO<FinalExamPostDTO>> GetFinalExamById(long id)
+        {
+            try
+            {
+                var exam = await context.Set<FinalExam>()
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(e => e.Id == id);
+
+                if (exam == null)
+                {
+                    return new ResponseDTO<FinalExamPostDTO>
+                    {
+                        StatusCode = HttpStatusCode.NotFound,
+                        Message = "No se encontró la mesa de examen solicitada.",
+                        Object = null
+                    };
+                }
+                
+                var tribunals = await context.FinalExamTribunals
+                    .AsNoTracking()
+                    .Where(t => t.FinalExamId == id)
+                    .ToListAsync();
+                
+                var president =
+                    tribunals.FirstOrDefault(t => t.FinalExamTribunalRole == EnumFinalExamTribunalRole.Titular);
+                
+                var vocals = tribunals.Where(t => t.FinalExamTribunalRole == EnumFinalExamTribunalRole.Vocal).ToList();
+                
+                var examDto = new FinalExamPostDTO
+                {
+                    Id = exam.Id,
+                    CreatedById = exam.CreatedBy,
+                    SubjectId = exam.SubjectId,
+                    Date = exam.Date,
+                    Time = exam.Time,
+                    RecordBook = exam.RecordBook,
+                    PageNumber = exam.PageNumber,
+                    Tribunal = new TribunalExamDTO
+                    {
+                        PresidentId = president?.PersonId ?? 0,
+                        Vocal1Id = vocals.Count > 0 ? vocals[0].PersonId : null,
+                        Vocal2Id = vocals.Count > 1 ? vocals[1].PersonId : null
+                    }
+                };
+
+                return new ResponseDTO<FinalExamPostDTO>
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Message = "Operación exitosa.",
+                    Object = examDto
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al obtener la mesa de examen con ID {id}: {ex.Message}");
+
+                return new ResponseDTO<FinalExamPostDTO>
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Message = "Ocurrió un error al consultar la mesa de examen.",
+                    Object = null
+                };
+            }
+        }
+
         public async Task<ResponseDTO<string>> Post(FinalExamPostDTO exam)
         {
             using var transaction = await context.Database.BeginTransactionAsync();
@@ -70,7 +137,39 @@ namespace Repositorio.Repository.Exams
                     PageNumber = exam.PageNumber
                 };
 
-                await context.Set<FinalExam>().AddAsync(finalExamEntity);
+                context.Set<FinalExam>().Add(finalExamEntity);
+                await context.SaveChangesAsync();
+
+                context.FinalExamTribunals.Add(new FinalExamTribunal()
+                {
+                    CreatedBy = exam.CreatedById ?? Guid.Empty,
+                    FinalExamId = finalExamEntity.Id,
+                    FinalExamTribunalRole = EnumFinalExamTribunalRole.Titular,
+                    PersonId = exam.Tribunal.PresidentId
+                });
+
+                if (exam.Tribunal.Vocal1Id is > 0)
+                {
+                    context.FinalExamTribunals.Add(new FinalExamTribunal()
+                    {
+                        CreatedBy = exam.CreatedById ?? Guid.Empty,
+                        FinalExamId = finalExamEntity.Id,
+                        FinalExamTribunalRole = EnumFinalExamTribunalRole.Vocal,
+                        PersonId = (long)exam.Tribunal.Vocal1Id
+                    });
+                }
+
+                if (exam.Tribunal.Vocal2Id is > 0)
+                {
+                    context.FinalExamTribunals.Add(new FinalExamTribunal()
+                    {
+                        CreatedBy = exam.CreatedById ?? Guid.Empty,
+                        FinalExamId = finalExamEntity.Id,
+                        FinalExamTribunalRole = EnumFinalExamTribunalRole.Vocal,
+                        PersonId = (long)exam.Tribunal.Vocal2Id
+                    });
+                }
+
                 await context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
@@ -95,9 +194,93 @@ namespace Repositorio.Repository.Exams
             }
         }
 
-        public Task<ResponseDTO<string>> Edit(FinalExamPostDTO exam)
+        public async Task<ResponseDTO<string>> Edit(FinalExamPostDTO exam)
         {
-            throw new NotImplementedException();
+            using var transaction = await context.Database.BeginTransactionAsync();
+            try
+            {
+                var existingExam = await context.Set<FinalExam>().FindAsync(exam.Id);
+
+                if (existingExam == null)
+                {
+                    return new ResponseDTO<string>
+                    {
+                        StatusCode = HttpStatusCode.NotFound,
+                        Message = "No se encontró la mesa de examen especificada."
+                    };
+                }
+
+                var userGuid = exam.UpdatedById ?? exam.CreatedById ?? Guid.Empty;
+
+                existingExam.SubjectId = exam.SubjectId;
+                existingExam.Date = exam.Date;
+                existingExam.Time = exam.Time;
+                existingExam.RecordBook = exam.RecordBook;
+                existingExam.PageNumber = exam.PageNumber;
+
+                var currentTribunals = await context.FinalExamTribunals
+                    .Where(t => t.FinalExamId == exam.Id)
+                    .ToListAsync();
+
+                context.FinalExamTribunals.RemoveRange(currentTribunals);
+
+                var newTribunalList = new List<FinalExamTribunal>
+                {
+                    new()
+                    {
+                        CreatedBy = userGuid,
+                        FinalExamId = exam.Id,
+                        FinalExamTribunalRole = EnumFinalExamTribunalRole.Titular,
+                        PersonId = exam.Tribunal.PresidentId
+                    }
+                };
+
+                if (exam.Tribunal.Vocal1Id is > 0)
+                {
+                    newTribunalList.Add(new FinalExamTribunal
+                    {
+                        CreatedBy = userGuid,
+                        FinalExamId = exam.Id,
+                        FinalExamTribunalRole = EnumFinalExamTribunalRole.Vocal,
+                        PersonId = exam.Tribunal.Vocal1Id.Value
+                    });
+                }
+
+                if (exam.Tribunal.Vocal2Id is > 0)
+                {
+                    newTribunalList.Add(new FinalExamTribunal
+                    {
+                        CreatedBy = userGuid,
+                        FinalExamId = exam.Id,
+                        FinalExamTribunalRole = EnumFinalExamTribunalRole.Vocal,
+                        PersonId = exam.Tribunal.Vocal2Id.Value
+                    });
+                }
+
+                context.FinalExamTribunals.AddRange(newTribunalList);
+
+                await context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return new ResponseDTO<string>
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Message = "Operación exitosa.",
+                    Object = $"¡Mesa de examen #{exam.Id} actualizada con éxito!"
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al actualizar la mesa de examen: {ex.Message}");
+                await transaction.RollbackAsync();
+
+                return new ResponseDTO<string>
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                    Message = "Ocurrió un error al actualizar la mesa de examen.",
+                    Object = null
+                };
+            }
         }
 
         public async Task<ResponseDTO<string>> Delete(long id)

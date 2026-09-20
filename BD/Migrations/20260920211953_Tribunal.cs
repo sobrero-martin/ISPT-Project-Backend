@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BD.Migrations
 {
     /// <inheritdoc />
-    public partial class test : Migration
+    public partial class Tribunal : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -607,11 +607,10 @@ namespace BD.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     SubjectId = table.Column<long>(type: "bigint", nullable: false),
-                    PersonId = table.Column<long>(type: "bigint", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     Time = table.Column<TimeOnly>(type: "time(6)", nullable: false),
-                    RecordBook = table.Column<int>(type: "int", nullable: false),
-                    PageNumber = table.Column<int>(type: "int", nullable: false),
+                    RecordBook = table.Column<int>(type: "int", nullable: true),
+                    PageNumber = table.Column<int>(type: "int", nullable: true),
                     state = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
@@ -621,12 +620,6 @@ namespace BD.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_FinalExams", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_FinalExams_People_PersonId",
-                        column: x => x.PersonId,
-                        principalTable: "People",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_FinalExams_Subjects_SubjectId",
                         column: x => x.SubjectId,
@@ -730,6 +723,39 @@ namespace BD.Migrations
                     table.ForeignKey(
                         name: "FK_TeacherDivisions_People_TeacherId",
                         column: x => x.TeacherId,
+                        principalTable: "People",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "FinalExamTribunals",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    PersonId = table.Column<long>(type: "bigint", nullable: false),
+                    FinalExamId = table.Column<long>(type: "bigint", nullable: false),
+                    FinalExamTribunalRole = table.Column<int>(type: "int", nullable: false),
+                    state = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    CreatedBy = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    UpdatedBy = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FinalExamTribunals", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FinalExamTribunals_FinalExams_FinalExamId",
+                        column: x => x.FinalExamId,
+                        principalTable: "FinalExams",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FinalExamTribunals_People_PersonId",
+                        column: x => x.PersonId,
                         principalTable: "People",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -961,17 +987,17 @@ namespace BD.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "7d1b364e-d1fd-4b36-9d35-28e86e77c8da", "5", "Estudiante", "ESTUDIANTE" },
-                    { "8d29a87a-1cd1-4f35-a198-8e73800a7900", "3", "Preceptor_Auxiliar", "PRECEPTOR_AUXILIAR" },
-                    { "8ea0dd25-8d5a-4f16-8276-760d7aa9b300", "4", "Docente", "DOCENTE" },
-                    { "96e114d3-ce41-48a1-b050-a97fabc79dfb", "2", "Preceptor", "PRECEPTOR" },
+                    { "0d6553f1-e562-4908-9216-4b4abf11354a", "2", "Preceptor", "PRECEPTOR" },
+                    { "2789dffd-0098-45c1-a50d-81bd92ab6357", "3", "Preceptor_Auxiliar", "PRECEPTOR_AUXILIAR" },
+                    { "47df5ed4-b2ac-4263-bdb5-cfabec732cd1", "5", "Estudiante", "ESTUDIANTE" },
+                    { "b1652125-ef8e-4dfd-b0b3-c217fb6ff62d", "4", "Docente", "DOCENTE" },
                     { "rol-directivo-id", "1", "Directivo", "DIRECTIVO" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "ae65a54a-aab5-4d0c-aa17-554334b49e8c", 0, "4117a112-c8c0-4c62-befe-a721990edc10", "", true, false, null, "", "SUPERADMINISPT-2026", "AQAAAAIAAYagAAAAEFy59Yf0OAWwHFDhHnU9qqcF0j3m68O8aL3pr5zYQrf2X7K8ICNg8wOy962/f/qtqQ==", null, false, "37339921-f78b-4268-9c81-7366a8cbeadb", false, "SuperadminISPT-2026" });
+                values: new object[] { "ae65a54a-aab5-4d0c-aa17-554334b49e8c", 0, "4c3cafb4-50ae-496f-9605-adc27e5422c7", "", true, false, null, "", "SUPERADMINISPT-2026", "AQAAAAIAAYagAAAAEDa1bzxQum0Y6ZF0/IDVPV0xysbt5kzXsZC9CdnZACy5WPFyNX9ipQZGdtECs99Idg==", null, false, "c7a0bd5a-53f5-4c77-a928-5681360a3d8d", false, "SuperadminISPT-2026" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
@@ -1127,14 +1153,20 @@ namespace BD.Migrations
                 column: "FinalExamId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FinalExams_PersonId",
-                table: "FinalExams",
-                column: "PersonId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_FinalExams_SubjectId",
                 table: "FinalExams",
                 column: "SubjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FinalExamTribunals_FinalExamId",
+                table: "FinalExamTribunals",
+                column: "FinalExamId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FinalExamTribunals_PersonId_FinalExamId",
+                table: "FinalExamTribunals",
+                columns: new[] { "PersonId", "FinalExamId" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Grades_DivisionExamId",
@@ -1236,6 +1268,9 @@ namespace BD.Migrations
 
             migrationBuilder.DropTable(
                 name: "FinalExamGrades");
+
+            migrationBuilder.DropTable(
+                name: "FinalExamTribunals");
 
             migrationBuilder.DropTable(
                 name: "Grades");

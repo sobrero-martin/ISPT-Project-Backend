@@ -43,6 +43,7 @@ namespace BD
 
         public DbSet<FinalExam> FinalExams { get; set; }
         public DbSet<FinalExamGrade> FinalExamGrades { get; set; }
+        public DbSet<FinalExamTribunal> FinalExamTribunals { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

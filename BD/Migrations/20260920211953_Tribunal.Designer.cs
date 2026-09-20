@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BD.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260907121907_test")]
-    partial class test
+    [Migration("20260920211953_Tribunal")]
+    partial class Tribunal
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -639,13 +639,10 @@ namespace BD.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("PageNumber")
+                    b.Property<int?>("PageNumber")
                         .HasColumnType("int");
 
-                    b.Property<long>("PersonId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("RecordBook")
+                    b.Property<int?>("RecordBook")
                         .HasColumnType("int");
 
                     b.Property<long>("SubjectId")
@@ -664,8 +661,6 @@ namespace BD.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("PersonId");
 
                     b.HasIndex("SubjectId");
 
@@ -1066,6 +1061,48 @@ namespace BD.Migrations
                     b.ToTable("TeacherDivisions");
                 });
 
+            modelBuilder.Entity("BD.Entities.FinalExamTribunal", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("char(36)");
+
+                    b.Property<long>("FinalExamId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("FinalExamTribunalRole")
+                        .HasColumnType("int");
+
+                    b.Property<long>("PersonId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("char(36)");
+
+                    b.Property<bool>("state")
+                        .HasColumnType("tinyint(1)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FinalExamId");
+
+                    b.HasIndex("PersonId", "FinalExamId")
+                        .IsUnique();
+
+                    b.ToTable("FinalExamTribunals");
+                });
+
             modelBuilder.Entity("BD.Entities.ScheduleTemplate", b =>
                 {
                     b.Property<long>("Id")
@@ -1144,28 +1181,28 @@ namespace BD.Migrations
                         },
                         new
                         {
-                            Id = "96e114d3-ce41-48a1-b050-a97fabc79dfb",
+                            Id = "0d6553f1-e562-4908-9216-4b4abf11354a",
                             ConcurrencyStamp = "2",
                             Name = "Preceptor",
                             NormalizedName = "PRECEPTOR"
                         },
                         new
                         {
-                            Id = "8d29a87a-1cd1-4f35-a198-8e73800a7900",
+                            Id = "2789dffd-0098-45c1-a50d-81bd92ab6357",
                             ConcurrencyStamp = "3",
                             Name = "Preceptor_Auxiliar",
                             NormalizedName = "PRECEPTOR_AUXILIAR"
                         },
                         new
                         {
-                            Id = "8ea0dd25-8d5a-4f16-8276-760d7aa9b300",
+                            Id = "b1652125-ef8e-4dfd-b0b3-c217fb6ff62d",
                             ConcurrencyStamp = "4",
                             Name = "Docente",
                             NormalizedName = "DOCENTE"
                         },
                         new
                         {
-                            Id = "7d1b364e-d1fd-4b36-9d35-28e86e77c8da",
+                            Id = "47df5ed4-b2ac-4263-bdb5-cfabec732cd1",
                             ConcurrencyStamp = "5",
                             Name = "Estudiante",
                             NormalizedName = "ESTUDIANTE"
@@ -1265,15 +1302,15 @@ namespace BD.Migrations
                         {
                             Id = "ae65a54a-aab5-4d0c-aa17-554334b49e8c",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "4117a112-c8c0-4c62-befe-a721990edc10",
+                            ConcurrencyStamp = "4c3cafb4-50ae-496f-9605-adc27e5422c7",
                             Email = "",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "",
                             NormalizedUserName = "SUPERADMINISPT-2026",
-                            PasswordHash = "AQAAAAIAAYagAAAAEFy59Yf0OAWwHFDhHnU9qqcF0j3m68O8aL3pr5zYQrf2X7K8ICNg8wOy962/f/qtqQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDa1bzxQum0Y6ZF0/IDVPV0xysbt5kzXsZC9CdnZACy5WPFyNX9ipQZGdtECs99Idg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "37339921-f78b-4268-9c81-7366a8cbeadb",
+                            SecurityStamp = "c7a0bd5a-53f5-4c77-a928-5681360a3d8d",
                             TwoFactorEnabled = false,
                             UserName = "SuperadminISPT-2026"
                         });
@@ -1552,19 +1589,11 @@ namespace BD.Migrations
 
             modelBuilder.Entity("BD.Entidades.FinalExam", b =>
                 {
-                    b.HasOne("BD.Entidades.Person", "Person")
-                        .WithMany()
-                        .HasForeignKey("PersonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("BD.Entidades.Subject", "Subject")
                         .WithMany()
                         .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Person");
 
                     b.Navigation("Subject");
                 });
@@ -1677,6 +1706,25 @@ namespace BD.Migrations
                     b.Navigation("Division");
 
                     b.Navigation("Teacher");
+                });
+
+            modelBuilder.Entity("BD.Entities.FinalExamTribunal", b =>
+                {
+                    b.HasOne("BD.Entidades.FinalExam", "FinalExam")
+                        .WithMany()
+                        .HasForeignKey("FinalExamId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BD.Entidades.Person", "Person")
+                        .WithMany()
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FinalExam");
+
+                    b.Navigation("Person");
                 });
 
             modelBuilder.Entity("BD.Entities.ScheduleTemplate", b =>

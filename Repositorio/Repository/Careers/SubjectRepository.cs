@@ -1,5 +1,6 @@
 ﻿using BD;
 using BD.Entidades;
+using BD.Entities;
 using DTO.DTOs.CareerDTO;
 using DTO.DTOs.DTO_Response;
 using Microsoft.EntityFrameworkCore;
@@ -369,27 +370,29 @@ namespace Repositorio.Repository.Careers
             }
         }
 
-        public async Task<ResponseDTO<List<SubjectTableDTO>>> GetBySchoolYear(long schoolYearId)
+        //REVISAR
+        public async Task<ResponseDTO<List<SubjectTableDTO>>> GetBySchoolYear(long schoolYearCurriculumId)
         {
             try
             {
-                var schoolYear = await context.Set<SchoolYear>()
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(s => s.Id == schoolYearId);
 
-                if (schoolYear == null)
+                var schoolYearCurriculum = await context.Set<SchoolYearCurriculum>()
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(sys => sys.Id == schoolYearCurriculumId);
+
+                if (schoolYearCurriculum == null)
                 {
                     return new ResponseDTO<List<SubjectTableDTO>>
                     {
                         StatusCode = System.Net.HttpStatusCode.NotFound,
                         Object = null,
-                        Message = "Ciclo lectivo no encontrado."
+                        Message = "Registro de año académico no encontrado."
                     };
                 }
 
                 var subjects = await context.Set<Subject>()
                     .AsNoTracking()
-                    .Where(s => s.CurriculumId == schoolYear.CurriculumId)
+                    .Where(s => s.CurriculumId == schoolYearCurriculum.CurriculumId && s.Year == schoolYearCurriculum.SchoolYearNumber)
                     .Select(s => new SubjectTableDTO
                     {
                         Id = s.Id,
@@ -409,7 +412,7 @@ namespace Repositorio.Repository.Careers
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error al obtener espacio curricular por año escolar: {ex.Message}");
+                Console.WriteLine($"Error al obtener espacios curriculares: {ex.Message}");
 
                 return new ResponseDTO<List<SubjectTableDTO>>
                 {

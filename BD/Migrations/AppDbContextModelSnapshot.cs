@@ -927,9 +927,6 @@ namespace BD.Migrations
                     b.Property<Guid>("CreatedBy")
                         .HasColumnType("char(36)");
 
-                    b.Property<long>("CurriculumId")
-                        .HasColumnType("bigint");
-
                     b.Property<int>("SchoolYearNumber")
                         .HasColumnType("int");
 
@@ -943,8 +940,6 @@ namespace BD.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CurriculumId");
 
                     b.ToTable("SchoolYears");
                 });
@@ -1143,6 +1138,47 @@ namespace BD.Migrations
                     b.ToTable("ScheduleTemplates");
                 });
 
+            modelBuilder.Entity("BD.Entities.SchoolYearCurriculum", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("char(36)");
+
+                    b.Property<long>("CurriculumId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("SchoolYearId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("SchoolYearNumber")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("char(36)");
+
+                    b.Property<bool>("state")
+                        .HasColumnType("tinyint(1)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CurriculumId");
+
+                    b.HasIndex("SchoolYearId");
+
+                    b.ToTable("SchoolYearCurriculum");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -1178,28 +1214,28 @@ namespace BD.Migrations
                         },
                         new
                         {
-                            Id = "0d6553f1-e562-4908-9216-4b4abf11354a",
+                            Id = "b42866ed-7902-4a13-9086-462f67034ebe",
                             ConcurrencyStamp = "2",
                             Name = "Preceptor",
                             NormalizedName = "PRECEPTOR"
                         },
                         new
                         {
-                            Id = "2789dffd-0098-45c1-a50d-81bd92ab6357",
+                            Id = "3ad8c59c-8647-43db-b7f3-6ec58fe8973b",
                             ConcurrencyStamp = "3",
                             Name = "Preceptor_Auxiliar",
                             NormalizedName = "PRECEPTOR_AUXILIAR"
                         },
                         new
                         {
-                            Id = "b1652125-ef8e-4dfd-b0b3-c217fb6ff62d",
+                            Id = "57a67825-e6cd-447a-8817-3f81384ac97e",
                             ConcurrencyStamp = "4",
                             Name = "Docente",
                             NormalizedName = "DOCENTE"
                         },
                         new
                         {
-                            Id = "47df5ed4-b2ac-4263-bdb5-cfabec732cd1",
+                            Id = "77ee9f4e-7880-4208-b07a-a374412bca57",
                             ConcurrencyStamp = "5",
                             Name = "Estudiante",
                             NormalizedName = "ESTUDIANTE"
@@ -1299,15 +1335,15 @@ namespace BD.Migrations
                         {
                             Id = "ae65a54a-aab5-4d0c-aa17-554334b49e8c",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "4c3cafb4-50ae-496f-9605-adc27e5422c7",
+                            ConcurrencyStamp = "7561ecb2-2b65-42cf-ad85-43d27bf90c79",
                             Email = "",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "",
                             NormalizedUserName = "SUPERADMINISPT-2026",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDa1bzxQum0Y6ZF0/IDVPV0xysbt5kzXsZC9CdnZACy5WPFyNX9ipQZGdtECs99Idg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEIjjElVoUPKFo+YaJ1FOCCMBCnkYwbMLVSJ3cKALz7QQ949FSD38uRQddosNxXso5Q==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "c7a0bd5a-53f5-4c77-a928-5681360a3d8d",
+                            SecurityStamp = "b703bfd7-505d-4f12-ba55-1cf243b51d9d",
                             TwoFactorEnabled = false,
                             UserName = "SuperadminISPT-2026"
                         });
@@ -1664,17 +1700,6 @@ namespace BD.Migrations
                     b.Navigation("Division");
                 });
 
-            modelBuilder.Entity("BD.Entidades.SchoolYear", b =>
-                {
-                    b.HasOne("BD.Entidades.Curriculum", "Curriculum")
-                        .WithMany()
-                        .HasForeignKey("CurriculumId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Curriculum");
-                });
-
             modelBuilder.Entity("BD.Entidades.Subject", b =>
                 {
                     b.HasOne("BD.Entidades.Curriculum", "Curriculum")
@@ -1733,6 +1758,25 @@ namespace BD.Migrations
                         .IsRequired();
 
                     b.Navigation("DivisionTemplate");
+                });
+
+            modelBuilder.Entity("BD.Entities.SchoolYearCurriculum", b =>
+                {
+                    b.HasOne("BD.Entidades.Curriculum", "Curriculum")
+                        .WithMany()
+                        .HasForeignKey("CurriculumId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BD.Entidades.SchoolYear", "SchoolYear")
+                        .WithMany()
+                        .HasForeignKey("SchoolYearId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Curriculum");
+
+                    b.Navigation("SchoolYear");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

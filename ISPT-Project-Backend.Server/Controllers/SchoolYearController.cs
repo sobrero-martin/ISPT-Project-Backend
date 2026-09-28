@@ -43,11 +43,30 @@ namespace ISPT_Project_Backend.Server.Controllers
             return StatusCode((int)response.StatusCode, response);
         }
 
+        /*
         [HttpPost]
         [Authorize(Roles = "Directivo")]
         public async Task<ActionResult<ResponseDTO<SchoolYearPostDTO>>> Post(SchoolYearPostDTO schoolYear)
         {
             var response = await schoolYearRepository.Post(schoolYear);
+
+            return StatusCode((int)response.StatusCode, response);
+        }*/
+
+        [HttpGet("{id:long}/curriculums")]
+        [Authorize(Roles = "Directivo, Preceptor")]
+        public async Task<ActionResult<ResponseDTO<List<SchoolYearCurriculumDTO>>>> GetCurriculumsBySchoolYearId(long id)
+        {
+            var response = await schoolYearRepository.GetCurriculumsBySchoolYearId(id);
+
+            return StatusCode((int)response.StatusCode, response);
+        }
+
+        [HttpPost("by-grade")]
+        [Authorize(Roles = "Directivo")]
+        public async Task<ActionResult<ResponseDTO<SchoolYearByGradePostDTO>>> PostByGrade(SchoolYearByGradePostDTO schoolYear)
+        {
+            var response = await schoolYearRepository.PostByGrade(schoolYear);
 
             return StatusCode((int)response.StatusCode, response);
         }

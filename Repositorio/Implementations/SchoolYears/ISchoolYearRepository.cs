@@ -11,11 +11,8 @@ namespace Repositorio.Implementations.SchoolYears
     public interface ISchoolYearRepository
     {
         Task<ResponseDTO<List<SchoolYearDTO>>> GetFull();
-        Task<ResponseDTO<List<SchoolYearByGradePostDTO>>> GetRaw();
-        Task<ResponseDTO<SchoolYearByGradePostDTO>> GetById(long id);
-        Task<ResponseDTO<List<SchoolYearCurriculumDTO>>> GetCurriculumsBySchoolYearId(long schoolYearId);
-        /*
-        Task<ResponseDTO<SchoolYearPostDTO>> Post(SchoolYearPostDTO schoolYear);*/
-        Task<ResponseDTO<SchoolYearByGradePostDTO>> PostByGrade(SchoolYearByGradePostDTO schoolYear);
+        Task<ResponseDTO<List<SchoolYearPostDTO>>> GetRaw();
+        Task<ResponseDTO<SchoolYearPostDTO>> GetById(long id);
+        Task<ResponseDTO<SchoolYearPostDTO>> Post(SchoolYearPostDTO schoolYear);
     }
 }

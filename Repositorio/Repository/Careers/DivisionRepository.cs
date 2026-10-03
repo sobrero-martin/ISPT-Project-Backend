@@ -22,12 +22,47 @@ namespace Repositorio.Repository.Careers
         {
             try
             {
+                var baseSchoolYear = await context.Set<SchoolYear>()
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(sy => sy.Id == schoolYearId);
+
+                if (baseSchoolYear == null)
+                {
+                    return new ResponseDTO<List<DivisionDTO>>
+                    {
+                        StatusCode = System.Net.HttpStatusCode.NotFound,
+                        Object = null,
+                        Message = "Ciclo lectivo no encontrado."
+                    };
+                }
+
+                var subject = await context.Set<Subject>()
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(s => s.Id == subjectId);
+
+                if (subject == null)
+                {
+                    return new ResponseDTO<List<DivisionDTO>>
+                    {
+                        StatusCode = System.Net.HttpStatusCode.NotFound,
+                        Object = null,
+                        Message = "Espacio curricular no encontrado."
+                    };
+                }
+
+                var targetSchoolYearId = await context.Set<SchoolYear>()
+                    .Where(sy => sy.CurriculumId == baseSchoolYear.CurriculumId &&
+                                 sy.SchoolYearNumber == baseSchoolYear.SchoolYearNumber &&
+                                 sy.YearNumber == subject.Year) 
+                    .Select(sy => sy.Id)
+                    .FirstOrDefaultAsync();
+
                 var divisionTemplates = await context.Set<DivisionTemplate>()
                     .Where(dt => dt.SubjectId == subjectId)
                     .ToListAsync();
 
                 var divisions = await context.Set<Division>()
-                    .Where(d => d.SchoolYearId == schoolYearId && divisionTemplates.Select(dt => dt.Id).Contains(d.DivisionTemplateId))
+                    .Where(d => d.SchoolYearId == targetSchoolYearId && divisionTemplates.Select(dt => dt.Id).Contains(d.DivisionTemplateId))
                     .Select(d => new DivisionDTO
                     {
                         Id = d.Id,
@@ -35,15 +70,12 @@ namespace Repositorio.Repository.Careers
                     })
                     .ToListAsync();
 
-
                 return new ResponseDTO<List<DivisionDTO>>
                 {
                     StatusCode = System.Net.HttpStatusCode.OK,
                     Object = divisions,
                     Message = "Divisiones obtenidas correctamente."
-
                 };
-
             }
             catch (Exception ex)
             {
@@ -53,10 +85,9 @@ namespace Repositorio.Repository.Careers
                     StatusCode = System.Net.HttpStatusCode.InternalServerError,
                     Object = null,
                     Message = "Ocurrió un error al obtener las divisiones."
-
                 };
             }
         }
 
-        }
+    }
     }

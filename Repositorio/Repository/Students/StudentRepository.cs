@@ -1,15 +1,14 @@
 using BD;
 using BD.Entidades;
-using BD.Entities;
 using DTO.DTOs.DTO_Response;
 using DTO.DTOs.SchoolYearDTO;
 using DTO.DTOs.StudentsDTO;
 using ExcelDataReader;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Repositorio.Implementations.Students;
 using System.Data;
 using System.Net;
+using Repositorio.Implementations.Students;
 using File = BD.Entidades.File;
 
 
@@ -66,31 +65,30 @@ public class StudentRepository : PersonRepository, IStudentRepository
         }
     }
 
-    //REVISAR
     public async Task<ResponseDTO<List<StudentFileDivisionDTO>>> GetStudentsBySchoolYearId(long schoolYearId)
     {
+
         try
         {
-            
-            var curriculumIds = await bbdd.Set<SchoolYearCurriculum>()
+            var curriculum = await bbdd.Set<SchoolYear>()
                 .AsNoTracking()
-                .Where(sy => sy.SchoolYearId == schoolYearId)
-                .Select(sy => sy.CurriculumId)
-                .ToListAsync();
+                .Where(sy => sy.Id == schoolYearId)
+                .Select(sy => sy.Curriculum)
+                .FirstOrDefaultAsync();
 
-            if (!curriculumIds.Any())
+            if (curriculum == null)
             {
                 return new ResponseDTO<List<StudentFileDivisionDTO>>()
                 {
                     StatusCode = HttpStatusCode.NotFound,
-                    Message = "¡No se encontró el año escolar especificado o no tiene planes de estudio asignados!",
+                    Message = "¡No se encontró el año escolar especificado o no tiene un plan de estudio asignado!",
                     Object = null
                 };
             }
 
             var fileCurriculums = await bbdd.Set<FileCurriculum>()
                 .AsNoTracking()
-                .Where(fc => curriculumIds.Contains(fc.CurriculumId))
+                .Where(fc => fc.CurriculumId == curriculum!.Id)
                 .Select(fc => fc.FileId)
                 .ToListAsync();
 
@@ -103,7 +101,11 @@ public class StudentRepository : PersonRepository, IStudentRepository
                     Object = new List<StudentFileDivisionDTO>()
                 };
             }
-
+            /*
+            var files = await bbdd.Set<File>()
+                .AsNoTracking()
+                .Where(f => fileCurriculums.Contains(f.Id))
+                .ToListAsync();*/
 
             var students = await bbdd.Set<Person>()
                 .Where(p => p.Files.Any(f => fileCurriculums.Contains(f.Id)))
@@ -116,7 +118,6 @@ public class StudentRepository : PersonRepository, IStudentRepository
                     DocumentNumber = p.DocumentNumber
                 })
                 .ToListAsync();
-
             return new ResponseDTO<List<StudentFileDivisionDTO>>()
             {
                 StatusCode = HttpStatusCode.OK,

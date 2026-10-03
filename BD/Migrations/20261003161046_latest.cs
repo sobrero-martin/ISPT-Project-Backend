@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BD.Migrations
 {
     /// <inheritdoc />
-    public partial class test : Migration
+    public partial class latest : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -90,25 +90,6 @@ namespace BD.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Careers", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "SchoolYears",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    SchoolYearNumber = table.Column<int>(type: "int", nullable: false),
-                    state = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
-                    CreatedBy = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    UpdatedBy = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SchoolYears", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -436,14 +417,14 @@ namespace BD.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "SchoolYearCurriculum",
+                name: "SchoolYears",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     CurriculumId = table.Column<long>(type: "bigint", nullable: false),
-                    SchoolYearId = table.Column<long>(type: "bigint", nullable: false),
                     SchoolYearNumber = table.Column<int>(type: "int", nullable: false),
+                    YearNumber = table.Column<int>(type: "int", nullable: false),
                     state = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
@@ -452,17 +433,11 @@ namespace BD.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SchoolYearCurriculum", x => x.Id);
+                    table.PrimaryKey("PK_SchoolYears", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_SchoolYearCurriculum_Curriculums_CurriculumId",
+                        name: "FK_SchoolYears_Curriculums_CurriculumId",
                         column: x => x.CurriculumId,
                         principalTable: "Curriculums",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_SchoolYearCurriculum_SchoolYears_SchoolYearId",
-                        column: x => x.SchoolYearId,
-                        principalTable: "SchoolYears",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -1013,17 +988,17 @@ namespace BD.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "3ad8c59c-8647-43db-b7f3-6ec58fe8973b", "3", "Preceptor_Auxiliar", "PRECEPTOR_AUXILIAR" },
-                    { "57a67825-e6cd-447a-8817-3f81384ac97e", "4", "Docente", "DOCENTE" },
-                    { "77ee9f4e-7880-4208-b07a-a374412bca57", "5", "Estudiante", "ESTUDIANTE" },
-                    { "b42866ed-7902-4a13-9086-462f67034ebe", "2", "Preceptor", "PRECEPTOR" },
+                    { "8453642f-b14d-4bcc-83bc-f8a12fd8542a", "3", "Preceptor_Auxiliar", "PRECEPTOR_AUXILIAR" },
+                    { "c7dbff1e-4b6f-4029-abab-23898e673ca7", "4", "Docente", "DOCENTE" },
+                    { "f00ecce8-9357-48b8-afa3-60f2eb0c03bb", "5", "Estudiante", "ESTUDIANTE" },
+                    { "f342c5d8-c3ba-42ac-8be8-c132c114aa5e", "2", "Preceptor", "PRECEPTOR" },
                     { "rol-directivo-id", "1", "Directivo", "DIRECTIVO" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "ae65a54a-aab5-4d0c-aa17-554334b49e8c", 0, "7561ecb2-2b65-42cf-ad85-43d27bf90c79", "", true, false, null, "", "SUPERADMINISPT-2026", "AQAAAAIAAYagAAAAEIjjElVoUPKFo+YaJ1FOCCMBCnkYwbMLVSJ3cKALz7QQ949FSD38uRQddosNxXso5Q==", null, false, "b703bfd7-505d-4f12-ba55-1cf243b51d9d", false, "SuperadminISPT-2026" });
+                values: new object[] { "ae65a54a-aab5-4d0c-aa17-554334b49e8c", 0, "6687ad02-88b3-4678-ac65-20f174addafe", "", true, false, null, "", "SUPERADMINISPT-2026", "AQAAAAIAAYagAAAAEN2yfg0HSENtciYPlaxXzKlV6xaeRUFilokSx7MSTbFuVazb/tavrDD82F8WgTacCw==", null, false, "3f327e03-ae56-4174-b681-23003608e5a6", false, "SuperadminISPT-2026" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
@@ -1233,14 +1208,9 @@ namespace BD.Migrations
                 column: "DivisionTemplateId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SchoolYearCurriculum_CurriculumId",
-                table: "SchoolYearCurriculum",
+                name: "IX_SchoolYears_CurriculumId",
+                table: "SchoolYears",
                 column: "CurriculumId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_SchoolYearCurriculum_SchoolYearId",
-                table: "SchoolYearCurriculum",
-                column: "SchoolYearId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Subjects_Code",
@@ -1314,9 +1284,6 @@ namespace BD.Migrations
 
             migrationBuilder.DropTable(
                 name: "ScheduleTemplates");
-
-            migrationBuilder.DropTable(
-                name: "SchoolYearCurriculum");
 
             migrationBuilder.DropTable(
                 name: "TeacherDivisions");

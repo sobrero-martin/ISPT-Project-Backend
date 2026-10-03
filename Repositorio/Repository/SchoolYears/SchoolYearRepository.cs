@@ -21,32 +21,43 @@ namespace Repositorio.Repository.SchoolYears
             this.context = context;
         }
 
-        //REVISAR
         public async Task<ResponseDTO<List<SchoolYearDTO>>> GetFull()
         {
             try
             {
-                var schoolYears = await context.Set<SchoolYear>()
+                var schoolYearsData = await context.Set<SchoolYear>()
                     .AsNoTracking()
-                    .Include(sy => sy.SchoolYearCurriculums) 
-                        .ThenInclude(syc => syc.Curriculum)
-                            .ThenInclude(c => c.Career)
-                    .Select(sy => new SchoolYearDTO
+                    .Include(s => s.Curriculum)
+                        .ThenInclude(c => c.Career)
+                    .Select(s => new
                     {
-                        Id = sy.Id,
-                        SchoolYearNumber = sy.SchoolYearNumber,
-                        
-                        CareerName = sy.SchoolYearCurriculums
-                            .Select(syc => syc.Curriculum.Career.Name)
-                            .FirstOrDefault(),
+                        s.Id,
+                        CareerName = s.Curriculum.Career.Name,
+                        Resolution = s.Curriculum.Resolution,
+                        s.SchoolYearNumber,
+                        s.CurriculumId,
+                        s.YearNumber 
                     })
                     .ToListAsync();
+
+                var groupedSchoolYears = schoolYearsData
+                    .GroupBy(s => new { s.SchoolYearNumber, s.CurriculumId, s.CareerName, s.Resolution })
+                    .Select(g => new SchoolYearDTO
+                    {
+                        Id = g.First().Id,
+                        CareerName = g.Key.CareerName,
+                        Resolution = g.Key.Resolution,
+                        SchoolYearNumber = g.Key.SchoolYearNumber,
+
+                        YearsFormatted = string.Join(", ", g.Select(x => $"{x.YearNumber}°").OrderBy(y => y))
+                    })
+                    .ToList();
 
                 return new ResponseDTO<List<SchoolYearDTO>>
                 {
                     StatusCode = HttpStatusCode.OK,
                     Message = "Listado de ciclos lectivos obtenido exitosamente.",
-                    Object = schoolYears
+                    Object = groupedSchoolYears
                 };
             }
             catch (Exception ex)
@@ -62,51 +73,32 @@ namespace Repositorio.Repository.SchoolYears
             }
         }
 
-        //REVISAR
-        public async Task<ResponseDTO<List<SchoolYearByGradePostDTO>>> GetRaw()
+        public async Task<ResponseDTO<List<SchoolYearPostDTO>>> GetRaw()
         {
             try
             {
                 var schoolYears = await context.Set<SchoolYear>()
                     .AsNoTracking()
-                    .GroupJoin(
-                        context.Set<SchoolYearCurriculum>(),
-                        sy => sy.Id,
-                        syc => syc.SchoolYearId,
-                        (sy, sycs) => new { SchoolYear = sy, Curriculums = sycs.ToList() }
-                    )
+                    .Select(s => new SchoolYearPostDTO
+                    {
+                        Id = s.Id,
+                        CurriculumId = s.CurriculumId,
+                        SchoolYearNumber = s.SchoolYearNumber
+                    })
                     .ToListAsync();
 
-                var resultList = new List<SchoolYearByGradePostDTO>();
-
-                foreach (var item in schoolYears)
-                {
-                    var sy = item.SchoolYear;
-                    var curriculums = item.Curriculums;
-
-                    resultList.Add(new SchoolYearByGradePostDTO
-                    {
-                        Id = sy.Id,
-                        SchoolYearNumber = sy.SchoolYearNumber,
-                        CurriculumYear1 = curriculums.FirstOrDefault(c => c.SchoolYearNumber == 1)?.CurriculumId ?? 0,
-                        CurriculumYear2 = curriculums.FirstOrDefault(c => c.SchoolYearNumber == 2)?.CurriculumId ?? 0,
-                        CurriculumYear3 = curriculums.FirstOrDefault(c => c.SchoolYearNumber == 3)?.CurriculumId ?? 0,
-                        CreatedById = sy.CreatedBy
-                    });
-                }
-
-                return new ResponseDTO<List<SchoolYearByGradePostDTO>>
+                return new ResponseDTO<List<SchoolYearPostDTO>>
                 {
                     StatusCode = HttpStatusCode.OK,
                     Message = "Listado de ciclos lectivos obtenido exitosamente.",
-                    Object = resultList
+                    Object = schoolYears
                 };
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error al obtener el listado de ciclos lectivos: {ex.Message}");
 
-                return new ResponseDTO<List<SchoolYearByGradePostDTO>>
+                return new ResponseDTO<List<SchoolYearPostDTO>>
                 {
                     StatusCode = HttpStatusCode.InternalServerError,
                     Message = "Ocurrió un error al obtener el listado de ciclos lectivos.",
@@ -115,19 +107,24 @@ namespace Repositorio.Repository.SchoolYears
             }
         }
 
-        //REVISAR
-        public async Task<ResponseDTO<SchoolYearByGradePostDTO>> GetById(long id)
+        public async Task<ResponseDTO<SchoolYearPostDTO>> GetById(long id)
         {
             try
             {
-                
                 var schoolYear = await context.Set<SchoolYear>()
                     .AsNoTracking()
-                    .FirstOrDefaultAsync(s => s.Id == id);
+                    .Where(s => s.Id == id)
+                    .Select(s => new SchoolYearPostDTO
+                    {
+                        Id = s.Id,
+                        CurriculumId = s.CurriculumId,
+                        SchoolYearNumber = s.SchoolYearNumber
+                    })
+                    .FirstOrDefaultAsync();
 
                 if (schoolYear == null)
                 {
-                    return new ResponseDTO<SchoolYearByGradePostDTO>
+                    return new ResponseDTO<SchoolYearPostDTO>
                     {
                         StatusCode = HttpStatusCode.NotFound,
                         Message = "Ciclo lectivo no encontrado.",
@@ -135,35 +132,18 @@ namespace Repositorio.Repository.SchoolYears
                     };
                 }
 
-               
-                var curriculums = await context.Set<SchoolYearCurriculum>()
-                    .AsNoTracking()
-                    .Where(syc => syc.SchoolYearId == id)
-                    .ToListAsync();
-
-               
-                var schoolYearDto = new SchoolYearByGradePostDTO
-                {
-                    Id = schoolYear.Id,
-                    SchoolYearNumber = schoolYear.SchoolYearNumber,
-                    CurriculumYear1 = curriculums.FirstOrDefault(c => c.SchoolYearNumber == 1)?.CurriculumId ?? 0,
-                    CurriculumYear2 = curriculums.FirstOrDefault(c => c.SchoolYearNumber == 2)?.CurriculumId ?? 0,
-                    CurriculumYear3 = curriculums.FirstOrDefault(c => c.SchoolYearNumber == 3)?.CurriculumId ?? 0,
-                    CreatedById = schoolYear.CreatedBy
-                };
-
-                return new ResponseDTO<SchoolYearByGradePostDTO>
+                return new ResponseDTO<SchoolYearPostDTO>
                 {
                     StatusCode = HttpStatusCode.OK,
                     Message = "Ciclo lectivo obtenido exitosamente.",
-                    Object = schoolYearDto
+                    Object = schoolYear
                 };
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error al obtener el ciclo lectivo: {ex.Message}");
 
-                return new ResponseDTO<SchoolYearByGradePostDTO>
+                return new ResponseDTO<SchoolYearPostDTO>
                 {
                     StatusCode = HttpStatusCode.InternalServerError,
                     Message = "Ocurrió un error al obtener el ciclo lectivo.",
@@ -171,235 +151,99 @@ namespace Repositorio.Repository.SchoolYears
                 };
             }
         }
-        /*
+
         public async Task<ResponseDTO<SchoolYearPostDTO>> Post(SchoolYearPostDTO schoolYear)
         {
             try
             {
-                var schoolYearEntity = new SchoolYear
-                {
-                    Id = schoolYear.Id,
-                    CurriculumId = schoolYear.CurriculumId,
-                    SchoolYearNumber = schoolYear.SchoolYearNumber,
-                    CreatedBy = schoolYear.CreatedById ?? Guid.Empty,
-                };
 
-                await context.Set<SchoolYear>().AddAsync(schoolYearEntity);
-                await context.SaveChangesAsync();
-
-                var subjectIds = await context.Set<Subject>()
-                    .Where(s => s.CurriculumId == schoolYearEntity.CurriculumId)
-                    .Select(s => s.Id)
+                var existingYears = await context.Set<SchoolYear>()
+                    .Where(sy => sy.CurriculumId == schoolYear.CurriculumId &&
+                                 sy.SchoolYearNumber == schoolYear.SchoolYearNumber &&
+                                 schoolYear.Years.Contains(sy.YearNumber))
+                    .Select(sy => sy.YearNumber)
                     .ToListAsync();
 
-                var divisionTemplates = await context.Set<DivisionTemplate>()
-                    .Where(d => subjectIds.Contains(d.SubjectId))
-                    .ToListAsync();
-
-                var divisions = divisionTemplates.Select(dt => new Division
+                if (existingYears.Any())
                 {
-                    DivisionTemplateId = dt.Id,
-                    SchoolYearId = schoolYearEntity.Id,
-                    DivisionState = "Active",
-                    CreatedBy = schoolYear.CreatedById ?? Guid.Empty,
-                }).ToList();
-
-                await context.Set<Division>().AddRangeAsync(divisions);
-                await context.SaveChangesAsync();
-
-                var scheduleTemplates = await context.Set<ScheduleTemplate>()
-                    .Where(s => divisionTemplates.Select(dt => dt.Id).Contains(s.DivisionTemplateId))
-                    .ToListAsync();
-
-                var schedules = scheduleTemplates.Select(st => new Schedule
-                {
-                    DivisionId = divisions.First(d => d.DivisionTemplateId == st.DivisionTemplateId).Id,
-                    Day = st.Day,
-                    StartTime = st.StartTime,
-                    EndTime = st.EndTime,
-                    CreatedBy = schoolYear.CreatedById ?? Guid.Empty,
-                }).ToList();
-
-                await context.Set<Schedule>().AddRangeAsync(schedules);
-                await context.SaveChangesAsync();
-
-                return new ResponseDTO<SchoolYearPostDTO>
-                {
-                    StatusCode = HttpStatusCode.Created,
-                    Message = "Ciclo lectivo creado exitosamente.",
-                    Object = new SchoolYearPostDTO
+                    var yearsFormatted = string.Join(", ", existingYears);
+                    return new ResponseDTO<SchoolYearPostDTO>
                     {
-                        Id = schoolYear.Id,
+                        StatusCode = HttpStatusCode.BadRequest,
+                        Message = $"Ya existen registros creados para el año lectivo {schoolYear.SchoolYearNumber} en los siguientes años de cursado: {yearsFormatted}.",
+                        Object = null
+                    };
+                }
+
+                foreach (var yearNum in schoolYear.Years)
+                {
+                    var schoolYearEntity = new SchoolYear
+                    {
                         CurriculumId = schoolYear.CurriculumId,
                         SchoolYearNumber = schoolYear.SchoolYearNumber,
-                        CreatedById = schoolYear.CreatedById ?? Guid.Empty,
+                        YearNumber = yearNum,
+                        CreatedBy = schoolYear.CreatedById ?? Guid.Empty,
+                    };
+
+                    await context.Set<SchoolYear>().AddAsync(schoolYearEntity);
+                    await context.SaveChangesAsync();
+
+                    var subjectIds = await context.Set<Subject>()
+                        .Where(s => s.CurriculumId == schoolYearEntity.CurriculumId && s.Year == yearNum)
+                        .Select(s => s.Id)
+                        .ToListAsync();
+
+                    if (!subjectIds.Any()) continue;
+
+                    var divisionTemplates = await context.Set<DivisionTemplate>()
+                        .Where(d => subjectIds.Contains(d.SubjectId))
+                        .ToListAsync();
+
+                    if (!divisionTemplates.Any()) continue;
+
+                    var divisions = divisionTemplates.Select(dt => new Division
+                    {
+                        DivisionTemplateId = dt.Id,
+                        SchoolYearId = schoolYearEntity.Id,
+                        DivisionState = "Active",
+                        CreatedBy = schoolYear.CreatedById ?? Guid.Empty,
+                    }).ToList();
+
+                    await context.Set<Division>().AddRangeAsync(divisions);
+                    await context.SaveChangesAsync();
+
+                    var scheduleTemplates = await context.Set<ScheduleTemplate>()
+                        .Where(s => divisionTemplates.Select(dt => dt.Id).Contains(s.DivisionTemplateId))
+                        .ToListAsync();
+
+                    if (scheduleTemplates.Any())
+                    {
+                        var schedules = scheduleTemplates.Select(st => new Schedule
+                        {
+                            DivisionId = divisions.First(d => d.DivisionTemplateId == st.DivisionTemplateId).Id,
+                            Day = st.Day,
+                            StartTime = st.StartTime,
+                            EndTime = st.EndTime,
+                            CreatedBy = schoolYear.CreatedById ?? Guid.Empty,
+                        }).ToList();
+
+                        await context.Set<Schedule>().AddRangeAsync(schedules);
+                        await context.SaveChangesAsync();
                     }
-                };
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error al crear el ciclo lectivo: {ex.Message}");
+                }
 
                 return new ResponseDTO<SchoolYearPostDTO>
                 {
-                    StatusCode = HttpStatusCode.InternalServerError,
-                    Message = "Ocurrió un error al crear el ciclo lectivo.",
-                    Object = null
-                };
-            }
-        }
-        */
-
-        public async Task<ResponseDTO<List<SchoolYearCurriculumDTO>>> GetCurriculumsBySchoolYearId(long schoolYearId)
-        {
-            try
-            {
-                var curriculumsByYear = await context.Set<SchoolYearCurriculum>()
-                    .AsNoTracking()
-                    .Where(syc => syc.SchoolYearId == schoolYearId)
-                    .Include(syc => syc.Curriculum) 
-                    .Select(syc => new SchoolYearCurriculumDTO
-                    {
-                        Id = syc.Id, 
-                        AcademicYear = syc.SchoolYearNumber, 
-                        Resolution = syc.Curriculum != null ? syc.Curriculum.Resolution : string.Empty
-                    })
-                    .ToListAsync();
-
-                return new ResponseDTO<List<SchoolYearCurriculumDTO>>
-                {
-                    StatusCode = HttpStatusCode.OK,
-                    Message = "Años académicos del ciclo lectivo obtenidos exitosamente.",
-                    Object = curriculumsByYear
-                };
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error al obtener los años del ciclo lectivo: {ex.Message}");
-
-                return new ResponseDTO<List<SchoolYearCurriculumDTO>>
-                {
-                    StatusCode = HttpStatusCode.InternalServerError,
-                    Message = "Ocurrió un error al obtener los años académicos.",
-                    Object = null
-                };
-            }
-        }
-
-        //REVISAR
-        public async Task<ResponseDTO<SchoolYearByGradePostDTO>> PostByGrade(SchoolYearByGradePostDTO schoolYear)
-        {
-            using var transaction = await context.Database.BeginTransactionAsync();
-            try
-            {
-                
-                var schoolYearEntity = new SchoolYear
-                {
-                    Id = schoolYear.Id,
-                    SchoolYearNumber = schoolYear.SchoolYearNumber,
-                    CreatedBy = schoolYear.CreatedById ?? Guid.Empty,
-                };
-
-                await context.Set<SchoolYear>().AddAsync(schoolYearEntity);
-                await context.SaveChangesAsync();
-
-                
-                var schoolYearPlans = new List<SchoolYearCurriculum>();
-
-                if (schoolYear.CurriculumYear1 > 0)
-                {
-                    schoolYearPlans.Add(new SchoolYearCurriculum { SchoolYearId = schoolYearEntity.Id, CurriculumId = schoolYear.CurriculumYear1, SchoolYearNumber = 1, CreatedBy = schoolYear.CreatedById ?? Guid.Empty });
-                }
-                if (schoolYear.CurriculumYear2 > 0)
-                {
-                    schoolYearPlans.Add(new SchoolYearCurriculum { SchoolYearId = schoolYearEntity.Id, CurriculumId = schoolYear.CurriculumYear2, SchoolYearNumber = 2, CreatedBy = schoolYear.CreatedById ?? Guid.Empty });
-                }
-                if (schoolYear.CurriculumYear3 > 0)
-                {
-                    schoolYearPlans.Add(new SchoolYearCurriculum { SchoolYearId = schoolYearEntity.Id, CurriculumId = schoolYear.CurriculumYear3, SchoolYearNumber = 3, CreatedBy = schoolYear.CreatedById ?? Guid.Empty });
-                }
-
-                await context.Set<SchoolYearCurriculum>().AddRangeAsync(schoolYearPlans);
-                await context.SaveChangesAsync();
-
-               
-                var subjects = new List<Subject>();
-
-                if (schoolYear.CurriculumYear1 > 0)
-                {
-                    var subs1 = await context.Set<Subject>()
-                        .Where(s => s.CurriculumId == schoolYear.CurriculumYear1 && s.Year == 1)
-                        .ToListAsync();
-                    subjects.AddRange(subs1);
-                }
-
-                if (schoolYear.CurriculumYear2 > 0)
-                {
-                    var subs2 = await context.Set<Subject>()
-                        .Where(s => s.CurriculumId == schoolYear.CurriculumYear2 && s.Year == 2)
-                        .ToListAsync();
-                    subjects.AddRange(subs2);
-                }
-
-                if (schoolYear.CurriculumYear3 > 0)
-                {
-                    var subs3 = await context.Set<Subject>()
-                        .Where(s => s.CurriculumId == schoolYear.CurriculumYear3 && s.Year == 3)
-                        .ToListAsync();
-                    subjects.AddRange(subs3);
-                }
-
-                var subjectIds = subjects.Select(s => s.Id).ToList();
-
-               
-                var divisionTemplates = await context.Set<DivisionTemplate>()
-                    .Where(dt => subjectIds.Contains(dt.SubjectId))
-                    .ToListAsync();
-
-                var divisions = divisionTemplates.Select(dt => new Division
-                {
-                    DivisionTemplateId = dt.Id,
-                    SchoolYearId = schoolYearEntity.Id,
-                    DivisionState = "Active",
-                    CreatedBy = schoolYear.CreatedById ?? Guid.Empty,
-                }).ToList();
-
-                await context.Set<Division>().AddRangeAsync(divisions);
-                await context.SaveChangesAsync();
-
-               
-                var scheduleTemplates = await context.Set<ScheduleTemplate>()
-                    .Where(st => divisionTemplates.Select(dt => dt.Id).Contains(st.DivisionTemplateId))
-                    .ToListAsync();
-
-                var schedules = scheduleTemplates.Select(st => new Schedule
-                {
-                    DivisionId = divisions.First(d => d.DivisionTemplateId == st.DivisionTemplateId).Id,
-                    Day = st.Day,
-                    StartTime = st.StartTime,
-                    EndTime = st.EndTime,
-                    CreatedBy = schoolYear.CreatedById ?? Guid.Empty,
-                }).ToList();
-
-                await context.Set<Schedule>().AddRangeAsync(schedules);
-                await context.SaveChangesAsync();
-
-                
-                await transaction.CommitAsync();
-
-                return new ResponseDTO<SchoolYearByGradePostDTO>
-                {
                     StatusCode = HttpStatusCode.Created,
-                    Message = "Ciclo lectivo creado exitosamente.",
+                    Message = "Ciclos lectivos creados exitosamente.",
                     Object = schoolYear
                 };
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
                 Console.WriteLine($"Error al crear el ciclo lectivo: {ex.Message}");
 
-                return new ResponseDTO<SchoolYearByGradePostDTO>
+                return new ResponseDTO<SchoolYearPostDTO>
                 {
                     StatusCode = HttpStatusCode.InternalServerError,
                     Message = "Ocurrió un error al crear el ciclo lectivo.",

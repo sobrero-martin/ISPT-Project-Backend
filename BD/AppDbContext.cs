@@ -37,7 +37,6 @@ namespace BD
 
         public DbSet<Career> Careers { get; set; }
         public DbSet<Curriculum> Curriculums { get; set; }
-        public DbSet<SchoolYearCurriculum> SchoolYearCurriculum { get; set; }
         public DbSet<SchoolYear> SchoolYears { get; set; }
         public DbSet<Subject> Subjects { get; set; }
         public DbSet<Correlative> Correlatives { get; set; }

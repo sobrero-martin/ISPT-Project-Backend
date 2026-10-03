@@ -7,7 +7,9 @@ namespace DTO.DTOs.SchoolYearDTO
     public class SchoolYearDTO
     {
         public long Id { get; set; }
-        public string? CareerName { get; set; }
+        public string CareerName { get; set; }
+        public string Resolution { get; set; }
         public int SchoolYearNumber { get; set; }
+        public string YearsFormatted { get; set; } = string.Empty;
     }
 }

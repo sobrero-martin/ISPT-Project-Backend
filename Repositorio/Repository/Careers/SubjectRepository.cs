@@ -1,6 +1,5 @@
 ﻿using BD;
 using BD.Entidades;
-using BD.Entities;
 using DTO.DTOs.CareerDTO;
 using DTO.DTOs.DTO_Response;
 using Microsoft.EntityFrameworkCore;
@@ -370,29 +369,35 @@ namespace Repositorio.Repository.Careers
             }
         }
 
-        //REVISAR
-        public async Task<ResponseDTO<List<SubjectTableDTO>>> GetBySchoolYear(long schoolYearCurriculumId)
+        public async Task<ResponseDTO<List<SubjectTableDTO>>> GetBySchoolYear(long schoolYearId)
         {
             try
             {
-
-                var schoolYearCurriculum = await context.Set<SchoolYearCurriculum>()
+                var schoolYear = await context.Set<SchoolYear>()
                     .AsNoTracking()
-                    .FirstOrDefaultAsync(sys => sys.Id == schoolYearCurriculumId);
+                    .FirstOrDefaultAsync(s => s.Id == schoolYearId);
 
-                if (schoolYearCurriculum == null)
+                if (schoolYear == null)
                 {
                     return new ResponseDTO<List<SubjectTableDTO>>
                     {
                         StatusCode = System.Net.HttpStatusCode.NotFound,
                         Object = null,
-                        Message = "Registro de año académico no encontrado."
+                        Message = "Ciclo lectivo no encontrado."
                     };
                 }
 
+                var activeYearNumbers = await context.Set<SchoolYear>()
+                    .AsNoTracking()
+                    .Where(s => s.CurriculumId == schoolYear.CurriculumId &&
+                                 s.SchoolYearNumber == schoolYear.SchoolYearNumber)
+                    .Select(s => s.YearNumber)
+                    .ToListAsync();
+
                 var subjects = await context.Set<Subject>()
                     .AsNoTracking()
-                    .Where(s => s.CurriculumId == schoolYearCurriculum.CurriculumId && s.Year == schoolYearCurriculum.SchoolYearNumber)
+                    .Where(s => s.CurriculumId == schoolYear.CurriculumId &&
+                                 activeYearNumbers.Contains(s.Year))
                     .Select(s => new SubjectTableDTO
                     {
                         Id = s.Id,
@@ -412,7 +417,7 @@ namespace Repositorio.Repository.Careers
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error al obtener espacios curriculares: {ex.Message}");
+                Console.WriteLine($"Error al obtener espacio curricular por año escolar: {ex.Message}");
 
                 return new ResponseDTO<List<SubjectTableDTO>>
                 {

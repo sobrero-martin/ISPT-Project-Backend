@@ -10,5 +10,6 @@ namespace DTO.DTOs.SchoolYearDTO
         public Guid? CreatedById { get; set; }
         public long CurriculumId { get; set; }
         public int SchoolYearNumber { get; set; }
+        public List<int> Years { get; set; } = new List<int>();
     }
 }

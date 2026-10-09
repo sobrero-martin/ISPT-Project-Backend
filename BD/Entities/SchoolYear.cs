@@ -10,5 +10,7 @@ namespace BD.Entidades
         public Curriculum? Curriculum { get; set; }
         public int SchoolYearNumber { get; set; }
         public int YearNumber { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
     }
 }

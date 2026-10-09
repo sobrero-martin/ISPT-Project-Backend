@@ -11,5 +11,7 @@ namespace DTO.DTOs.SchoolYearDTO
         public long CurriculumId { get; set; }
         public int SchoolYearNumber { get; set; }
         public List<int> Years { get; set; } = new List<int>();
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
     }
 }

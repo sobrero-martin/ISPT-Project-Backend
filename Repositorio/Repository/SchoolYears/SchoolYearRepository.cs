@@ -156,6 +156,15 @@ namespace Repositorio.Repository.SchoolYears
         {
             try
             {
+                if (schoolYear.StartDate >= schoolYear.EndDate)
+                {
+                    return new ResponseDTO<SchoolYearPostDTO>
+                    {
+                        StatusCode = HttpStatusCode.BadRequest,
+                        Message = "La fecha de inicio debe ser anterior a la fecha de fin.",
+                        Object = null
+                    };
+                }
 
                 var existingYears = await context.Set<SchoolYear>()
                     .Where(sy => sy.CurriculumId == schoolYear.CurriculumId &&
@@ -183,6 +192,8 @@ namespace Repositorio.Repository.SchoolYears
                         SchoolYearNumber = schoolYear.SchoolYearNumber,
                         YearNumber = yearNum,
                         CreatedBy = schoolYear.CreatedById ?? Guid.Empty,
+                        StartDate = schoolYear.StartDate, 
+                        EndDate = schoolYear.EndDate       
                     };
 
                     await context.Set<SchoolYear>().AddAsync(schoolYearEntity);

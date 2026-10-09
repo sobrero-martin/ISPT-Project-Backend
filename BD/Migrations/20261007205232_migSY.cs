@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BD.Migrations
 {
     /// <inheritdoc />
-    public partial class latest : Migration
+    public partial class migSY : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -425,6 +425,8 @@ namespace BD.Migrations
                     CurriculumId = table.Column<long>(type: "bigint", nullable: false),
                     SchoolYearNumber = table.Column<int>(type: "int", nullable: false),
                     YearNumber = table.Column<int>(type: "int", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     state = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
@@ -988,17 +990,17 @@ namespace BD.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "8453642f-b14d-4bcc-83bc-f8a12fd8542a", "3", "Preceptor_Auxiliar", "PRECEPTOR_AUXILIAR" },
-                    { "c7dbff1e-4b6f-4029-abab-23898e673ca7", "4", "Docente", "DOCENTE" },
-                    { "f00ecce8-9357-48b8-afa3-60f2eb0c03bb", "5", "Estudiante", "ESTUDIANTE" },
-                    { "f342c5d8-c3ba-42ac-8be8-c132c114aa5e", "2", "Preceptor", "PRECEPTOR" },
+                    { "0ad3e500-ba7b-4df4-b2cb-6f3326f85804", "3", "Preceptor_Auxiliar", "PRECEPTOR_AUXILIAR" },
+                    { "4d8d1bdb-d4aa-4a55-b011-1b5d40695275", "2", "Preceptor", "PRECEPTOR" },
+                    { "7c8ecc3e-d4e7-4585-95d0-9fda2467dcc4", "5", "Estudiante", "ESTUDIANTE" },
+                    { "a54945c5-a4b1-48fe-b95e-50d083129604", "4", "Docente", "DOCENTE" },
                     { "rol-directivo-id", "1", "Directivo", "DIRECTIVO" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "ae65a54a-aab5-4d0c-aa17-554334b49e8c", 0, "6687ad02-88b3-4678-ac65-20f174addafe", "", true, false, null, "", "SUPERADMINISPT-2026", "AQAAAAIAAYagAAAAEN2yfg0HSENtciYPlaxXzKlV6xaeRUFilokSx7MSTbFuVazb/tavrDD82F8WgTacCw==", null, false, "3f327e03-ae56-4174-b681-23003608e5a6", false, "SuperadminISPT-2026" });
+                values: new object[] { "ae65a54a-aab5-4d0c-aa17-554334b49e8c", 0, "1f5c45eb-b299-4081-9544-343297c3c9ac", "", true, false, null, "", "SUPERADMINISPT-2026", "AQAAAAIAAYagAAAAENwl/PAOUW6XLPdWM3XDdIyTF+kAIvEN09qqM50iXH7Rl8f21BVn0J0hV813DSA8dQ==", null, false, "8f1603ac-e108-4772-9edb-821fe0acba81", false, "SuperadminISPT-2026" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",

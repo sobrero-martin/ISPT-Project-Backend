@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BD.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20261003161046_latest")]
-    partial class latest
+    [Migration("20261007205232_migSY")]
+    partial class migSY
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -933,8 +933,14 @@ namespace BD.Migrations
                     b.Property<long>("CurriculumId")
                         .HasColumnType("bigint");
 
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<int>("SchoolYearNumber")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -1184,28 +1190,28 @@ namespace BD.Migrations
                         },
                         new
                         {
-                            Id = "f342c5d8-c3ba-42ac-8be8-c132c114aa5e",
+                            Id = "4d8d1bdb-d4aa-4a55-b011-1b5d40695275",
                             ConcurrencyStamp = "2",
                             Name = "Preceptor",
                             NormalizedName = "PRECEPTOR"
                         },
                         new
                         {
-                            Id = "8453642f-b14d-4bcc-83bc-f8a12fd8542a",
+                            Id = "0ad3e500-ba7b-4df4-b2cb-6f3326f85804",
                             ConcurrencyStamp = "3",
                             Name = "Preceptor_Auxiliar",
                             NormalizedName = "PRECEPTOR_AUXILIAR"
                         },
                         new
                         {
-                            Id = "c7dbff1e-4b6f-4029-abab-23898e673ca7",
+                            Id = "a54945c5-a4b1-48fe-b95e-50d083129604",
                             ConcurrencyStamp = "4",
                             Name = "Docente",
                             NormalizedName = "DOCENTE"
                         },
                         new
                         {
-                            Id = "f00ecce8-9357-48b8-afa3-60f2eb0c03bb",
+                            Id = "7c8ecc3e-d4e7-4585-95d0-9fda2467dcc4",
                             ConcurrencyStamp = "5",
                             Name = "Estudiante",
                             NormalizedName = "ESTUDIANTE"
@@ -1305,15 +1311,15 @@ namespace BD.Migrations
                         {
                             Id = "ae65a54a-aab5-4d0c-aa17-554334b49e8c",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "6687ad02-88b3-4678-ac65-20f174addafe",
+                            ConcurrencyStamp = "1f5c45eb-b299-4081-9544-343297c3c9ac",
                             Email = "",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "",
                             NormalizedUserName = "SUPERADMINISPT-2026",
-                            PasswordHash = "AQAAAAIAAYagAAAAEN2yfg0HSENtciYPlaxXzKlV6xaeRUFilokSx7MSTbFuVazb/tavrDD82F8WgTacCw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAENwl/PAOUW6XLPdWM3XDdIyTF+kAIvEN09qqM50iXH7Rl8f21BVn0J0hV813DSA8dQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "3f327e03-ae56-4174-b681-23003608e5a6",
+                            SecurityStamp = "8f1603ac-e108-4772-9edb-821fe0acba81",
                             TwoFactorEnabled = false,
                             UserName = "SuperadminISPT-2026"
                         });

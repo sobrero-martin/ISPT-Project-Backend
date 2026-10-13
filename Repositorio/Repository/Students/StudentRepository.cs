@@ -19,8 +19,8 @@ public class StudentRepository : PersonRepository, IStudentRepository
     private readonly AppDbContext bbdd;
     private readonly UserManager<IdentityUser> userManager;
 
-    public StudentRepository(AppDbContext bbdd, UserManager<IdentityUser> userManager)
-        : base(bbdd, userManager, "Estudiante", "estudiante", "estudiantes")
+    public StudentRepository(AppDbContext bbdd, UserManager<IdentityUser> userManager, IEmailService emailService)
+        : base(bbdd, userManager, "Estudiante", "estudiante", "estudiantes", emailService)
     {
         this.bbdd = bbdd;
         this.userManager = userManager;

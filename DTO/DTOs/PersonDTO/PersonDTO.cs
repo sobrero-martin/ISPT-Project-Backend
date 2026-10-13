@@ -30,7 +30,7 @@ public class PersonDTO
     public string? PracticePlace { get; set; }
     public string? Observations { get; set; }
         
-    public ContactDTO? ContactDTO { get; set; }
+    public ContactDTO ContactDTO { get; set; }
     public required LocationDTO LocationDTO { get; set; }
     
     // Only accepted by users with role "Directivo"

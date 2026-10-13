@@ -22,8 +22,8 @@ public class PositionRepository : PersonRepository, IPositionRepository
         { "Preceptor_Auxiliar", "Preceptor Auxiliar" }
     };
 
-    public PositionRepository(AppDbContext bbdd, UserManager<IdentityUser> userManager)
-        : base(bbdd, userManager, roles, "persona con cargo", "cargos")
+    public PositionRepository(AppDbContext bbdd, UserManager<IdentityUser> userManager, IEmailService emailService)
+        : base(bbdd, userManager, roles, "persona con cargo", "cargos", emailService)
     {
         this.bbdd = bbdd;
         this.userManager = userManager;

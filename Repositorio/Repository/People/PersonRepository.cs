@@ -17,10 +17,11 @@ public class PersonRepository : IPersonRepository
     private readonly string singularTypeName;
     private readonly string pluralTypeName;
     private readonly string singularTypeNameFirstLetterUpper;
+    private readonly IEmailService emailService;
 
     // ONLY ONE ROL
     public PersonRepository(AppDbContext bbdd, UserManager<IdentityUser> userManager,
-        string roleName, string singularTypeName, string pluralTypeName)
+        string roleName, string singularTypeName, string pluralTypeName, IEmailService emailService)
     {
         this.bbdd = bbdd;
         this.userManager = userManager;
@@ -28,17 +29,19 @@ public class PersonRepository : IPersonRepository
         this.singularTypeName = singularTypeName;
         this.pluralTypeName = pluralTypeName;
         singularTypeNameFirstLetterUpper = char.ToUpper(singularTypeName[0]) + singularTypeName.Substring(1);
+        this.emailService = emailService;
     }
 
     // MULTIPLE ROLES LIKE POSITION
     public PersonRepository(AppDbContext bbdd, UserManager<IdentityUser> userManager,
-        List<string> roleNames, string singularTypeName, string pluralTypeName)
+        List<string> roleNames, string singularTypeName, string pluralTypeName, IEmailService emailService)
     {
         this.bbdd = bbdd;
         this.userManager = userManager;
         this.roleNames = roleNames;
         this.singularTypeName = singularTypeName;
         this.pluralTypeName = pluralTypeName;
+        this.emailService = emailService;
     }
 
     public async Task<ResponseDTO<PersonDTO>> GetPerson(long id)
@@ -236,6 +239,30 @@ public class PersonRepository : IPersonRepository
 
             await bbdd.SaveChangesAsync();
             await transaction.CommitAsync();
+            
+            if (string.IsNullOrEmpty(personDTO.ContactDTO?.Email))
+                return new ResponseDTO<string>()
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Message = "¡Operación éxitosa!",
+                    Object = $"¡{singularTypeNameFirstLetterUpper} creado con éxito!"
+                };
+            
+            try
+            {
+                await emailService.SendEmailAsync(
+                    to: personDTO.ContactDTO.Email,
+                    subject: "Alta de usuario en el sistema",
+                    bodyHtml: $"<h1>¡Hola {personDTO.Firstname}!</h1><br/>" +
+                              $"<p>Tu usuario ha sido creado con éxito. Tu nombre de usuario y contraseña es tu CUIL: <strong>{personDTO.CUIL}</strong>.</p>" +
+                              $"<p>¡Una vez iniciado sesión por primera vez en el sistema podrás cambiarla!</p>"
+                );
+            }
+            catch (Exception mailEx)
+            {
+                Console.WriteLine(mailEx.StackTrace);
+                Console.WriteLine($"El usuario se creó correctamente, pero falló el envío de correo: {mailEx.Message}");
+            }
 
             return new ResponseDTO<string>()
             {

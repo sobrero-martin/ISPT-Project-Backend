@@ -3,6 +3,7 @@ using BD;
 using DTO.DTOs.DTO_Response;
 using DTO.DTOs.TeachersDTO;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace Repositorio.Repository;
@@ -12,8 +13,8 @@ public class TeacherRepository : PersonRepository, ITeacherRepository
     private readonly AppDbContext bbdd;
     private readonly UserManager<IdentityUser> userManager;
     
-    public TeacherRepository(AppDbContext bbdd, UserManager<IdentityUser> userManager) : 
-        base(bbdd, userManager, "Docente", "docente", "docentes")
+    public TeacherRepository(AppDbContext bbdd, UserManager<IdentityUser> userManager, IEmailService emailService) : 
+        base(bbdd, userManager, "Docente", "docente", "docentes", emailService)
     {
         this.bbdd = bbdd;
         this.userManager = userManager;

@@ -58,7 +58,11 @@ public class AuthRepository : IAuthRepository
             }
 
             var person = await appDbContext.People.FirstOrDefaultAsync(p => p.UserId == user.Id);
-            if (person != null) authClaims.Add(new Claim("Fullname", $"{person.Firstname} {person.Lastname}"));
+            if (person != null)
+            {
+                authClaims.Add(new Claim("PersonId", person.Id.ToString()));
+                authClaims.Add(new Claim("Fullname", $"{person.Firstname} {person.Lastname}"));
+            }
 
             var accessToken = tokenService.GenerateAccessToken(authClaims);
             string? refreshToken = null;

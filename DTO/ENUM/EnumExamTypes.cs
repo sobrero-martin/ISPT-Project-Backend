@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,6 +8,7 @@ namespace DTO.ENUM
     {
         Practical = 1,
         Midterm = 2,
-        Final = 3
+        Final = 3,
+        Recovery = 4
     }
 }

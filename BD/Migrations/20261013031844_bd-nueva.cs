@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BD.Migrations
 {
     /// <inheritdoc />
-    public partial class migSY : Migration
+    public partial class bdnueva : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -990,17 +990,17 @@ namespace BD.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "0ad3e500-ba7b-4df4-b2cb-6f3326f85804", "3", "Preceptor_Auxiliar", "PRECEPTOR_AUXILIAR" },
-                    { "4d8d1bdb-d4aa-4a55-b011-1b5d40695275", "2", "Preceptor", "PRECEPTOR" },
-                    { "7c8ecc3e-d4e7-4585-95d0-9fda2467dcc4", "5", "Estudiante", "ESTUDIANTE" },
-                    { "a54945c5-a4b1-48fe-b95e-50d083129604", "4", "Docente", "DOCENTE" },
+                    { "053a8915-f68e-4504-a37b-79ceed0dae46", "5", "Estudiante", "ESTUDIANTE" },
+                    { "4d56725d-c233-44a0-ba05-55bdebb2888b", "2", "Preceptor", "PRECEPTOR" },
+                    { "ef281dde-221c-4c2e-9875-d2fd76ba1f4b", "3", "Preceptor_Auxiliar", "PRECEPTOR_AUXILIAR" },
+                    { "f541b52b-2097-4218-9631-e4f6636a9f60", "4", "Docente", "DOCENTE" },
                     { "rol-directivo-id", "1", "Directivo", "DIRECTIVO" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "ae65a54a-aab5-4d0c-aa17-554334b49e8c", 0, "1f5c45eb-b299-4081-9544-343297c3c9ac", "", true, false, null, "", "SUPERADMINISPT-2026", "AQAAAAIAAYagAAAAENwl/PAOUW6XLPdWM3XDdIyTF+kAIvEN09qqM50iXH7Rl8f21BVn0J0hV813DSA8dQ==", null, false, "8f1603ac-e108-4772-9edb-821fe0acba81", false, "SuperadminISPT-2026" });
+                values: new object[] { "ae65a54a-aab5-4d0c-aa17-554334b49e8c", 0, "a900e07d-c248-48f3-a638-20026341a7f2", "", true, false, null, "", "SUPERADMINISPT-2026", "AQAAAAIAAYagAAAAEHauFI1k7T2m4qaE8G0eoYgmlv+OcVBLG6JGu5yzk3frdLO4Jz6EJj5Y0zeLhgo5eg==", null, false, "03632095-84f7-4846-825a-d59f80cffb40", false, "SuperadminISPT-2026" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",

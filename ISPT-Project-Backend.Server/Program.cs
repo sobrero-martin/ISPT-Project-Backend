@@ -13,8 +13,12 @@ using Repositorio.Repository.SchoolYears;
 using Repositorio.Implementations.Exams;
 using Repositorio.Implementations.Students;
 using Repositorio.Repository.Exams;
+using Resend;
+using Repositorio.Implementations.Courses;
+using Repositorio.Repository.Courses;
 
 var builder = WebApplication.CreateBuilder(args);
+var resendApiKey = builder.Configuration["Resend:ApiKey"];
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("DBConnection"),
@@ -52,9 +56,17 @@ builder.Services.AddAuthentication(opt =>
     };
 });
 
+builder.Services.AddOptions();
+builder.Services.AddHttpClient<Resend.IResend, Resend.ResendClient>();
+builder.Services.AddResend(options =>
+{
+    options.ApiToken = builder.Configuration["Resend:ApiKey"]!;
+});
+
 // Add services to the container.
 builder.Services.AddControllers();
 
+builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<IDegreesRepository, DegreesRepository>();
 builder.Services.AddScoped<IFileRepository, FileRepository>();
@@ -79,6 +91,9 @@ builder.Services.AddScoped<IScheduleRepository, ScheduleRepository>();
 builder.Services.AddScoped<IFileDivisionRepository, FileDivisionRepository>();
 
 builder.Services.AddScoped<IFinalExamRepository, FinalExamRepository>();
+
+builder.Services.AddScoped<ITeacherCourses, TeacherCourses>();
+builder.Services.AddScoped<IDivisionExamRepository, DivisionExamRepository>();
 
 builder.Services.AddAuthorization();
 

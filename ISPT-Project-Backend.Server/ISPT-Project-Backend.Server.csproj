@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>ISPT_Project_Backend.Server</RootNamespace>
+    <UserSecretsId>b57349ad-519a-4891-9a57-a094afc89a3f</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,6 +13,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Resend" Version="0.22.0" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1187,28 +1187,28 @@ namespace BD.Migrations
                         },
                         new
                         {
-                            Id = "4d8d1bdb-d4aa-4a55-b011-1b5d40695275",
+                            Id = "4d56725d-c233-44a0-ba05-55bdebb2888b",
                             ConcurrencyStamp = "2",
                             Name = "Preceptor",
                             NormalizedName = "PRECEPTOR"
                         },
                         new
                         {
-                            Id = "0ad3e500-ba7b-4df4-b2cb-6f3326f85804",
+                            Id = "ef281dde-221c-4c2e-9875-d2fd76ba1f4b",
                             ConcurrencyStamp = "3",
                             Name = "Preceptor_Auxiliar",
                             NormalizedName = "PRECEPTOR_AUXILIAR"
                         },
                         new
                         {
-                            Id = "a54945c5-a4b1-48fe-b95e-50d083129604",
+                            Id = "f541b52b-2097-4218-9631-e4f6636a9f60",
                             ConcurrencyStamp = "4",
                             Name = "Docente",
                             NormalizedName = "DOCENTE"
                         },
                         new
                         {
-                            Id = "7c8ecc3e-d4e7-4585-95d0-9fda2467dcc4",
+                            Id = "053a8915-f68e-4504-a37b-79ceed0dae46",
                             ConcurrencyStamp = "5",
                             Name = "Estudiante",
                             NormalizedName = "ESTUDIANTE"
@@ -1308,15 +1308,15 @@ namespace BD.Migrations
                         {
                             Id = "ae65a54a-aab5-4d0c-aa17-554334b49e8c",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1f5c45eb-b299-4081-9544-343297c3c9ac",
+                            ConcurrencyStamp = "a900e07d-c248-48f3-a638-20026341a7f2",
                             Email = "",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "",
                             NormalizedUserName = "SUPERADMINISPT-2026",
-                            PasswordHash = "AQAAAAIAAYagAAAAENwl/PAOUW6XLPdWM3XDdIyTF+kAIvEN09qqM50iXH7Rl8f21BVn0J0hV813DSA8dQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHauFI1k7T2m4qaE8G0eoYgmlv+OcVBLG6JGu5yzk3frdLO4Jz6EJj5Y0zeLhgo5eg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "8f1603ac-e108-4772-9edb-821fe0acba81",
+                            SecurityStamp = "03632095-84f7-4846-825a-d59f80cffb40",
                             TwoFactorEnabled = false,
                             UserName = "SuperadminISPT-2026"
                         });

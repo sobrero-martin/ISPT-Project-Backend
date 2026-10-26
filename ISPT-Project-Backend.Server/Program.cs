@@ -16,6 +16,9 @@ using Repositorio.Repository.Exams;
 using Resend;
 using Repositorio.Implementations.Courses;
 using Repositorio.Repository.Courses;
+using Repositorio.Implementations.News;
+using Repositorio.Repository.News;
+
 
 var builder = WebApplication.CreateBuilder(args);
 var resendApiKey = builder.Configuration["Resend:ApiKey"];
@@ -91,6 +94,7 @@ builder.Services.AddScoped<IScheduleRepository, ScheduleRepository>();
 builder.Services.AddScoped<IFileDivisionRepository, FileDivisionRepository>();
 
 builder.Services.AddScoped<IFinalExamRepository, FinalExamRepository>();
+builder.Services.AddScoped<INewsRepository, NewsRepository>();
 
 builder.Services.AddScoped<ITeacherCourses, TeacherCourses>();
 builder.Services.AddScoped<IDivisionExamRepository, DivisionExamRepository>();

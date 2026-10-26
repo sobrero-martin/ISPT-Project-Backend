@@ -13,7 +13,5 @@ namespace BD.Entidades
         public SchoolYear? SchoolYear { get; set; }
 
         public required string DivisionState { get; set; }
-
-        public Schedule? Schedule { get; set; }
     }
 }

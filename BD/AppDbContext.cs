@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using BD.Entidades;
+﻿using BD.Entidades;
 using BD.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Reflection.Emit;
+using System.Text;
 using File = BD.Entidades.File;
 
 namespace BD
@@ -44,6 +45,7 @@ namespace BD
         public DbSet<FinalExam> FinalExams { get; set; }
         public DbSet<FinalExamGrade> FinalExamGrades { get; set; }
         public DbSet<FinalExamTribunal> FinalExamTribunals { get; set; }
+        public DbSet<News> News { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -57,21 +59,25 @@ namespace BD
                     ConcurrencyStamp = "1"
                 },
                 new IdentityRole{
+                Id = "4d8d1bdb-d4aa-4a55-b011-1b5d40695275",
                 Name = "Preceptor",
                 NormalizedName = "PRECEPTOR",
                 ConcurrencyStamp = "2"
                 },
                 new IdentityRole{
+                    Id = "0ad3e500-ba7b-4df4-b2cb-6f3326f85804",
                     Name = "Preceptor_Auxiliar",
                     NormalizedName = "PRECEPTOR_AUXILIAR",
                     ConcurrencyStamp = "3"
                 },
                 new IdentityRole{
+                    Id = "a54945c5-a4b1-48fe-b95e-50d083129604",
                     Name = "Docente",
                     NormalizedName = "DOCENTE",
                     ConcurrencyStamp = "4"
                 },
                 new IdentityRole{
+                    Id = "7c8ecc3e-d4e7-4585-95d0-9fda2467dcc4",
                     Name = "Estudiante",
                     NormalizedName = "ESTUDIANTE",
                     ConcurrencyStamp = "5"
@@ -86,10 +92,11 @@ namespace BD
                 Email = "",
                 NormalizedEmail = "",
                 EmailConfirmed = true,
-                SecurityStamp = Guid.NewGuid().ToString()
+                SecurityStamp = "8f1603ac-e108-4772-9edb-821fe0acba81",
+                ConcurrencyStamp = "1f5c45eb-b299-4081-9544-343297c3c9ac"
             };
-            
-            adminUser.PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(adminUser, "!ISPT-AQUILES-#2026#");
+
+            adminUser.PasswordHash = "AQAAAAIAAYagAAAAENwl/PAOUW6XLPdWM3XDdIyTF+kAIvEN09qqM50iXH7Rl8f21BVn0J0hV813DSA8dQ==";
             builder.Entity<IdentityUser>().HasData(adminUser);
             
             builder.Entity<IdentityUserRole<string>>().HasData(
@@ -99,6 +106,7 @@ namespace BD
                     RoleId = "rol-directivo-id"
                 }
             );
+
         }
         
         public override int SaveChanges()
@@ -112,6 +120,7 @@ namespace BD
             ApplyAuditory();
             return base.SaveChangesAsync(cancellationToken);
         }
+
 
         private void ApplyAuditory()
         {

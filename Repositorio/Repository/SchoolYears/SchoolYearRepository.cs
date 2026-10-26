@@ -227,6 +227,18 @@ namespace Repositorio.Repository.SchoolYears
                         .Where(s => divisionTemplates.Select(dt => dt.Id).Contains(s.DivisionTemplateId))
                         .ToListAsync();
 
+                    var templateCounts = scheduleTemplates
+    .GroupBy(st => st.DivisionTemplateId)
+    .Select(g => new { DivisionTemplateId = g.Key, Count = g.Count() });
+
+                    foreach (var item in templateCounts)
+                    {
+                        Console.WriteLine(
+                            $"[DEBUG] DivisionTemplateId={item.DivisionTemplateId}, ScheduleTemplates={item.Count}");
+                    }
+
+                    Console.WriteLine($"[DEBUG] Total ScheduleTemplates encontrados={scheduleTemplates.Count}");
+
                     if (scheduleTemplates.Any())
                     {
                         var schedules = scheduleTemplates.Select(st => new Schedule
@@ -240,6 +252,14 @@ namespace Repositorio.Repository.SchoolYears
 
                         await context.Set<Schedule>().AddRangeAsync(schedules);
                         await context.SaveChangesAsync();
+
+                        var divisionIds = divisions.Select(d => d.Id).ToList();
+
+                        var savedSchedules = await context.Set<Schedule>()
+                            .CountAsync(s => divisionIds.Contains(s.DivisionId));
+
+                        Console.WriteLine(
+                            $"[DEBUG] Schedules guardados para las divisiones nuevas={savedSchedules}");
                     }
                 }
 

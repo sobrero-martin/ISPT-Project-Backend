@@ -13,19 +13,19 @@ namespace BD
     public class AppDbContext : IdentityDbContext<IdentityUser>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-        {}
-        
+        { }
+
         public DbSet<Person> People { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<Documentation> Documentations { get; set; }
         public DbSet<Degree> Degrees { get; set; }
         public DbSet<Contact> Contacts { get; set; }
-        
+
         public DbSet<File> Files { get; set; }
         public DbSet<FileCurriculum> FileCurriculum { get; set; }
         public DbSet<FileDivision> FileDivisions { get; set; }
         public DbSet<TeacherDivision> TeacherDivisions { get; set; }
-        
+
         public DbSet<AttendanceDay> AttendanceDays { get; set; }
         public DbSet<Attendance> Attendances { get; set; }
         public DbSet<Grade> Grades { get; set; }
@@ -44,6 +44,7 @@ namespace BD
         public DbSet<FinalExam> FinalExams { get; set; }
         public DbSet<FinalExamGrade> FinalExamGrades { get; set; }
         public DbSet<FinalExamTribunal> FinalExamTribunals { get; set; }
+        public DbSet<News> News { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -56,22 +57,26 @@ namespace BD
                     NormalizedName = "DIRECTIVO",
                     ConcurrencyStamp = "1"
                 },
-                new IdentityRole{
-                Name = "Preceptor",
-                NormalizedName = "PRECEPTOR",
-                ConcurrencyStamp = "2"
+                new IdentityRole
+                {
+                    Name = "Preceptor",
+                    NormalizedName = "PRECEPTOR",
+                    ConcurrencyStamp = "2"
                 },
-                new IdentityRole{
+                new IdentityRole
+                {
                     Name = "Preceptor_Auxiliar",
                     NormalizedName = "PRECEPTOR_AUXILIAR",
                     ConcurrencyStamp = "3"
                 },
-                new IdentityRole{
+                new IdentityRole
+                {
                     Name = "Docente",
                     NormalizedName = "DOCENTE",
                     ConcurrencyStamp = "4"
                 },
-                new IdentityRole{
+                new IdentityRole
+                {
                     Name = "Estudiante",
                     NormalizedName = "ESTUDIANTE",
                     ConcurrencyStamp = "5"
@@ -81,17 +86,17 @@ namespace BD
             var adminUser = new IdentityUser()
             {
                 Id = superadminId,
-                UserName = "SuperadminISPT-2026", 
+                UserName = "SuperadminISPT-2026",
                 NormalizedUserName = "SUPERADMINISPT-2026",
                 Email = "",
                 NormalizedEmail = "",
                 EmailConfirmed = true,
                 SecurityStamp = Guid.NewGuid().ToString()
             };
-            
+
             adminUser.PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(adminUser, "!ISPT-AQUILES-#2026#");
             builder.Entity<IdentityUser>().HasData(adminUser);
-            
+
             builder.Entity<IdentityUserRole<string>>().HasData(
                 new IdentityUserRole<string>
                 {
@@ -100,13 +105,13 @@ namespace BD
                 }
             );
         }
-        
+
         public override int SaveChanges()
         {
             ApplyAuditory();
             return base.SaveChanges();
         }
-        
+
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             ApplyAuditory();
@@ -121,7 +126,7 @@ namespace BD
 
             foreach (var entrada in entidades)
             {
-                var entidad = (BaseEntity) entrada.Entity;
+                var entidad = (BaseEntity)entrada.Entity;
                 DateTime fechaActual = DateTime.UtcNow;
 
                 if (entrada.State == EntityState.Added)

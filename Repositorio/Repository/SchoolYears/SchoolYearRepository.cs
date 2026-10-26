@@ -229,10 +229,23 @@ namespace Repositorio.Repository.SchoolYears
                         .Where(s => divisionTemplateIds.Contains(s.DivisionTemplateId))
                         .ToListAsync();
 
+                    var templateCounts = scheduleTemplates
+    .GroupBy(st => st.DivisionTemplateId)
+    .Select(g => new { DivisionTemplateId = g.Key, Count = g.Count() });
+
+                    foreach (var item in templateCounts)
+                    {
+                        Console.WriteLine(
+                            $"[DEBUG] DivisionTemplateId={item.DivisionTemplateId}, ScheduleTemplates={item.Count}");
+                    }
+
+                    Console.WriteLine($"[DEBUG] Total ScheduleTemplates encontrados={scheduleTemplates.Count}");
+
                     if (scheduleTemplates.Any())
                     {
                         var schedules = new List<Schedule>();
 
+<<<<<<< HEAD
                         foreach (var st in scheduleTemplates)
                         {
                             var matchingDivision = divisions.FirstOrDefault(d => d.DivisionTemplateId == st.DivisionTemplateId);
@@ -263,6 +276,18 @@ namespace Repositorio.Repository.SchoolYears
                                 Console.WriteLine($"[FALLÓ] El día {st.Day} dio error: {ex.InnerException?.Message ?? ex.Message}");
                             }
                         }
+=======
+                        await context.Set<Schedule>().AddRangeAsync(schedules);
+                        await context.SaveChangesAsync();
+
+                        var divisionIds = divisions.Select(d => d.Id).ToList();
+
+                        var savedSchedules = await context.Set<Schedule>()
+                            .CountAsync(s => divisionIds.Contains(s.DivisionId));
+
+                        Console.WriteLine(
+                            $"[DEBUG] Schedules guardados para las divisiones nuevas={savedSchedules}");
+>>>>>>> a04024e9d32c0f7a2008c0f5854e18057659e055
                     }
                 }
 

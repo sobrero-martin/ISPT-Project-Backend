@@ -1,12 +1,11 @@
-﻿using BD.Entidades;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using BD.Entidades;
 using BD.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Reflection.Emit;
-using System.Text;
 using File = BD.Entidades.File;
 
 namespace BD
@@ -14,19 +13,19 @@ namespace BD
     public class AppDbContext : IdentityDbContext<IdentityUser>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-        {}
-        
+        { }
+
         public DbSet<Person> People { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<Documentation> Documentations { get; set; }
         public DbSet<Degree> Degrees { get; set; }
         public DbSet<Contact> Contacts { get; set; }
-        
+
         public DbSet<File> Files { get; set; }
         public DbSet<FileCurriculum> FileCurriculum { get; set; }
         public DbSet<FileDivision> FileDivisions { get; set; }
         public DbSet<TeacherDivision> TeacherDivisions { get; set; }
-        
+
         public DbSet<AttendanceDay> AttendanceDays { get; set; }
         public DbSet<Attendance> Attendances { get; set; }
         public DbSet<Grade> Grades { get; set; }
@@ -58,26 +57,26 @@ namespace BD
                     NormalizedName = "DIRECTIVO",
                     ConcurrencyStamp = "1"
                 },
-                new IdentityRole{
-                Id = "4d8d1bdb-d4aa-4a55-b011-1b5d40695275",
-                Name = "Preceptor",
-                NormalizedName = "PRECEPTOR",
-                ConcurrencyStamp = "2"
+                new IdentityRole
+                {
+                    Name = "Preceptor",
+                    NormalizedName = "PRECEPTOR",
+                    ConcurrencyStamp = "2"
                 },
-                new IdentityRole{
-                    Id = "0ad3e500-ba7b-4df4-b2cb-6f3326f85804",
+                new IdentityRole
+                {
                     Name = "Preceptor_Auxiliar",
                     NormalizedName = "PRECEPTOR_AUXILIAR",
                     ConcurrencyStamp = "3"
                 },
-                new IdentityRole{
-                    Id = "a54945c5-a4b1-48fe-b95e-50d083129604",
+                new IdentityRole
+                {
                     Name = "Docente",
                     NormalizedName = "DOCENTE",
                     ConcurrencyStamp = "4"
                 },
-                new IdentityRole{
-                    Id = "7c8ecc3e-d4e7-4585-95d0-9fda2467dcc4",
+                new IdentityRole
+                {
                     Name = "Estudiante",
                     NormalizedName = "ESTUDIANTE",
                     ConcurrencyStamp = "5"
@@ -87,18 +86,17 @@ namespace BD
             var adminUser = new IdentityUser()
             {
                 Id = superadminId,
-                UserName = "SuperadminISPT-2026", 
+                UserName = "SuperadminISPT-2026",
                 NormalizedUserName = "SUPERADMINISPT-2026",
                 Email = "",
                 NormalizedEmail = "",
                 EmailConfirmed = true,
-                SecurityStamp = "8f1603ac-e108-4772-9edb-821fe0acba81",
-                ConcurrencyStamp = "1f5c45eb-b299-4081-9544-343297c3c9ac"
+                SecurityStamp = Guid.NewGuid().ToString()
             };
 
-            adminUser.PasswordHash = "AQAAAAIAAYagAAAAENwl/PAOUW6XLPdWM3XDdIyTF+kAIvEN09qqM50iXH7Rl8f21BVn0J0hV813DSA8dQ==";
+            adminUser.PasswordHash = new PasswordHasher<IdentityUser>().HashPassword(adminUser, "!ISPT-AQUILES-#2026#");
             builder.Entity<IdentityUser>().HasData(adminUser);
-            
+
             builder.Entity<IdentityUserRole<string>>().HasData(
                 new IdentityUserRole<string>
                 {
@@ -106,21 +104,19 @@ namespace BD
                     RoleId = "rol-directivo-id"
                 }
             );
-
         }
-        
+
         public override int SaveChanges()
         {
             ApplyAuditory();
             return base.SaveChanges();
         }
-        
+
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             ApplyAuditory();
             return base.SaveChangesAsync(cancellationToken);
         }
-
 
         private void ApplyAuditory()
         {
@@ -130,7 +126,7 @@ namespace BD
 
             foreach (var entrada in entidades)
             {
-                var entidad = (BaseEntity) entrada.Entity;
+                var entidad = (BaseEntity)entrada.Entity;
                 DateTime fechaActual = DateTime.UtcNow;
 
                 if (entrada.State == EntityState.Added)

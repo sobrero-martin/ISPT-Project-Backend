@@ -223,23 +223,46 @@ namespace Repositorio.Repository.SchoolYears
                     await context.Set<Division>().AddRangeAsync(divisions);
                     await context.SaveChangesAsync();
 
+                    var divisionTemplateIds = divisionTemplates.Select(dt => dt.Id).ToList();
+
                     var scheduleTemplates = await context.Set<ScheduleTemplate>()
-                        .Where(s => divisionTemplates.Select(dt => dt.Id).Contains(s.DivisionTemplateId))
+                        .Where(s => divisionTemplateIds.Contains(s.DivisionTemplateId))
                         .ToListAsync();
 
                     if (scheduleTemplates.Any())
                     {
-                        var schedules = scheduleTemplates.Select(st => new Schedule
-                        {
-                            DivisionId = divisions.First(d => d.DivisionTemplateId == st.DivisionTemplateId).Id,
-                            Day = st.Day,
-                            StartTime = st.StartTime,
-                            EndTime = st.EndTime,
-                            CreatedBy = schoolYear.CreatedById ?? Guid.Empty,
-                        }).ToList();
+                        var schedules = new List<Schedule>();
 
-                        await context.Set<Schedule>().AddRangeAsync(schedules);
-                        await context.SaveChangesAsync();
+                        foreach (var st in scheduleTemplates)
+                        {
+                            var matchingDivision = divisions.FirstOrDefault(d => d.DivisionTemplateId == st.DivisionTemplateId);
+
+                            if (matchingDivision != null)
+                            {
+                                schedules.Add(new Schedule
+                                {
+                                    DivisionId = matchingDivision.Id,
+                                    Day = st.Day,
+                                    StartTime = st.StartTime,
+                                    EndTime = st.EndTime,
+                                    CreatedBy = schoolYear.CreatedById ?? Guid.Empty,
+                                });
+                            }
+                        }
+
+                        foreach (var st in schedules)
+                        {
+                            context.Schedules.Add(st);
+                            try
+                            {
+                                await context.SaveChangesAsync();
+                                Console.WriteLine($"[ÉXITO] Guardado: {st.Day} - {st.StartTime}");
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"[FALLÓ] El día {st.Day} dio error: {ex.InnerException?.Message ?? ex.Message}");
+                            }
+                        }
                     }
                 }
 

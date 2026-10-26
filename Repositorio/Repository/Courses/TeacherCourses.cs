@@ -2,6 +2,7 @@ using System.Net;
 using BD;
 using DTO.DTOs.CoursesDTO;
 using DTO.DTOs.DTO_Response;
+using DTO.DTOs.SchoolYearDTO;
 using Microsoft.EntityFrameworkCore;
 
 namespace Repositorio.Repository;
@@ -61,6 +62,30 @@ public class TeacherCourses : ITeacherCourses
             return new ResponseDTO<List<TeacherCoursesDTO>>()
             {
                 Message = "¡Error al intentar obtener los cursos del docente!",
+                Object = null,
+                StatusCode = HttpStatusCode.InternalServerError
+            };
+        }
+    }
+
+    public async Task<ResponseDTO<List<ScheduleDTO>>> GetScheduleByCourseId(long id)
+    {
+        try
+        {
+            return new ResponseDTO<List<ScheduleDTO>>
+            {
+                Message = "¡Cursos del docente cargados con éxito!",
+                Object = [],
+                StatusCode = HttpStatusCode.OK
+            };
+        }
+        catch(Exception e)
+        {
+            Console.WriteLine($"Error al intentar obtener el horario de la división: " + e.Message);
+            
+            return new ResponseDTO<List<ScheduleDTO>>()
+            {
+                Message = "¡Error al intentar obtener el horario de la división!",
                 Object = null,
                 StatusCode = HttpStatusCode.InternalServerError
             };

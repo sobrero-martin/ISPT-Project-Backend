@@ -7,5 +7,5 @@ namespace Repositorio.Repository;
 public interface ITeacherCourses
 {
     Task<ResponseDTO<List<TeacherCoursesDTO>>> GetCoursesByTeacherId(long teacherId);
-    Task<ResponseDTO<List<ScheduleDTO>>> GetScheduleByCourseId(long id);
+    Task<ResponseDTO<List<ScheduleDTO>>> GetScheduleByDivisionId(long id);
 }

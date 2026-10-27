@@ -1,6 +1,7 @@
 using BD.Entidades;
 using DTO.DTOs.CoursesDTO;
 using DTO.DTOs.DTO_Response;
+using DTO.DTOs.SchoolYearDTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Repositorio.Implementations.Courses;
@@ -53,7 +54,13 @@ public class TeacherCoursesController :  ControllerBase
         return StatusCode((int)res.StatusCode, res);
     }
 
-    // TIMESTAP
+    // SCHEDULE
+    [HttpGet("schedules/{divisionId:long}")]
+    public async Task<ActionResult<ResponseDTO<ScheduleDTO>>> GetSchedulesByDivisionId(long divisionId)
+    {
+        var res = await teacherCoursesRepository.GetScheduleByDivisionId(divisionId);
+        return StatusCode((int)res.StatusCode, res);
+    }
 
     // ATTENDANCE
 }

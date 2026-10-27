@@ -68,14 +68,19 @@ public class TeacherCourses : ITeacherCourses
         }
     }
 
-    public async Task<ResponseDTO<List<ScheduleDTO>>> GetScheduleByCourseId(long id)
+    public async Task<ResponseDTO<List<ScheduleDTO>>> GetScheduleByDivisionId(long id)
     {
         try
         {
             return new ResponseDTO<List<ScheduleDTO>>
             {
-                Message = "¡Cursos del docente cargados con éxito!",
-                Object = [],
+                Message = "¡Horarios de la divisón obtenidos con éxito!",
+                Object = await bbdd.Schedules.Where(s => s.DivisionId == id).Select(s => new ScheduleDTO
+                {
+                    Day = s.Day,
+                    StartTime = s.StartTime,
+                    EndTime = s.EndTime
+                }).ToListAsync(),
                 StatusCode = HttpStatusCode.OK
             };
         }

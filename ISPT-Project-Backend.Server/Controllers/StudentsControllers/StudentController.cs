@@ -101,6 +101,17 @@ public class StudentController : ControllerBase
         return StatusCode((int)res.StatusCode, res);
     }
 
+    [HttpGet("my-subjects")]
+    [Authorize(Roles = "Estudiante")]
+    public async Task<IActionResult> GetMySubjects()
+    {
+        var personId = User.FindFirst("PersonId")?.Value;
+        if (!long.TryParse(personId, out var parsedPersonId)) return Unauthorized();
+
+        var res = await studentRepository.GetStudentSubjects(parsedPersonId);
+        return StatusCode((int)res.StatusCode, res);
+    }
+
     [HttpPost("import-excel")]
     public async Task<IActionResult> ImportExcel(IFormFile file)
     {

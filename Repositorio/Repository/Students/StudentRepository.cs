@@ -137,6 +137,66 @@ public class StudentRepository : PersonRepository, IStudentRepository
         }
     }
 
+    public async Task<ResponseDTO<List<StudentSubjectDTO>>> GetStudentSubjects(long personId)
+    {
+        try
+        {
+            var enrollments = await bbdd.Set<FileDivision>()
+                .AsNoTracking()
+                .Where(fd => fd.FileCurriculum.File.StudentId == personId)
+                .Select(fd => new
+                {
+                    fd.Id,
+                    Subject = fd.Division!.DivisionTemplate!.Subject!.Name,
+                    SchoolYear = fd.Division.SchoolYear!.SchoolYearNumber,
+                    Division = fd.Division.DivisionTemplate.Name
+                })
+                .ToListAsync();
+
+            var result = new List<StudentSubjectDTO>();
+            foreach (var enrollment in enrollments)
+            {
+                var grades = await bbdd.Set<Grade>()
+                    .AsNoTracking()
+                    .Where(g => g.FileDivisionId == enrollment.Id)
+                    .Select(g => (double)g.GradeNumber)
+                    .ToListAsync();
+
+                var attendance = await bbdd.Set<Attendance>()
+                    .AsNoTracking()
+                    .Where(a => a.FileDivisionId == enrollment.Id)
+                    .Select(a => a.Status)
+                    .ToListAsync();
+
+                result.Add(new StudentSubjectDTO
+                {
+                    Subject = enrollment.Subject,
+                    SchoolYear = enrollment.SchoolYear,
+                    Division = enrollment.Division,
+                    Average = grades.Count == 0 ? null : Math.Round(grades.Average(), 2),
+                    AttendancePercentage = attendance.Count == 0 ? null : Math.Round(attendance.Count(a => a) * 100d / attendance.Count, 2)
+                });
+            }
+
+            return new ResponseDTO<List<StudentSubjectDTO>>
+            {
+                StatusCode = HttpStatusCode.OK,
+                Message = "Espacios curriculares del estudiante obtenidos con éxito.",
+                Object = result
+            };
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Error al obtener los espacios curriculares del estudiante: {e.Message}");
+            return new ResponseDTO<List<StudentSubjectDTO>>
+            {
+                StatusCode = HttpStatusCode.InternalServerError,
+                Message = "Hubo un error al obtener los espacios curriculares del estudiante.",
+                Object = null
+            };
+        }
+    }
+
 
     public async Task<ResponseDTO<int>> ImportStudentsFromExcel(Stream fileStream)
     {

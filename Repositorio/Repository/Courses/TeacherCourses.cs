@@ -1,9 +1,10 @@
-using System.Net;
 using BD;
+using BD.Entidades;
 using DTO.DTOs.CoursesDTO;
 using DTO.DTOs.DTO_Response;
 using DTO.DTOs.SchoolYearDTO;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 namespace Repositorio.Repository;
 
@@ -23,21 +24,16 @@ public class TeacherCourses : ITeacherCourses
             var courses = await bbdd.TeacherDivisions
                 .AsNoTracking()
                 .Where(td => td.TeacherId == teacherId)
-                .Join(
-                    bbdd.Divisions.AsNoTracking(),
-                    td => td.DivisionId,              
-                    d => d.Id,                      
-                    (td, d) => new TeacherCoursesDTO     
-                    {
-                        DivisionId = td.DivisionId,
-                        Division = td.Division.Name,   
-                        Subject = td.Division.Subject.Name,
-                        SchoolYear = d.SchoolYear.SchoolYearNumber,      
-                        Career = td.Division.Subject.Curriculum.Career.Name
-                    }
-                )
+                .Select(td => new TeacherCoursesDTO
+                {
+                    DivisionId = td.DivisionId,
+                    Division = td.Division.Name,
+                    Subject = td.Division.Subject!.Name,
+                    SchoolYear = td.Division.Subject.Year,
+                    Career = td.Division.Subject.Curriculum!.Career!.Name
+                })
                 .ToListAsync();
-            
+
             if (courses.Count == 0) throw new Exception("TeacherWithoutCoursesAssigned");
             
             return new ResponseDTO<List<TeacherCoursesDTO>>
@@ -75,7 +71,7 @@ public class TeacherCourses : ITeacherCourses
             return new ResponseDTO<List<ScheduleDTO>>
             {
                 Message = "¡Horarios de la divisón obtenidos con éxito!",
-                Object = await bbdd.Schedules.Where(s => s.DivisionId == id).Select(s => new ScheduleDTO
+                Object = await bbdd.Schedules.Where(s => s.Division!.DivisionTemplateId == id).Select(s => new ScheduleDTO
                 {
                     Day = s.Day,
                     StartTime = s.StartTime,

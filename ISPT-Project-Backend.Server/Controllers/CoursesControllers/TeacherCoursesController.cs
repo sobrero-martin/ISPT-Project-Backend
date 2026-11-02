@@ -41,6 +41,7 @@ public class TeacherCoursesController :  ControllerBase
     }
 
     [HttpPost("evaluations")]
+    [Authorize(Roles = "Docente")]
     public async Task<ActionResult<ResponseDTO<string>>> CreateEvaluation(DivisionExamPostDTO divisionExamDTO)
     {
         var res = await divisionExamRepository.CreateEvaluation(divisionExamDTO);
@@ -48,6 +49,7 @@ public class TeacherCoursesController :  ControllerBase
     }
 
     [HttpDelete("evaluations/{evaluationId:long}")]
+    [Authorize(Roles = "Docente")]
     public async Task<ActionResult<ResponseDTO<string>>> DeleteEvaluation(long evaluationId)
     {
         var res = await divisionExamRepository.DeleteEvaluation(evaluationId);
@@ -56,6 +58,7 @@ public class TeacherCoursesController :  ControllerBase
 
     // SCHEDULE
     [HttpGet("schedules/{divisionId:long}")]
+    [Authorize(Roles = "Docente")]
     public async Task<ActionResult<ResponseDTO<ScheduleDTO>>> GetSchedulesByDivisionId(long divisionId)
     {
         var res = await teacherCoursesRepository.GetScheduleByDivisionId(divisionId);

@@ -97,6 +97,7 @@ builder.Services.AddScoped<IFinalExamRepository, FinalExamRepository>();
 builder.Services.AddScoped<INewsRepository, NewsRepository>();
 
 builder.Services.AddScoped<ITeacherCourses, TeacherCourses>();
+builder.Services.AddScoped<IStudentCourses, StudentCourses>();
 builder.Services.AddScoped<IDivisionExamRepository, DivisionExamRepository>();
 
 builder.Services.AddAuthorization();

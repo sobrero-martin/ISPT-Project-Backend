@@ -49,6 +49,12 @@ namespace BD
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            builder.Entity<News>()
+                .HasOne(news => news.AuthorPerson)
+                .WithMany()
+                .HasForeignKey(news => news.AuthorPersonId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             builder.Entity<IdentityRole>().HasData(
                 new IdentityRole
                 {

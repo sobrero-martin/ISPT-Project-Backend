@@ -9,4 +9,7 @@ public class News : BaseEntity
 
     [Required, MaxLength(4000)]
     public string Content { get; set; } = string.Empty;
+
+    public long? AuthorPersonId { get; set; }
+    public Person? AuthorPerson { get; set; }
 }

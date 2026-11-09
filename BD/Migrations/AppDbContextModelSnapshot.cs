@@ -819,6 +819,9 @@ namespace BD.Migrations
                     b.Property<Guid>("CreatedBy")
                         .HasColumnType("char(36)");
 
+                    b.Property<long?>("AuthorPersonId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(120)
@@ -834,6 +837,8 @@ namespace BD.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AuthorPersonId");
 
                     b.ToTable("News");
                 });
@@ -1250,6 +1255,16 @@ namespace BD.Migrations
                             Name = "Estudiante",
                             NormalizedName = "ESTUDIANTE"
                         });
+                });
+
+            modelBuilder.Entity("BD.Entidades.News", b =>
+                {
+                    b.HasOne("BD.Entidades.Person", "AuthorPerson")
+                        .WithMany()
+                        .HasForeignKey("AuthorPersonId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("AuthorPerson");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

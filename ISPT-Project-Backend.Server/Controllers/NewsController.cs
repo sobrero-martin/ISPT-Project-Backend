@@ -1,5 +1,7 @@
 using DTO.DTOs.DTO_Response;
 using DTO.DTOs.NewsDTO;
+using BD;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Repositorio.Implementations.News;
@@ -12,10 +14,12 @@ namespace ISPT_Project_Backend.Server.Controllers;
 public class NewsController : ControllerBase
 {
     private readonly INewsRepository newsRepository;
+    private readonly AppDbContext dbContext;
 
-    public NewsController(INewsRepository newsRepository)
+    public NewsController(INewsRepository newsRepository, AppDbContext dbContext)
     {
         this.newsRepository = newsRepository;
+        this.dbContext = dbContext;
     }
 
     [HttpGet]
@@ -33,7 +37,12 @@ public class NewsController : ControllerBase
         if (!Guid.TryParse(userId, out var createdBy))
             return Unauthorized();
 
-        var response = await newsRepository.Create(newsPostDTO, createdBy);
+        var authorPersonId = await dbContext.People
+            .Where(person => person.UserId == userId)
+            .Select(person => (long?)person.Id)
+            .FirstOrDefaultAsync();
+
+        var response = await newsRepository.Create(newsPostDTO, createdBy, authorPersonId);
         return StatusCode((int)response.StatusCode, response);
     }
 

@@ -148,7 +148,6 @@ namespace Repositorio.Repository.Careers
                 };
             }
         }
-        /*
         public async Task<ResponseDTO<string>> Update(long scheduleTemplateId, ScheduleTemplatePostDTO scheduleTemplateDTO)
         {
             try
@@ -168,27 +167,31 @@ namespace Repositorio.Repository.Careers
 
 
 
-                await context.Set<ScheduleTemplate>().AddAsync(scheduleTemplateEntity);
+                existingScheduleTemplate.StartTime = scheduleTemplateDTO.StartTime;
+                existingScheduleTemplate.EndTime = scheduleTemplateDTO.EndTime;
+                existingScheduleTemplate.Day = scheduleTemplateDTO.Day ?? string.Empty;
+                existingScheduleTemplate.UpdatedBy = scheduleTemplateDTO.UpdatedById;
+                existingScheduleTemplate.UpdatedAt = DateTime.UtcNow;
                 await context.SaveChangesAsync();
 
                 return new ResponseDTO<string>
                 {
-                    StatusCode = HttpStatusCode.Created,
+                    StatusCode = HttpStatusCode.OK,
                     Message = "Operación exitosa.",
-                    Object = $"¡Plantilla de horario:{scheduleTemplateDTO.Id} creada con éxito!"
+                    Object = "¡Plantilla de horario actualizada con éxito!"
                 };
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error al crear la plantilla de horario: {ex.Message}");
+                Console.WriteLine($"Error al actualizar la plantilla de horario: {ex.Message}");
 
                 return new ResponseDTO<string>
                 {
                     StatusCode = HttpStatusCode.InternalServerError,
-                    Message = "Ocurrió un error al crear la plantilla de horario.",
+                    Message = "Ocurrió un error al actualizar la plantilla de horario.",
                     Object = null
                 };
             }
-        }*/
+        }
     }
 }

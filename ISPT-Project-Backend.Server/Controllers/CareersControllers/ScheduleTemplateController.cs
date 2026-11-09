@@ -42,5 +42,14 @@ namespace ISPT_Project_Backend.Server.Controllers
 
             return StatusCode((int)response.StatusCode, response);
         }
+
+        [HttpPut("{scheduleTemplateId:long}")]
+        [Authorize(Roles = "Directivo,Preceptor")]
+        public async Task<ActionResult<ResponseDTO<string>>> Put(long scheduleTemplateId, ScheduleTemplatePostDTO scheduleTemplateDTO)
+        {
+            var response = await scheduleTemplateRepository.Update(scheduleTemplateId, scheduleTemplateDTO);
+
+            return StatusCode((int)response.StatusCode, response);
+        }
     }
 }

@@ -19,18 +19,41 @@ public class NewsRepository : INewsRepository
 
     public async Task<ResponseDTO<List<NewsDTO>>> GetAll()
     {
-        var news = await context.News
+        var records = await context.News
             .AsNoTracking()
             .Where(item => item.state)
             .OrderByDescending(item => item.CreatedAt)
-            .Select(item => new NewsDTO
+            .Select(item => new
             {
                 Id = item.Id,
                 Title = item.Title,
                 Content = item.Content,
-                CreatedAt = item.CreatedAt
+                CreatedAt = item.CreatedAt,
+                item.CreatedBy,
+                AuthorName = item.AuthorPerson == null
+                    ? null
+                    : $"{item.AuthorPerson.Firstname} {item.AuthorPerson.Lastname}"
             })
             .ToListAsync();
+
+        var unmatchedUserIds = records
+            .Where(item => item.AuthorName == null)
+            .Select(item => item.CreatedBy.ToString())
+            .Distinct()
+            .ToList();
+        var usernames = await context.Users
+            .Where(user => unmatchedUserIds.Contains(user.Id))
+            .Select(user => new { user.Id, user.UserName })
+            .ToDictionaryAsync(user => user.Id, user => user.UserName);
+
+        var news = records.Select(item => new NewsDTO
+        {
+            Id = item.Id,
+            Title = item.Title,
+            Content = item.Content,
+            CreatedAt = item.CreatedAt,
+            AuthorName = item.AuthorName ?? usernames.GetValueOrDefault(item.CreatedBy.ToString())
+        }).ToList();
 
         return new ResponseDTO<List<NewsDTO>>
         {
@@ -40,7 +63,7 @@ public class NewsRepository : INewsRepository
         };
     }
 
-    public async Task<ResponseDTO<NewsDTO>> Create(NewsPostDTO newsPostDTO, Guid createdBy)
+    public async Task<ResponseDTO<NewsDTO>> Create(NewsPostDTO newsPostDTO, Guid createdBy, long? authorPersonId)
     {
         var title = newsPostDTO.Title.Trim();
         var content = newsPostDTO.Content.Trim();
@@ -58,11 +81,18 @@ public class NewsRepository : INewsRepository
         {
             Title = title,
             Content = content,
-            CreatedBy = createdBy
+            CreatedBy = createdBy,
+            AuthorPersonId = authorPersonId
         };
 
+        if (authorPersonId.HasValue)
+            news.AuthorPerson = await context.People.FindAsync(authorPersonId.Value);
         context.News.Add(news);
         await context.SaveChangesAsync();
+
+        var authorName = news.AuthorPerson == null
+            ? await context.Users.Where(user => user.Id == createdBy.ToString()).Select(user => user.UserName).FirstOrDefaultAsync()
+            : $"{news.AuthorPerson.Firstname} {news.AuthorPerson.Lastname}";
 
         return new ResponseDTO<NewsDTO>
         {
@@ -73,7 +103,8 @@ public class NewsRepository : INewsRepository
                 Id = news.Id,
                 Title = news.Title,
                 Content = news.Content,
-                CreatedAt = news.CreatedAt
+                CreatedAt = news.CreatedAt,
+                AuthorName = authorName
             }
         };
     }

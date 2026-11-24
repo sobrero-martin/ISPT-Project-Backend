@@ -147,7 +147,7 @@ public class StudentRepository : PersonRepository, IStudentRepository
                 .Select(fd => new
                 {
                     fd.Id,
-                    fd.DivisionId,
+                    DivisionId = fd.DivisionId,
                     Subject = fd.Division!.DivisionTemplate!.Subject!.Name,
                     SchoolYear = fd.Division.SchoolYear!.SchoolYearNumber,
                     Division = fd.Division.DivisionTemplate.Name
@@ -166,17 +166,18 @@ public class StudentRepository : PersonRepository, IStudentRepository
                 var attendance = await bbdd.Set<Attendance>()
                     .AsNoTracking()
                     .Where(a => a.FileDivisionId == enrollment.Id)
-                    .Select(a => a.Status)
+                    .Select(a => new { a.Status, a.Recorded })
                     .ToListAsync();
 
                 result.Add(new StudentSubjectDTO
                 {
+                    FileDivisionId = enrollment.Id,
                     DivisionId = enrollment.DivisionId,
                     Subject = enrollment.Subject,
                     SchoolYear = enrollment.SchoolYear,
                     Division = enrollment.Division,
                     Average = grades.Count == 0 ? null : Math.Round(grades.Average(), 2),
-                    AttendancePercentage = attendance.Count == 0 ? null : Math.Round(attendance.Count(a => a) * 100d / attendance.Count, 2)
+                    AttendancePercentage = attendance.Count(a => a.Recorded) == 0 ? null : Math.Round(attendance.Count(a => a.Recorded && a.Status) * 100d / attendance.Count(a => a.Recorded), 2)
                 });
             }
 
@@ -197,6 +198,74 @@ public class StudentRepository : PersonRepository, IStudentRepository
                 Object = null
             };
         }
+    }
+
+    public async Task<ResponseDTO<List<StudentAttendanceDTO>>> GetStudentAttendance(long personId, long fileDivisionId)
+    {
+        var belongsToStudent = await bbdd.FileDivisions.AsNoTracking()
+            .AnyAsync(fd => fd.Id == fileDivisionId && fd.FileCurriculum.File.StudentId == personId);
+        if (!belongsToStudent)
+        {
+            return new ResponseDTO<List<StudentAttendanceDTO>>
+            {
+                StatusCode = HttpStatusCode.NotFound,
+                Message = "No se encontró el cursado del estudiante.",
+                Object = null
+            };
+        }
+
+        var attendance = await bbdd.Attendances.AsNoTracking()
+            .Where(a => a.FileDivisionId == fileDivisionId && a.state && a.AttendanceDay.state)
+            .OrderBy(a => a.AttendanceDay.Date)
+            .Select(a => new StudentAttendanceDTO
+            {
+                Date = a.AttendanceDay.Date,
+                Status = !a.Recorded ? "Pendiente" : a.Justified ? "Justificado" : a.Status ? "Presente" : "Ausente"
+            })
+            .ToListAsync();
+
+        return new ResponseDTO<List<StudentAttendanceDTO>>
+        {
+            StatusCode = HttpStatusCode.OK,
+            Message = "Asistencias del cursado obtenidas con éxito.",
+            Object = attendance
+        };
+    }
+
+    public async Task<ResponseDTO<List<StudentEvaluationDTO>>> GetStudentEvaluations(long personId, long fileDivisionId)
+    {
+        var belongsToStudent = await bbdd.FileDivisions.AsNoTracking()
+            .AnyAsync(fd => fd.Id == fileDivisionId && fd.FileCurriculum.File.StudentId == personId);
+        if (!belongsToStudent)
+        {
+            return new ResponseDTO<List<StudentEvaluationDTO>>
+            {
+                StatusCode = HttpStatusCode.NotFound,
+                Message = "No se encontró el cursado del estudiante.",
+                Object = null
+            };
+        }
+
+        var evaluations = await bbdd.Grades.AsNoTracking()
+            .Where(g => g.FileDivisionId == fileDivisionId && g.state && g.DivisionExam.state)
+            .OrderBy(g => g.DivisionExam.Date)
+            .ThenBy(g => g.DivisionExam.Number)
+            .Select(g => new StudentEvaluationDTO
+            {
+                Id = g.DivisionExamId,
+                Date = g.DivisionExam.Date,
+                Type = (int)g.DivisionExam.Type,
+                Number = g.DivisionExam.Number,
+                Grade = g.GradeNumber
+            })
+            .ToListAsync();
+
+        return new ResponseDTO<List<StudentEvaluationDTO>>
+        {
+            StatusCode = HttpStatusCode.OK,
+            Message = "Evaluaciones del estudiante obtenidas con éxito.",
+            Object = evaluations
+        };
     }
 
 

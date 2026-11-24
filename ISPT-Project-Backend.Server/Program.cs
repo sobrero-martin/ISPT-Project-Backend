@@ -18,6 +18,8 @@ using Repositorio.Implementations.Courses;
 using Repositorio.Repository.Courses;
 using Repositorio.Implementations.News;
 using Repositorio.Repository.News;
+using Repositorio.Repository.Assitance;
+using Repositorio.Implementations.Assistance;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -100,6 +102,8 @@ builder.Services.AddScoped<INewsRepository, NewsRepository>();
 builder.Services.AddScoped<ITeacherCourses, TeacherCourses>();
 builder.Services.AddScoped<IStudentCourses, StudentCourses>();
 builder.Services.AddScoped<IDivisionExamRepository, DivisionExamRepository>();
+builder.Services.AddScoped<IGradesRepository, GradesRepository>();
+builder.Services.AddScoped<IAttendanceRepository, AttendanceRepository>();
 
 builder.Services.AddAuthorization();
 

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Repositorio.Implementations.Courses;
 using Repositorio.Repository;
+using Repositorio.Implementations.Assistance;
 
 namespace ISPT_Project_Backend.Server.Controllers.CoursesControllers;
 
@@ -15,11 +16,15 @@ public class TeacherCoursesController :  ControllerBase
 {
     private readonly ITeacherCourses teacherCoursesRepository;
     private readonly IDivisionExamRepository divisionExamRepository;
+    private readonly IAttendanceRepository attendanceRepository;
+    private readonly IGradesRepository gradesRepository;
 
-    public TeacherCoursesController(ITeacherCourses teacherCoursesRepository, IDivisionExamRepository divisionExamRepository)
+    public TeacherCoursesController(ITeacherCourses teacherCoursesRepository, IDivisionExamRepository divisionExamRepository, IAttendanceRepository attendanceRepository, IGradesRepository gradesRepository)
     {
         this.teacherCoursesRepository = teacherCoursesRepository;
         this.divisionExamRepository = divisionExamRepository;
+        this.attendanceRepository = attendanceRepository;
+        this.gradesRepository = gradesRepository;
     }
     
     // COURSES
@@ -56,6 +61,15 @@ public class TeacherCoursesController :  ControllerBase
         return StatusCode((int)res.StatusCode, res);
     }
 
+    // GRADES
+    [HttpGet("evaluations/{evaluationId:long}/grades")]
+    [Authorize(Roles = "Docente")]
+    public async Task<IActionResult> GetEvaluationGrades(long evaluationId) => Respond(await gradesRepository.GetGrades(evaluationId));
+
+    [HttpPut("evaluations/{evaluationId:long}/grades")]
+    [Authorize(Roles = "Docente")]
+    public async Task<IActionResult> SaveEvaluationGrades(long evaluationId, List<CourseGradeUpdateDTO> grades) => Respond(await gradesRepository.SaveGrades(evaluationId, grades));
+
     // SCHEDULE
     [HttpGet("schedules/{divisionId:long}")]
     [Authorize(Roles = "Docente")]
@@ -66,4 +80,21 @@ public class TeacherCoursesController :  ControllerBase
     }
 
     // ATTENDANCE
+    [HttpGet("attendance/{divisionId:long}")]
+    [Authorize(Roles = "Docente")]
+    public async Task<IActionResult> GetAttendanceDays(long divisionId) => Respond(await attendanceRepository.GetDays(divisionId));
+
+    [HttpPost("attendance/{divisionId:long}/today")]
+    [Authorize(Roles = "Docente")]
+    public async Task<IActionResult> CreateAttendanceDay(long divisionId, [FromQuery] DateTime date) => Respond(await attendanceRepository.CreateToday(divisionId, date));
+
+    [HttpGet("attendance/day/{dayId:long}")]
+    [Authorize(Roles = "Docente")]
+    public async Task<IActionResult> GetDailyAttendance(long dayId) => Respond(await attendanceRepository.GetDaily(dayId));
+
+    [HttpPut("attendance/day/{dayId:long}")]
+    [Authorize(Roles = "Docente")]
+    public async Task<IActionResult> UpdateDailyAttendance(long dayId, List<AttendanceUpdateDTO> data) => Respond(await attendanceRepository.UpdateDaily(dayId, data));
+
+    private IActionResult Respond<T>(ResponseDTO<T> response) => StatusCode((int)response.StatusCode, response);
 }

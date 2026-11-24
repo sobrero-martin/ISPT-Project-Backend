@@ -112,6 +112,28 @@ public class StudentController : ControllerBase
         return StatusCode((int)res.StatusCode, res);
     }
 
+    [HttpGet("my-subjects/{fileDivisionId:long}/evaluations")]
+    [Authorize(Roles = "Estudiante")]
+    public async Task<IActionResult> GetMySubjectEvaluations(long fileDivisionId)
+    {
+        var personId = User.FindFirst("PersonId")?.Value;
+        if (!long.TryParse(personId, out var parsedPersonId)) return Unauthorized();
+
+        var res = await studentRepository.GetStudentEvaluations(parsedPersonId, fileDivisionId);
+        return StatusCode((int)res.StatusCode, res);
+    }
+
+    [HttpGet("my-subjects/{fileDivisionId:long}/attendance")]
+    [Authorize(Roles = "Estudiante")]
+    public async Task<IActionResult> GetMySubjectAttendance(long fileDivisionId)
+    {
+        var personId = User.FindFirst("PersonId")?.Value;
+        if (!long.TryParse(personId, out var parsedPersonId)) return Unauthorized();
+
+        var res = await studentRepository.GetStudentAttendance(parsedPersonId, fileDivisionId);
+        return StatusCode((int)res.StatusCode, res);
+    }
+
     [HttpPost("import-excel")]
     public async Task<IActionResult> ImportExcel(IFormFile file)
     {

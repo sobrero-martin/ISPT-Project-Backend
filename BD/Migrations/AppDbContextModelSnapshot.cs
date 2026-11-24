@@ -42,6 +42,12 @@ namespace BD.Migrations
                     b.Property<long>("FileDivisionId")
                         .HasColumnType("bigint");
 
+                    b.Property<bool>("Justified")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("Recorded")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<bool>("Status")
                         .HasColumnType("tinyint(1)");
 
@@ -1299,28 +1305,28 @@ namespace BD.Migrations
                         },
                         new
                         {
-                            Id = "cc27765b-a262-4cca-926f-177e30f65106",
+                            Id = "d4803d7e-c4a9-40dc-b145-c0cfbfc3eeb1",
                             ConcurrencyStamp = "2",
                             Name = "Preceptor",
                             NormalizedName = "PRECEPTOR"
                         },
                         new
                         {
-                            Id = "2a12c78b-cf9b-4718-ba6e-09cb72c2e05f",
+                            Id = "351fed30-76ad-4da8-a065-27b7db4aaa7d",
                             ConcurrencyStamp = "3",
                             Name = "Preceptor_Auxiliar",
                             NormalizedName = "PRECEPTOR_AUXILIAR"
                         },
                         new
                         {
-                            Id = "b3c0f6e1-5766-40d7-abc5-c55875cad672",
+                            Id = "171f2a41-6715-459f-8c66-3cda319596b9",
                             ConcurrencyStamp = "4",
                             Name = "Docente",
                             NormalizedName = "DOCENTE"
                         },
                         new
                         {
-                            Id = "f0a77725-b3b5-4071-9ada-52afb9294476",
+                            Id = "a962e87c-3b6e-4138-8517-4cd13ac3d9ab",
                             ConcurrencyStamp = "5",
                             Name = "Estudiante",
                             NormalizedName = "ESTUDIANTE"
@@ -1420,15 +1426,15 @@ namespace BD.Migrations
                         {
                             Id = "ae65a54a-aab5-4d0c-aa17-554334b49e8c",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "0c9e9273-2313-46b3-b655-5b246394a1a3",
+                            ConcurrencyStamp = "c79aa666-ee5e-43c0-b104-e86ec0965a99",
                             Email = "",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "",
                             NormalizedUserName = "SUPERADMINISPT-2026",
-                            PasswordHash = "AQAAAAIAAYagAAAAEEJ1jK6P14OkK4v57vrBlQvKAhWwtNJdK+jKILxBJAt4ag3IE5VPb6O7BibTvL27JA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAENgeQ2a51Vp7jbOLtIN34BtFHTuqqtzFGsQ0PR4uIIalxlWkpjkg+d2kAYWImITjog==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "3d86c3ea-9539-4c2a-b3ed-efeb5c30a10f",
+                            SecurityStamp = "7836e86b-4521-4b61-92be-03a868470770",
                             TwoFactorEnabled = false,
                             UserName = "SuperadminISPT-2026"
                         });

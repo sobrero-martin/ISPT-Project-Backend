@@ -13,5 +13,7 @@ namespace BD.Entidades
         public AttendanceDay AttendanceDay { get; set; }
         
         public bool Status { get; set; }
+        public bool Justified { get; set; }
+        public bool Recorded { get; set; }
     }
 }

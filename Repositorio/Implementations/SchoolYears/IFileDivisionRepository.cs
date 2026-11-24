@@ -10,5 +10,7 @@ namespace Repositorio.Implementations.SchoolYears
     {
         Task<ResponseDTO<List<FileDivisionDTO>>> GetByDivisionId(long divisionId);
         Task<ResponseDTO<string>> Post(StudentFileDivisionPostDTO studentFileDivisionDTO);
+        Task<ResponseDTO<List<InscriptionRequestDTO>>> GetInscriptionRequests(long schoolYearId);
+        Task<ResponseDTO<string>> ReviewInscriptionRequests(long schoolYearId, ReviewInscriptionRequestsDTO review);
     }
 }

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json.Serialization;
+using DTO.ENUM;
 
 namespace BD.Entidades
 {
@@ -16,7 +17,11 @@ namespace BD.Entidades
         public Division? Division { get; set; }
 
         // Valida si se le admitio o no el cursado a esa division de ese espacio curricular
-        public required string FileDivisionStatus { get; set; }
+        public EnumFileDivisionAdmitedStatus FileDivisionAdmitedStatus { get; set; }
+
+        // Muestra hasta cuando dura la regularidad y su estado
+        public EnumStudentFileSubjectStatus StudentFileSubjectStatus { get; set; } 
+        public DateTime? StudentSubjectDateExpiration { get; set; }
 
         public long? FileDivisionObservations { get; set; }
         

@@ -7,4 +7,5 @@ public interface IAuthRepository
 {
     public Task<ResponseDTO<TokenDTO>> Login(AuthDTO authDTO);
     public Task<ResponseDTO<TokenDTO>> Refresh(TokenDTO tokenDTO);
+    public Task<ResponseDTO<string>> Logout(TokenDTO tokenDTO);
 }

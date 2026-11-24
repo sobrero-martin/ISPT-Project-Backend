@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DTO.ENUM;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -14,6 +15,6 @@ namespace BD.Entidades
 
         public int Grade { get; set; }
 
-        public required string GradeState { get; set; }
+        public EnumFinalGradeForIEFIandFExam GradeState { get; set; } 
     }
 }

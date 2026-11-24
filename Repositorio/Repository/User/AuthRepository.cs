@@ -143,7 +143,21 @@ public class AuthRepository : IAuthRepository
                     Object = null
                 };
 
-            var newAccessToken = tokenService.GenerateAccessToken(principal!.Claims);
+            var tokenMetadataClaims = new HashSet<string>
+            {
+                JwtRegisteredClaimNames.Exp,
+                JwtRegisteredClaimNames.Iat,
+                JwtRegisteredClaimNames.Nbf,
+                JwtRegisteredClaimNames.Iss,
+                JwtRegisteredClaimNames.Aud,
+                JwtRegisteredClaimNames.Jti
+            };
+            var refreshedClaims = principal!.Claims
+                .Where(claim => !tokenMetadataClaims.Contains(claim.Type))
+                .ToList();
+            refreshedClaims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
+
+            var newAccessToken = tokenService.GenerateAccessToken(refreshedClaims);
             var newRefreshToken = tokenService.GenerateRefreshToken();
 
             await userManager.SetAuthenticationTokenAsync(user, "JWTAuth", "RefreshToken", newRefreshToken);
@@ -167,6 +181,46 @@ public class AuthRepository : IAuthRepository
             {
                 StatusCode = HttpStatusCode.InternalServerError,
                 Message = "Error interno al intentar actualizar token.",
+                Object = null
+            };
+        }
+    }
+
+    public async Task<ResponseDTO<string>> Logout(TokenDTO tokenDTO)
+    {
+        try
+        {
+            if (tokenDTO != null && !string.IsNullOrEmpty(tokenDTO.AccessToken)
+                && !string.IsNullOrEmpty(tokenDTO.RefreshToken))
+            {
+                var principal = tokenService.GetPrincipalFromExpiredToken(tokenDTO.AccessToken);
+                var username = principal?.FindFirst("Username")?.Value;
+                if (!string.IsNullOrEmpty(username))
+                {
+                    var user = await userManager.FindByNameAsync(username);
+                    var savedRefreshToken = user == null
+                        ? null
+                        : await userManager.GetAuthenticationTokenAsync(user, "JWTAuth", "RefreshToken");
+
+                    if (user != null && savedRefreshToken == tokenDTO.RefreshToken)
+                        await userManager.RemoveAuthenticationTokenAsync(user, "JWTAuth", "RefreshToken");
+                }
+            }
+
+            return new ResponseDTO<string>
+            {
+                StatusCode = HttpStatusCode.OK,
+                Message = "Sesión cerrada.",
+                Object = "Sesión cerrada."
+            };
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("Error al cerrar la sesión: " + e.Message);
+            return new ResponseDTO<string>
+            {
+                StatusCode = HttpStatusCode.InternalServerError,
+                Message = "No se pudo invalidar la sesión en el servidor.",
                 Object = null
             };
         }

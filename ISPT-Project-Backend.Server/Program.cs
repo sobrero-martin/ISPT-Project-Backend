@@ -94,6 +94,7 @@ builder.Services.AddScoped<IScheduleRepository, ScheduleRepository>();
 builder.Services.AddScoped<IFileDivisionRepository, FileDivisionRepository>();
 
 builder.Services.AddScoped<IFinalExamRepository, FinalExamRepository>();
+builder.Services.AddScoped<IIEFIRepository, IEFIRepository>();
 builder.Services.AddScoped<INewsRepository, NewsRepository>();
 
 builder.Services.AddScoped<ITeacherCourses, TeacherCourses>();

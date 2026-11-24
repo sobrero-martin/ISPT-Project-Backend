@@ -28,4 +28,11 @@ public class AuthController : ControllerBase
         var res = await authRepository.Refresh(tokenDTO);
         return StatusCode((int)res.StatusCode, res);
     }
+
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout(TokenDTO tokenDTO)
+    {
+        var res = await authRepository.Logout(tokenDTO);
+        return StatusCode((int)res.StatusCode, res);
+    }
 }

@@ -147,6 +147,7 @@ public class StudentRepository : PersonRepository, IStudentRepository
                 .Select(fd => new
                 {
                     fd.Id,
+                    fd.DivisionId,
                     Subject = fd.Division!.DivisionTemplate!.Subject!.Name,
                     SchoolYear = fd.Division.SchoolYear!.SchoolYearNumber,
                     Division = fd.Division.DivisionTemplate.Name
@@ -170,6 +171,7 @@ public class StudentRepository : PersonRepository, IStudentRepository
 
                 result.Add(new StudentSubjectDTO
                 {
+                    DivisionId = enrollment.DivisionId,
                     Subject = enrollment.Subject,
                     SchoolYear = enrollment.SchoolYear,
                     Division = enrollment.Division,

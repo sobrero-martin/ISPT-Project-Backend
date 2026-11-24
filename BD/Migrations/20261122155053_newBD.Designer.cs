@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BD.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20261026131719_newBD")]
+    [Migration("20261122155053_newBD")]
     partial class newBD
     {
         /// <inheritdoc />
@@ -596,12 +596,17 @@ namespace BD.Migrations
                     b.Property<long>("FileCurriculumId")
                         .HasColumnType("bigint");
 
+                    b.Property<bool>("FileDivisionAdmitedStatus")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<long?>("FileDivisionObservations")
                         .HasColumnType("bigint");
 
-                    b.Property<string>("FileDivisionStatus")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<int>("StudentFileSubjectStatus")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("StudentSubjectDateExpiration")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -690,9 +695,8 @@ namespace BD.Migrations
                     b.Property<int>("Grade")
                         .HasColumnType("int");
 
-                    b.Property<string>("GradeState")
-                        .IsRequired()
-                        .HasColumnType("longtext");
+                    b.Property<int>("GradeState")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -811,6 +815,9 @@ namespace BD.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
 
+                    b.Property<long?>("AuthorPersonId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Content")
                         .IsRequired()
                         .HasMaxLength(4000)
@@ -837,6 +844,8 @@ namespace BD.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AuthorPersonId");
 
                     b.ToTable("News");
                 });
@@ -1149,6 +1158,72 @@ namespace BD.Migrations
                     b.ToTable("FinalExamTribunals");
                 });
 
+            modelBuilder.Entity("BD.Entities.IEFI", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<long>("DivisionId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int?>("PageNumber")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("RecordBook")
+                        .HasColumnType("int");
+
+                    b.Property<TimeOnly>("Time")
+                        .HasColumnType("time(6)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("char(36)");
+
+                    b.Property<bool>("state")
+                        .HasColumnType("tinyint(1)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DivisionId");
+
+                    b.ToTable("IEFIs");
+                });
+
+            modelBuilder.Entity("BD.Entities.IEFIGrade", b =>
+                {
+                    b.Property<long>("IEFIId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("FileDivisionId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int?>("Grade")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("GradeState")
+                        .HasColumnType("int");
+
+                    b.HasKey("IEFIId", "FileDivisionId");
+
+                    b.HasIndex("FileDivisionId");
+
+                    b.ToTable("IEFIGrades");
+                });
+
             modelBuilder.Entity("BD.Entities.ScheduleTemplate", b =>
                 {
                     b.Property<long>("Id")
@@ -1227,28 +1302,28 @@ namespace BD.Migrations
                         },
                         new
                         {
-                            Id = "653e49e0-1487-4253-be44-d53705961d52",
+                            Id = "cc27765b-a262-4cca-926f-177e30f65106",
                             ConcurrencyStamp = "2",
                             Name = "Preceptor",
                             NormalizedName = "PRECEPTOR"
                         },
                         new
                         {
-                            Id = "833ba568-f83c-438f-b1a8-dc7b618c2163",
+                            Id = "2a12c78b-cf9b-4718-ba6e-09cb72c2e05f",
                             ConcurrencyStamp = "3",
                             Name = "Preceptor_Auxiliar",
                             NormalizedName = "PRECEPTOR_AUXILIAR"
                         },
                         new
                         {
-                            Id = "8df792ea-e550-40b7-ba5b-d1dc59c1ace2",
+                            Id = "b3c0f6e1-5766-40d7-abc5-c55875cad672",
                             ConcurrencyStamp = "4",
                             Name = "Docente",
                             NormalizedName = "DOCENTE"
                         },
                         new
                         {
-                            Id = "86050573-f818-44e2-8c37-d3cf6f9cc29b",
+                            Id = "f0a77725-b3b5-4071-9ada-52afb9294476",
                             ConcurrencyStamp = "5",
                             Name = "Estudiante",
                             NormalizedName = "ESTUDIANTE"
@@ -1348,15 +1423,15 @@ namespace BD.Migrations
                         {
                             Id = "ae65a54a-aab5-4d0c-aa17-554334b49e8c",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "939ed94a-5788-4b40-b668-f3132873c0dd",
+                            ConcurrencyStamp = "0c9e9273-2313-46b3-b655-5b246394a1a3",
                             Email = "",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "",
                             NormalizedUserName = "SUPERADMINISPT-2026",
-                            PasswordHash = "AQAAAAIAAYagAAAAEEi+Ub8BnUgXWXkRB6Mx6cbH4Ps6lwTQ7BEE+ooDoK26zlPqOB/3kAR/IxzcZncpQQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEEJ1jK6P14OkK4v57vrBlQvKAhWwtNJdK+jKILxBJAt4ag3IE5VPb6O7BibTvL27JA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "9fd31458-1297-4dfe-a0a7-ec13c6acabeb",
+                            SecurityStamp = "3d86c3ea-9539-4c2a-b3ed-efeb5c30a10f",
                             TwoFactorEnabled = false,
                             UserName = "SuperadminISPT-2026"
                         });
@@ -1693,6 +1768,16 @@ namespace BD.Migrations
                     b.Navigation("Person");
                 });
 
+            modelBuilder.Entity("BD.Entidades.News", b =>
+                {
+                    b.HasOne("BD.Entidades.Person", "AuthorPerson")
+                        .WithMany()
+                        .HasForeignKey("AuthorPersonId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("AuthorPerson");
+                });
+
             modelBuilder.Entity("BD.Entidades.Person", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
@@ -1771,6 +1856,36 @@ namespace BD.Migrations
                     b.Navigation("FinalExam");
 
                     b.Navigation("Person");
+                });
+
+            modelBuilder.Entity("BD.Entities.IEFI", b =>
+                {
+                    b.HasOne("BD.Entidades.Division", "Division")
+                        .WithMany()
+                        .HasForeignKey("DivisionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Division");
+                });
+
+            modelBuilder.Entity("BD.Entities.IEFIGrade", b =>
+                {
+                    b.HasOne("BD.Entidades.FileDivision", "FileDivision")
+                        .WithMany()
+                        .HasForeignKey("FileDivisionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BD.Entities.IEFI", "IEFI")
+                        .WithMany()
+                        .HasForeignKey("IEFIId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FileDivision");
+
+                    b.Navigation("IEFI");
                 });
 
             modelBuilder.Entity("BD.Entities.ScheduleTemplate", b =>

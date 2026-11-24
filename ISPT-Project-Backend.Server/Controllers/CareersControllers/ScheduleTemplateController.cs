@@ -35,7 +35,7 @@ namespace ISPT_Project_Backend.Server.Controllers
         }
 
         [HttpPost("{divisionTemplateId:long}")]
-        [Authorize(Roles = "Directivo,Preceptor")]
+        [Authorize(Roles = "Directivo")]
         public async Task<ActionResult<ResponseDTO<string>>> Post(long divisionTemplateId, ScheduleTemplatePostDTO scheduleTemplateDTO)
         {
             var response = await scheduleTemplateRepository.Post(divisionTemplateId, scheduleTemplateDTO);

@@ -42,6 +42,8 @@ namespace BD
         public DbSet<Correlative> Correlatives { get; set; }
 
         public DbSet<FinalExam> FinalExams { get; set; }
+        public DbSet<IEFI> IEFIs { get; set; }
+        public DbSet<IEFIGrade> IEFIGrades { get; set; }
         public DbSet<FinalExamGrade> FinalExamGrades { get; set; }
         public DbSet<FinalExamTribunal> FinalExamTribunals { get; set; }
         public DbSet<News> News { get; set; }
@@ -49,6 +51,7 @@ namespace BD
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            builder.Entity<IEFIGrade>().HasKey(x => new { x.IEFIId, x.FileDivisionId });
             builder.Entity<News>()
                 .HasOne(news => news.AuthorPerson)
                 .WithMany()

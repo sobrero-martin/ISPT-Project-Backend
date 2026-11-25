@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BD.Migrations
 {
     /// <inheritdoc />
-    public partial class newBD : Migration
+    public partial class test : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -857,7 +857,7 @@ namespace BD.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     FileCurriculumId = table.Column<long>(type: "bigint", nullable: false),
                     DivisionId = table.Column<long>(type: "bigint", nullable: false),
-                    FileDivisionAdmitedStatus = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    FileDivisionAdmitedStatus = table.Column<int>(type: "int", nullable: false),
                     StudentFileSubjectStatus = table.Column<int>(type: "int", nullable: false),
                     StudentSubjectDateExpiration = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     FileDivisionObservations = table.Column<long>(type: "bigint", nullable: true),
@@ -951,7 +951,7 @@ namespace BD.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     FileDivisionId = table.Column<long>(type: "bigint", nullable: false),
                     AttendanceDayId = table.Column<long>(type: "bigint", nullable: false),
-                    Status = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
                     state = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: true),
@@ -1075,17 +1075,17 @@ namespace BD.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "2a12c78b-cf9b-4718-ba6e-09cb72c2e05f", "3", "Preceptor_Auxiliar", "PRECEPTOR_AUXILIAR" },
-                    { "b3c0f6e1-5766-40d7-abc5-c55875cad672", "4", "Docente", "DOCENTE" },
-                    { "cc27765b-a262-4cca-926f-177e30f65106", "2", "Preceptor", "PRECEPTOR" },
-                    { "f0a77725-b3b5-4071-9ada-52afb9294476", "5", "Estudiante", "ESTUDIANTE" },
+                    { "01c4242b-474a-40cc-ada0-81bf7686f59c", "5", "Estudiante", "ESTUDIANTE" },
+                    { "478567d6-9e39-411b-b224-0878b92d2b1d", "2", "Preceptor", "PRECEPTOR" },
+                    { "a27546a7-81d4-4b47-aa97-8da27cbaeab6", "4", "Docente", "DOCENTE" },
+                    { "eaa95748-3564-4bb8-9116-4ba8ce91cfc5", "3", "Preceptor_Auxiliar", "PRECEPTOR_AUXILIAR" },
                     { "rol-directivo-id", "1", "Directivo", "DIRECTIVO" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "ae65a54a-aab5-4d0c-aa17-554334b49e8c", 0, "0c9e9273-2313-46b3-b655-5b246394a1a3", "", true, false, null, "", "SUPERADMINISPT-2026", "AQAAAAIAAYagAAAAEEJ1jK6P14OkK4v57vrBlQvKAhWwtNJdK+jKILxBJAt4ag3IE5VPb6O7BibTvL27JA==", null, false, "3d86c3ea-9539-4c2a-b3ed-efeb5c30a10f", false, "SuperadminISPT-2026" });
+                values: new object[] { "ae65a54a-aab5-4d0c-aa17-554334b49e8c", 0, "acdbc455-5532-43e0-b5b8-06628faa0f84", "", true, false, null, "", "SUPERADMINISPT-2026", "AQAAAAIAAYagAAAAEMX31fhcPcxMMBJjymfP+kxkKMeG1x++F8hqIOWtPE4pNMwVYRi++MRih8WoHZOv8w==", null, false, "d85cded5-292b-44a6-b93c-2fa9882eda5e", false, "SuperadminISPT-2026" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",

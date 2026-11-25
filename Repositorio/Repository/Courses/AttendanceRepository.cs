@@ -2,6 +2,7 @@ using BD;
 using BD.Entidades;
 using DTO.DTOs.CoursesDTO;
 using DTO.DTOs.DTO_Response;
+using DTO.ENUM;
 using Microsoft.EntityFrameworkCore;
 using Repositorio.Implementations.Assistance;
 using System.Net;
@@ -19,8 +20,8 @@ public class AttendanceRepository : IAttendanceRepository
             .OrderByDescending(d => d.Date)
             .Select(d => new AttendanceDayDTO { Id = d.Id, Date = d.Date,
                 Total = d.Attendances.Count(a => a.state),
-                Present = d.Attendances.Count(a => a.state && a.Status),
-                State = d.Attendances.Any(a => a.state) && d.Attendances.Where(a => a.state).All(a => a.Recorded) ? "Completa" : "Pendiente" })
+                Present = d.Attendances.Count(a => a.state && a.Status == EnumAttendanceStatus.Presente),
+                State = d.Attendances.Any(a => a.state) && d.Attendances.Where(a => a.state).All(a => a.Status != EnumAttendanceStatus.Pendiente) ? "Completa" : "Pendiente" })
             .ToListAsync();
         return Ok(days, "Días de asistencia cargados.");
     }
@@ -37,7 +38,7 @@ public class AttendanceRepository : IAttendanceRepository
         db.AttendanceDays.Add(day);
         var enrollments = db.FileDivisions.Where(fd => fd.DivisionId == divisionId && fd.FileDivisionAdmitedStatus == DTO.ENUM.EnumFileDivisionAdmitedStatus.Aceptado);
         await foreach (var enrollment in enrollments.AsAsyncEnumerable())
-            day.Attendances.Add(new Attendance { FileDivisionId = enrollment.Id, Status = false, Justified = false, Recorded = false });
+            day.Attendances.Add(new Attendance { FileDivisionId = enrollment.Id, Status = EnumAttendanceStatus.Pendiente });
         await db.SaveChangesAsync();
         return Ok(new AttendanceDayDTO { Id = day.Id, Date = day.Date, Total = day.Attendances.Count, State = "Pendiente" }, "Día de asistencia creado.");
     }
@@ -52,7 +53,7 @@ public class AttendanceRepository : IAttendanceRepository
                 FileDivisionId = a.FileDivisionId,
                 FileCode = a.FileDivision.FileCurriculum.File.Code,
                 StudentName = a.FileDivision.FileCurriculum.File.Student.Lastname + ", " + a.FileDivision.FileCurriculum.File.Student.Firstname,
-                Status = !a.Recorded ? "Pendiente" : a.Justified ? "Justificado" : a.Status ? "Presente" : "Ausente"
+                Status = a.Status.ToString()
             }).ToListAsync();
         return Ok(rows, "Asistencia diaria cargada.");
     }
@@ -67,9 +68,7 @@ public class AttendanceRepository : IAttendanceRepository
             var row = rows.FirstOrDefault(a => a.FileDivisionId == update.FileDivisionId);
             if (row == null || !new[] { "Presente", "Ausente", "Justificado" }.Contains(update.Status))
                 return Error<string>(HttpStatusCode.BadRequest, "La asistencia enviada no es válida.");
-            row.Status = update.Status == "Presente";
-            row.Justified = update.Status == "Justificado";
-            row.Recorded = true;
+            row.Status = Enum.Parse<EnumAttendanceStatus>(update.Status);
         }
         await db.SaveChangesAsync();
         return Ok("Guardado", "Asistencia actualizada.");

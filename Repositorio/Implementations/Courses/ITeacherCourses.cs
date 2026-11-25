@@ -8,4 +8,5 @@ public interface ITeacherCourses
 {
     Task<ResponseDTO<List<TeacherCoursesDTO>>> GetCoursesByTeacherId(long teacherId);
     Task<ResponseDTO<List<ScheduleDTO>>> GetScheduleByDivisionId(long id);
+    Task<ResponseDTO<string>> CloseDivision(long divisionId, long teacherId);
 }

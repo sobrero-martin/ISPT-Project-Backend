@@ -161,6 +161,7 @@ public class StudentRepository : PersonRepository, IStudentRepository
                 {
                     fd.Id,
                     DivisionId = fd.DivisionId,
+                    fd.StudentFileSubjectStatus,
                     Subject = fd.Division!.DivisionTemplate!.Subject!.Name,
                     SchoolYear = fd.Division.SchoolYear!.SchoolYearNumber,
                     Division = fd.Division.DivisionTemplate.Name
@@ -193,7 +194,8 @@ public class StudentRepository : PersonRepository, IStudentRepository
                     AttendancePercentage = attendance.Count(status => status != EnumAttendanceStatus.Pendiente) == 0
                         ? null
                         : Math.Round(attendance.Count(status => status == EnumAttendanceStatus.Presente) * 100d
-                            / attendance.Count(status => status != EnumAttendanceStatus.Pendiente), 2)
+                            / attendance.Count(status => status != EnumAttendanceStatus.Pendiente), 2),
+                    Status = enrollment.StudentFileSubjectStatus.ToString()
                 });
             }
 

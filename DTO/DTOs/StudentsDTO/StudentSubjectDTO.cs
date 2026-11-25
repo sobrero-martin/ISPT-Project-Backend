@@ -10,4 +10,5 @@ public class StudentSubjectDTO
     public string Division { get; set; } = string.Empty;
     public double? Average { get; set; }
     public double? AttendancePercentage { get; set; }
+    public string Status { get; set; } = string.Empty;
 }

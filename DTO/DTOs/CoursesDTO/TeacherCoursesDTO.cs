@@ -7,4 +7,5 @@ public class TeacherCoursesDTO
     public int SchoolYear { get; set; }
     public string Division { get; set; }
     public long DivisionId { get; set; }
+    public bool IsClosed { get; set; }
 }

@@ -143,7 +143,19 @@ public class StudentRepository : PersonRepository, IStudentRepository
         {
             var enrollments = await bbdd.Set<FileDivision>()
                 .AsNoTracking()
-                .Where(fd => fd.FileCurriculum.File.StudentId == personId)
+                .Where(fd => fd.state
+                    && fd.FileDivisionAdmitedStatus == DTO.ENUM.EnumFileDivisionAdmitedStatus.Aceptado
+                    && fd.FileCurriculum.state
+                    && fd.FileCurriculum.File.state
+                    && fd.FileCurriculum.File.StudentId == personId
+                    && fd.Division != null
+                    && fd.Division.state
+                    && fd.Division.DivisionTemplate != null
+                    && fd.Division.DivisionTemplate.TemplateState
+                    && fd.Division.DivisionTemplate.Subject != null
+                    && fd.Division.DivisionTemplate.Subject.state
+                    && fd.Division.SchoolYear != null
+                    && fd.Division.SchoolYear.state)
                 .Select(fd => new
                 {
                     fd.Id,
@@ -190,7 +202,7 @@ public class StudentRepository : PersonRepository, IStudentRepository
         }
         catch (Exception e)
         {
-            Console.WriteLine($"Error al obtener los espacios curriculares del estudiante: {e.Message}");
+            Console.WriteLine($"Error al obtener los espacios curriculares del estudiante: {e}");
             return new ResponseDTO<List<StudentSubjectDTO>>
             {
                 StatusCode = HttpStatusCode.InternalServerError,

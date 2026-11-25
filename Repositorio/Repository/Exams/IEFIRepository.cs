@@ -1,8 +1,8 @@
 using BD;
 using BD.Entities;
 using DTO.DTOs.DTO_Response;
-using DTO.DTOs.ExamDTO;
 using DTO.ENUM;
+using DTO.DTOs.ExamDTO;
 using Microsoft.EntityFrameworkCore;
 using Repositorio.Implementations.Exams;
 using System.Net;
@@ -34,10 +34,12 @@ namespace Repositorio.Repository.Exams
                 foreach (var student in enrollments)
                 {
                     var grades = await context.Grades.AsNoTracking().Where(g => g.FileDivisionId == student.Id && g.state).Select(g => (double)g.GradeNumber).ToListAsync();
-                    var attendance = await context.Attendances.AsNoTracking().Where(a => a.FileDivisionId == student.Id && a.state && a.AttendanceDay.Status).Select(a => a.Status).ToListAsync();
+                    var attendance = await context.Attendances.AsNoTracking()
+                        .Where(a => a.FileDivisionId == student.Id && a.state && a.AttendanceDay.Status && a.Status != EnumAttendanceStatus.Pendiente)
+                        .Select(a => a.Status).ToListAsync();
                     var ieGrade = iefi == null ? null : await context.IEFIGrades.AsNoTracking().FirstOrDefaultAsync(g => g.IEFIId == iefi.Id && g.FileDivisionId == student.Id);
                     var average = grades.Count == 0 ? (double?)null : Math.Round(grades.Average(), 2);
-                    var percentage = attendance.Count == 0 ? (double?)null : Math.Round(attendance.Count(a => a) * 100d / attendance.Count, 2);
+                    var percentage = attendance.Count == 0 ? (double?)null : Math.Round(attendance.Count(a => a == EnumAttendanceStatus.Presente) * 100d / attendance.Count, 2);
                     if (registerEligible && average >= 7 && percentage >= 75 && ieGrade == null)
                     {
                         if (iefi == null)

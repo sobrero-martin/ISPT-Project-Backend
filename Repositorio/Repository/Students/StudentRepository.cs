@@ -3,6 +3,7 @@ using BD.Entidades;
 using DTO.DTOs.DTO_Response;
 using DTO.DTOs.SchoolYearDTO;
 using DTO.DTOs.StudentsDTO;
+using DTO.ENUM;
 using ExcelDataReader;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -166,7 +167,7 @@ public class StudentRepository : PersonRepository, IStudentRepository
                 var attendance = await bbdd.Set<Attendance>()
                     .AsNoTracking()
                     .Where(a => a.FileDivisionId == enrollment.Id)
-                    .Select(a => new { a.Status, a.Recorded })
+                    .Select(a => a.Status)
                     .ToListAsync();
 
                 result.Add(new StudentSubjectDTO
@@ -177,7 +178,10 @@ public class StudentRepository : PersonRepository, IStudentRepository
                     SchoolYear = enrollment.SchoolYear,
                     Division = enrollment.Division,
                     Average = grades.Count == 0 ? null : Math.Round(grades.Average(), 2),
-                    AttendancePercentage = attendance.Count(a => a.Recorded) == 0 ? null : Math.Round(attendance.Count(a => a.Recorded && a.Status) * 100d / attendance.Count(a => a.Recorded), 2)
+                    AttendancePercentage = attendance.Count(status => status != EnumAttendanceStatus.Pendiente) == 0
+                        ? null
+                        : Math.Round(attendance.Count(status => status == EnumAttendanceStatus.Presente) * 100d
+                            / attendance.Count(status => status != EnumAttendanceStatus.Pendiente), 2)
                 });
             }
 
@@ -220,7 +224,7 @@ public class StudentRepository : PersonRepository, IStudentRepository
             .Select(a => new StudentAttendanceDTO
             {
                 Date = a.AttendanceDay.Date,
-                Status = !a.Recorded ? "Pendiente" : a.Justified ? "Justificado" : a.Status ? "Presente" : "Ausente"
+                Status = a.Status.ToString()
             })
             .ToListAsync();
 

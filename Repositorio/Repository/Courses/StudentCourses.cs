@@ -165,8 +165,9 @@ public class StudentCourses : IStudentCourses
             var attendanceSummaries = await bbdd.Attendances
                 .AsNoTracking()
                 .Where(a => a.state && fileDivisionIds.Contains(a.FileDivisionId))
+                .Where(a => a.Status != EnumAttendanceStatus.Pendiente)
                 .GroupBy(a => a.FileDivisionId)
-                .Select(g => new { FileDivisionId = g.Key, Count = g.Count(), Present = g.Count(a => a.Status) })
+                .Select(g => new { FileDivisionId = g.Key, Count = g.Count(), Present = g.Count(a => a.Status == EnumAttendanceStatus.Presente) })
                 .ToDictionaryAsync(a => a.FileDivisionId);
 
             var regularSubjectIds = fileDivisions

@@ -9,5 +9,6 @@ namespace Repositorio.Implementations.Careers
     public interface IDivisionRepository
     {
         Task<ResponseDTO<List<DivisionDTO>>> GetBySchoolYearSubject(long schoolYearId, long subjectId);
+        Task<ResponseDTO<string>> Unlock(long divisionId);
     }
 }

@@ -16,7 +16,7 @@ public class AttendanceRepository : IAttendanceRepository
 
     public async Task<ResponseDTO<List<AttendanceDayDTO>>> GetDays(long divisionId)
     {
-        var days = await db.AttendanceDays.Where(d => d.DivisionId == divisionId)
+        var days = await db.AttendanceDays.Where(d => d.DivisionId == divisionId && d.state)
             .OrderByDescending(d => d.Date)
             .Select(d => new AttendanceDayDTO { Id = d.Id, Date = d.Date,
                 Total = d.Attendances.Count(a => a.state),
@@ -31,7 +31,7 @@ public class AttendanceRepository : IAttendanceRepository
         var divisionExists = await db.Divisions.AnyAsync(d => d.Id == divisionId);
         if (!divisionExists) return Error<AttendanceDayDTO>(HttpStatusCode.NotFound, "No se encontró el curso.");
         var today = date.Date;
-        var existing = await db.AttendanceDays.FirstOrDefaultAsync(d => d.DivisionId == divisionId && d.Date.Date == today);
+        var existing = await db.AttendanceDays.FirstOrDefaultAsync(d => d.DivisionId == divisionId && d.Date.Date == today && d.state);
         if (existing != null) return Ok(new AttendanceDayDTO { Id = existing.Id, Date = existing.Date }, "El día de hoy ya estaba cargado.");
 
         var day = new AttendanceDay { DivisionId = divisionId, Date = today, Status = false, Attendances = new List<Attendance>() };
@@ -43,9 +43,24 @@ public class AttendanceRepository : IAttendanceRepository
         return Ok(new AttendanceDayDTO { Id = day.Id, Date = day.Date, Total = day.Attendances.Count, State = "Pendiente" }, "Día de asistencia creado.");
     }
 
+    public async Task<ResponseDTO<string>> DeleteDay(long attendanceDayId)
+    {
+        var day = await db.AttendanceDays
+            .Include(d => d.Attendances)
+            .FirstOrDefaultAsync(d => d.Id == attendanceDayId && d.state);
+        if (day == null) return Error<string>(HttpStatusCode.NotFound, "No se encontró el día de asistencia.");
+
+        day.state = false;
+        foreach (var attendance in day.Attendances)
+            attendance.state = false;
+
+        await db.SaveChangesAsync();
+        return Ok("Eliminado", "Día de asistencia eliminado.");
+    }
+
     public async Task<ResponseDTO<List<DailyAttendanceDTO>>> GetDaily(long attendanceDayId)
     {
-        var day = await db.AttendanceDays.Where(d => d.Id == attendanceDayId).Select(d => d.Id).FirstOrDefaultAsync();
+        var day = await db.AttendanceDays.Where(d => d.Id == attendanceDayId && d.state).Select(d => d.Id).FirstOrDefaultAsync();
         if (day == 0) return Error<List<DailyAttendanceDTO>>(HttpStatusCode.NotFound, "No se encontró el día de asistencia.");
         var rows = await db.Attendances.Where(a => a.AttendanceDayId == attendanceDayId && a.state)
             .OrderBy(a => a.FileDivision.FileCurriculum.File.Code)
@@ -60,9 +75,9 @@ public class AttendanceRepository : IAttendanceRepository
 
     public async Task<ResponseDTO<string>> UpdateDaily(long attendanceDayId, List<AttendanceUpdateDTO> attendances)
     {
-        var rows = await db.Attendances.Where(a => a.AttendanceDayId == attendanceDayId && a.state).ToListAsync();
-        if (rows.Count == 0 && !await db.AttendanceDays.AnyAsync(d => d.Id == attendanceDayId))
+        if (!await db.AttendanceDays.AnyAsync(d => d.Id == attendanceDayId && d.state))
             return Error<string>(HttpStatusCode.NotFound, "No se encontró el día de asistencia.");
+        var rows = await db.Attendances.Where(a => a.AttendanceDayId == attendanceDayId && a.state).ToListAsync();
         foreach (var update in attendances)
         {
             var row = rows.FirstOrDefault(a => a.FileDivisionId == update.FileDivisionId);

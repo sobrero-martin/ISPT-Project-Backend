@@ -67,6 +67,7 @@ namespace Repositorio.Repository.Careers
                     {
                         Id = d.Id,
                         Name = d.DivisionTemplate!.Name,
+                        IsClosed = d.DivisionState == "Closed",
                     })
                     .ToListAsync();
 
@@ -89,5 +90,37 @@ namespace Repositorio.Repository.Careers
             }
         }
 
+        public async Task<ResponseDTO<string>> Unlock(long divisionId)
+        {
+            var division = await context.Set<Division>().FirstOrDefaultAsync(d => d.Id == divisionId);
+            if (division == null)
+            {
+                return new ResponseDTO<string>
+                {
+                    StatusCode = System.Net.HttpStatusCode.NotFound,
+                    Message = "No se encontró el cursado.",
+                    Object = null
+                };
+            }
+
+            if (division.DivisionState != "Closed")
+            {
+                return new ResponseDTO<string>
+                {
+                    StatusCode = System.Net.HttpStatusCode.Conflict,
+                    Message = "El cursado ya está desbloqueado.",
+                    Object = null
+                };
+            }
+
+            division.DivisionState = "Active";
+            await context.SaveChangesAsync();
+            return new ResponseDTO<string>
+            {
+                StatusCode = System.Net.HttpStatusCode.OK,
+                Message = "Cursado desbloqueado correctamente.",
+                Object = "El docente ya puede volver a modificar notas y asistencias."
+            };
+        }
     }
-    }
+}

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Repositorio.Implementations.Students;
+using DTO.DTOs.StudentsDTO;
 using System.Security.Claims;
 
 namespace ISPT_Project_Backend.Server.Controllers.CoursesControllers
@@ -19,6 +20,14 @@ namespace ISPT_Project_Backend.Server.Controllers.CoursesControllers
         public StudentCoursesController(IStudentCourses studentCourses)
         {
             this.studentCourses = studentCourses;
+        }
+
+        [HttpGet("student-files/{fileId:long}/courses")]
+        [Authorize(Roles = "Directivo,Preceptor")]
+        public async Task<ActionResult<ResponseDTO<List<StudentSubjectDTO>>>> GetCoursesByStudentFileId(long fileId)
+        {
+            var res = await studentCourses.GetCoursesByStudentId(fileId);
+            return StatusCode((int)res.StatusCode, res);
         }
 
         // INSCRIPTIONS

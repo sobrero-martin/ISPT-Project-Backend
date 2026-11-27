@@ -11,5 +11,5 @@ public interface IStudentCourses
     Task<ResponseDTO<InscriptionFormDTO>> GetAllSubjectsFromCareer(long curriculumId, int schoolYear, long studentId);
     Task<ResponseDTO<string>> Inscription(StudentInscriptionDTO inscription, long studentId);
     Task<ResponseDTO<List<ScheduleInscriptionDTO>>> GetAllDivisionSchedules(List<long> divisionIds);
-    Task GetCoursesByStudentId(long studentId);
+    Task<ResponseDTO<List<DTO.DTOs.StudentsDTO.StudentSubjectDTO>>> GetCoursesByStudentId(long fileId);
 }

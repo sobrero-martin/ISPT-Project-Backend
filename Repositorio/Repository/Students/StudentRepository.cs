@@ -179,7 +179,7 @@ public class StudentRepository : PersonRepository, IStudentRepository
 
                 var attendance = await bbdd.Set<Attendance>()
                     .AsNoTracking()
-                    .Where(a => a.FileDivisionId == enrollment.Id)
+                    .Where(a => a.FileDivisionId == enrollment.Id && a.state && a.AttendanceDay.state)
                     .Select(a => a.Status)
                     .ToListAsync();
 

@@ -112,6 +112,15 @@ public class TeacherCoursesController :  ControllerBase
         return Respond(await attendanceRepository.CreateToday(divisionId, date));
     }
 
+    [HttpDelete("attendance/day/{dayId:long}")]
+    [Authorize(Roles = "Docente")]
+    public async Task<IActionResult> DeleteAttendanceDay(long dayId)
+    {
+        var divisionId = await db.AttendanceDays.Where(d => d.Id == dayId).Select(d => (long?)d.DivisionId).FirstOrDefaultAsync();
+        if (divisionId.HasValue && await IsClosed(divisionId.Value)) return ClosedResponse();
+        return Respond(await attendanceRepository.DeleteDay(dayId));
+    }
+
     [HttpGet("attendance/day/{dayId:long}")]
     [Authorize(Roles = "Docente")]
     public async Task<IActionResult> GetDailyAttendance(long dayId) => Respond(await attendanceRepository.GetDaily(dayId));

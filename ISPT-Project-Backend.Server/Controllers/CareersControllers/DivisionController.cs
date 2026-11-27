@@ -20,5 +20,13 @@ namespace ISPT_Project_Backend.Server.Controllers
             var response = await divisionRepository.GetBySchoolYearSubject(schoolYearId, subjectId);
             return Ok(response);
         }
+
+        [HttpPut("{divisionId:long}/unlock")]
+        [Microsoft.AspNetCore.Authorization.Authorize(Roles = "Directivo")]
+        public async Task<IActionResult> Unlock(long divisionId)
+        {
+            var response = await divisionRepository.Unlock(divisionId);
+            return StatusCode((int)response.StatusCode, response);
+        }
     }
 }

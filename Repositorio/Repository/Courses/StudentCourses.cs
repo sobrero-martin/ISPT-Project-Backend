@@ -5,6 +5,7 @@ using DTO.DTOs.CoursesDTO.InscriptionForm;
 using DTO.DTOs.DTO_Response;
 using DTO.DTOs.SchoolYearDTO;
 using DTO.ENUM;
+using DTO.DTOs.StudentsDTO;
 using Microsoft.EntityFrameworkCore;
 using Repositorio.Implementations.Students;
 using System.Net;
@@ -420,8 +421,82 @@ public class StudentCourses : IStudentCourses
 
 
 
-    public Task GetCoursesByStudentId(long studentId)
+    public async Task<ResponseDTO<List<StudentSubjectDTO>>> GetCoursesByStudentId(long fileId)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var fileExists = await bbdd.Files.AsNoTracking().AnyAsync(file => file.Id == fileId && file.state);
+            if (!fileExists)
+                return new ResponseDTO<List<StudentSubjectDTO>>
+                {
+                    StatusCode = HttpStatusCode.NotFound,
+                    Message = "No se encontró el legajo seleccionado.",
+                    Object = null
+                };
+
+            var enrollments = await bbdd.FileDivisions
+                .AsNoTracking()
+                .Where(fd => fd.state
+                    && fd.FileDivisionAdmitedStatus == EnumFileDivisionAdmitedStatus.Aceptado
+                    && fd.FileCurriculum.state
+                    && fd.FileCurriculum.FileId == fileId
+                    && fd.Division != null && fd.Division.state
+                    && fd.Division.DivisionTemplate != null && fd.Division.DivisionTemplate.TemplateState
+                    && fd.Division.DivisionTemplate.Subject != null && fd.Division.DivisionTemplate.Subject.state
+                    && fd.Division.SchoolYear != null && fd.Division.SchoolYear.state)
+                .Select(fd => new
+                {
+                    fd.Id,
+                    DivisionId = fd.DivisionId,
+                    fd.StudentFileSubjectStatus,
+                    Subject = fd.Division!.DivisionTemplate!.Subject!.Name,
+                    SchoolYear = fd.Division.SchoolYear!.SchoolYearNumber,
+                    Division = fd.Division.DivisionTemplate.Name
+                })
+                .ToListAsync();
+
+            var results = new List<StudentSubjectDTO>();
+            foreach (var enrollment in enrollments)
+            {
+                var grades = await bbdd.Grades.AsNoTracking()
+                    .Where(grade => grade.state && grade.FileDivisionId == enrollment.Id)
+                    .Select(grade => (double)grade.GradeNumber)
+                    .ToListAsync();
+                var attendance = await bbdd.Attendances.AsNoTracking()
+                    .Where(item => item.state && item.AttendanceDay.state && item.FileDivisionId == enrollment.Id
+                        && item.Status != EnumAttendanceStatus.Pendiente)
+                    .Select(item => item.Status)
+                    .ToListAsync();
+
+                results.Add(new StudentSubjectDTO
+                {
+                    FileDivisionId = enrollment.Id,
+                    DivisionId = enrollment.DivisionId,
+                    Subject = enrollment.Subject,
+                    SchoolYear = enrollment.SchoolYear,
+                    Division = enrollment.Division,
+                    Average = grades.Count == 0 ? null : Math.Round(grades.Average(), 2),
+                    AttendancePercentage = attendance.Count == 0 ? null : Math.Round(attendance.Count(status => status == EnumAttendanceStatus.Presente) * 100d / attendance.Count, 2),
+                    Status = enrollment.StudentFileSubjectStatus.ToString()
+                });
+            }
+
+            return new ResponseDTO<List<StudentSubjectDTO>>
+            {
+                StatusCode = HttpStatusCode.OK,
+                Message = "Espacios curriculares del legajo obtenidos con éxito.",
+                Object = results
+            };
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Error al obtener los espacios curriculares del legajo: {e}");
+            return new ResponseDTO<List<StudentSubjectDTO>>
+            {
+                StatusCode = HttpStatusCode.InternalServerError,
+                Message = "Hubo un error al obtener los espacios curriculares del legajo.",
+                Object = null
+            };
+        }
     }
 }
